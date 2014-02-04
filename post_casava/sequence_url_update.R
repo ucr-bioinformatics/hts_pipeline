@@ -67,13 +67,12 @@ for (i in c(1:lanes)) {
 }
 
 # Check if Bustard Summary exists for each 'qc' sym-link
+qc_url <- c()
 if (length(qcs) > 0) {
     for (qc in qcs){
         qc_url <- cbind(qc_url, paste(sequence_url, qc, "/BustardSummary.xml",sep="") )
     }
     qc_url <- paste(qc_url,collapse="\n")
-} else {
-    qc_url <- ""
 }
 
 # Update CASAVA Bustard Summary in flowcell_list table
