@@ -59,3 +59,6 @@ for (p in pairs){
         }
     }
 }
+
+# Create QC sym-links
+# Unaligned/Basecall_Stats_
