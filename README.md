@@ -1,7 +1,7 @@
-[Pre-CASAVA]
+#Pre-CASAVA#
 
-[CASAVA]
+#CASAVA#
 
-[Post-CASAVA]
-1. Rename files
-2. Update links on Illumina web server
+#Post-CASAVA#
+#Rename files
+#Update links on Illumina web server
