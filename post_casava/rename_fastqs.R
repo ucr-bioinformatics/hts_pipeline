@@ -44,7 +44,7 @@ lane <- samples$Lane
 # For each pair iterate over samples and rename associated files
 for (p in pairs){
     for(i in 1:length(samples[,1])){
-        file_name <- paste('^',samplenumber[i],"_S.*_L00",lane[i],"_R", p, ".*fastq.gz$", sep="")
+        file_name <- paste('^',samplenumber[i],"_[S|NoIndex].*_L00",lane[i],"_R", p, ".*fastq.gz$", sep="")
         files <- list.files(path=fastq_path,pattern=file_name)
         if (length(files) > 0){
             commands <- paste("ln -s ",fastq_path,'/',files, "  ", flowcell, "_lane",lane[i],"_pair",p,"_",index[i],".fastq.gz",sep="")
