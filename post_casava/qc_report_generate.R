@@ -6,6 +6,7 @@
 
 # Get script arguments
 args <- commandArgs(trailingOnly = TRUE)
+#args <- c(221,2,'/shared/genomics/221/','/bigdata/nkatiyar/QC_flowcells/221/')
 if (length(args) < 2) {
     stop("USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath>")
 }
@@ -18,11 +19,18 @@ targets_path <- args[4]
 source("http://faculty.ucr.edu/~tgirke/Documents/R_BioCond/My_R_Scripts/fastqQuality.R")
 
 # For each lane target file, process PDF report
-for (lane in 1:8){
-    target_lane <- list.files(path=targets_path, pattern=paste('^targets_lane',lane,'.txt$',sep=""))
+for (lane in 1:8) {
+    file_pattern <- paste('^targets_lane', lane, '.txt$', sep="")
+    target_lane <- list.files(path=targets_path, pattern=file_pattern)
 
     # Get targets (FASTQ files) for specific lane
-    targets <- read.delim(target_lane)
+    if (length(target_lane) == 1) {
+        targets <- read.delim(target_lane[1])
+    } else {
+        msg <- paste0("Did not find target file matching ", targets_path, file_pattern, " Skipping...")
+        warning(msg)
+        next
+    }
 
     # Format files object
     if (num_pairs == 1) {
@@ -30,12 +38,12 @@ for (lane in 1:8){
         names(myfiles) <- targets$SampleName
     } else if (num_pairs == 2) {
         myfiles1 <- paste(fastq_path, targets$FileName1, sep="")
-        names(myfiles1) <-paste(targets$SampleName,"_pair1",sep="")
+        names(myfiles1) <-paste(targets$SampleName, "_pair1", sep="")
         myfiles2 <- paste(fastq_path, targets$FileName2, sep="")
-        names(myfiles2) <-paste(targets$SampleName,"_pair2",sep="")
-        myfiles <- append(myfiles1,myfiles2)
+        names(myfiles2) <-paste(targets$SampleName, "_pair2", sep="")
+        myfiles <- append(myfiles1, myfiles2)
     } else {
-        stop(paste("ERROR::",num_pairs,"pairs not supported."))
+        stop(paste("ERROR::", num_pairs, "pairs not supported."))
     }
 
     # What files are we processing
@@ -43,7 +51,9 @@ for (lane in 1:8){
 
     # Generate PDF Report
     fqlist <- seeFastq(fastq=myfiles, batchsize=50000, klength=8)
-    file_name <- paste("flowcell",flowcellid,"_lane",lane,"_fastqReport.pdf")
-    pdf(file_name, height=18, width=4*length(myfiles)); seeFastqPlot(fqlist); dev.off()
+    file_name <- paste("flowcell", flowcellid, "_lane", lane, "_fastqReport.pdf", sep="")
+    pdf(file_name, height=18, width=4*length(myfiles))
+    seeFastqPlot(fqlist)
+    dev.off()
 }
 
