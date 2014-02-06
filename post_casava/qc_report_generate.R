@@ -25,7 +25,7 @@ for (lane in 1:8) {
 
     # Get targets (FASTQ files) for specific lane
     if (length(target_lane) == 1) {
-        targets <- read.delim(target_lane[1])
+        targets <- read.delim(paste(targets_path, target_lane[1], sep=""))
     } else {
         msg <- paste0("Did not find target file matching ", targets_path, file_pattern, " Skipping...")
         warning(msg)
@@ -52,7 +52,7 @@ for (lane in 1:8) {
     # Generate PDF Report
     fqlist <- seeFastq(fastq=myfiles, batchsize=50000, klength=8)
     file_name <- paste("flowcell", flowcellid, "_lane", lane, "_fastqReport.pdf", sep="")
-    pdf(file_name, height=18, width=4*length(myfiles))
+    pdf(file_name, height=18, width=8*length(myfiles))
     seeFastqPlot(fqlist)
     dev.off()
 }
