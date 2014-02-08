@@ -31,10 +31,10 @@ Running
 The /home/researchers filesystem is where the RunAnalysis direcotrty is located (/home/researchers/RunAnalysis). The sequencer generated intensity and bcl files are stored here.
     When John asks about available space on the Z dirve, he is referring to the /home/researchers filesystem. A paired end run can be 1.5 TB to 3 TB. In general it is bad to have usage over 80%. So, you must delete old intensity files and bcl files, to free up space so that John can run the new flowcell.
 ~~~~~~~~
-[nkatiyar@hts BaseCalls]$ pwd
-/home/researchers/RunAnalysis/flowcell206/130912_SN279_0378_AC2C1DACXX/Data/Intensities/BaseCalls
+    [nkatiyar@hts BaseCalls]$ pwd
+    /home/researchers/RunAnalysis/flowcell206/130912_SN279_0378_AC2C1DACXX/Data/Intensities/BaseCalls
 ~~~~~~~~
-#Version:1.0 StartHTML:0000000239 EndHTML:0000003941 StartFragment:0000002599 EndFragment:0000003905 SourceURL:file://localhost/Users/fireflysrb/Google%20Drive/Illumina%20Pipeline%20Running%20and%20Server%20Maintenance%20Document.doc 
+    Rebecca Google Drive /Illumina%20Pipeline%20Running%20and%20Server%20Maintenance%20Document.doc 
 ~~~~~~~~
     $df -h  #no more than 80%  for /home/researchers
 ~~~~~~~~
