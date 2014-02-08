@@ -40,7 +40,7 @@ The /home/researchers filesystem is where the RunAnalysis direcotrty is located 
 ~~~~~~~~
 
     You should delete the intensity files for old flowcells. We only keep them for a period of one month, starting from when you sent the email notification to the user regarding the availabilty of their FASTQs. 
-  
+
     __Pracital Sizes__
     >2X101X7 cyles flowcell | ~1.5 TB space | (My experience (Neerja) – 3.0 TB)
     >1X101X7 cycles flowcell | ~1 TB space | (My exp (Neerja) – 1.5 TB)
@@ -50,10 +50,11 @@ The /home/researchers filesystem is where the RunAnalysis direcotrty is located 
 1. John will run sequencing and will ask to create realtime view link or hiseq viewer link for him. So that John can check the process of sequencing online.
 http://illumina.ucr.edu/illumina_runs/realtimeview/
 
-[nkatiyar@hts illumina_runs]$ pwd
-/home/www/html/illumina_runs
-[nkatiyar@hts illumina_runs]$ cd realtimeview/
-[nkatiyar@hts realtimeview]$ ls
+~~~~~~~~
+    [nkatiyar@hts illumina_runs]$ pwd
+        /home/www/html/illumina_runs
+    [nkatiyar@hts illumina_runs]$ cd realtimeview/
+    [nkatiyar@hts realtimeview]$ ls
 101130_SN279_0151_B80UUUABXX_test  FC115_realtime  FC148_realtime      flowcel133_new_realtime	flowcell143_realtime	flowcell168_realtime  flowcell189
 130314_SN279_0336_AH0BJ2ADXX	   FC116_realtime  FC149_realtime      flowcell105		flowcell144_realtime	flowcell169_realtime  flowcell190
 130315_SN279_0337_BH0BGEADXX	   FC117_realtime  FC150_realtime      flowcell116		flowcell152_realtime	flowcell170_realtime  flowcell191
@@ -73,9 +74,8 @@ FC111_realtime			   FC142_realtime  FC97_realtime       flowcell136_realtime	flo
 FC112_realtime			   FC145_realtime  FC98_realtime       flowcell138_realtime	flowcell165_realtime	flowcell186_realtime
 FC113_realtime			   FC146_realtime  FC99_realtime       flowcell139_realtime	flowcell166_realtime	flowcell187
 FC114_realtime			   FC147_realtime  flowceell132        flowcell140_realtime	flowcell167_realtime	flowcell188
-
-The sequencing instrument copy the data to /home/researchers/Runs/
-This is real time copy.
+~~~~~~~~
+        The sequencing instrument copy the data to /home/researchers/Runs/ This is real time copy.
 
 Reply to John he can start. When he starts, he will ask to create hiseqviewer (realtime viewer) link to him.
 
