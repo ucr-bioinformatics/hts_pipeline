@@ -27,17 +27,24 @@ Running
         /dev/mapper/vg02-lvResearchers  19534684160 14134585132 5400099028  73% /home/researchers
         /dev/sda2                       951111700   130576344   772221604   15% /mnt/sda
 ~~~~~~~~
+    
     The /home filesystem is where the illumina_runs direcotry is located (/home/www/html/illumina_runs/). CASAVA stores the generated FASTQ files here.
-The /home/researchers filesystem is where the RunAnalysis direcotrty is located (/home/researchers/RunAnalysis). The sequencer generated intensity and bcl files are stored here.
+
+    The /home/researchers filesystem is where the RunAnalysis direcotrty is located (/home/researchers/RunAnalysis). The sequencer generated intensity and bcl files are stored here.
+    
     When John asks about available space on the Z dirve, he is referring to the /home/researchers filesystem. A paired end run can be 1.5 TB to 3 TB. In general it is bad to have usage over 80%. So, you must delete old intensity files and bcl files, to free up space so that John can run the new flowcell.
+
 ~~~~~~~~
     [nkatiyar@hts BaseCalls]$ pwd
     /home/researchers/RunAnalysis/flowcell206/130912_SN279_0378_AC2C1DACXX/Data/Intensities/BaseCalls
 ~~~~~~~~
+
     Rebecca Google Drive /Illumina%20Pipeline%20Running%20and%20Server%20Maintenance%20Document.doc 
+
 ~~~~~~~~
     $df -h  #no more than 80%  for /home/researchers
 ~~~~~~~~
+    
     You should delete the intensity files for old flowcells. We only keep them for a period of one month, starting from when you sent the email notification to the user regarding the availabilty of their FASTQs. 
 
     __Pracital Sizes__
