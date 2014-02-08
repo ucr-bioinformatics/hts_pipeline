@@ -27,24 +27,16 @@ Running
         /dev/mapper/vg02-lvResearchers  19534684160 14134585132 5400099028  73% /home/researchers
         /dev/sda2                       951111700   130576344   772221604   15% /mnt/sda
 ~~~~~~~~
-    
-    The /home filesystem is where the illumina_runs direcotry is located (/home/www/html/illumina_runs/). CASAVA stores the generated FASTQ files here.
-
-    The /home/researchers filesystem is where the RunAnalysis direcotrty is located (/home/researchers/RunAnalysis). The sequencer generated intensity and bcl files are stored here.
-    
-    When John asks about available space on the Z dirve, he is referring to the /home/researchers filesystem. A paired end run can be 1.5 TB to 3 TB. In general it is bad to have usage over 80%. So, you must delete old intensity files and bcl files, to free up space so that John can run the new flowcell.
-
+    The /home filesystem is where the illumina_runs direcotry is located (/home/www/html/illumina_runs/). CASAVA stores the generated FASTQ files here. The /home/researchers filesystem is where the RunAnalysis direcotrty is located (/home/researchers/RunAnalysis). The sequencer generated intensity and bcl files are stored here. When John asks about available space on the Z dirve, he is referring to the /home/researchers filesystem. A paired end run can be 1.5 TB to 3 TB. In general it is bad to have usage over 80%. So, you must delete old intensity files and bcl files, to free up space so that John can run the new flowcell.
 ~~~~~~~~
     [nkatiyar@hts BaseCalls]$ pwd
     /home/researchers/RunAnalysis/flowcell206/130912_SN279_0378_AC2C1DACXX/Data/Intensities/BaseCalls
 ~~~~~~~~
-
     Rebecca Google Drive /Illumina%20Pipeline%20Running%20and%20Server%20Maintenance%20Document.doc 
-
 ~~~~~~~~
     $df -h  #no more than 80%  for /home/researchers
 ~~~~~~~~
-    
+
     You should delete the intensity files for old flowcells. We only keep them for a period of one month, starting from when you sent the email notification to the user regarding the availabilty of their FASTQs. 
 
     __Pracital Sizes__
@@ -52,8 +44,10 @@ Running
     >1X101X7 cycles flowcell | ~1 TB space | (My exp (Neerja) – 1.5 TB)
     >50X7 cycles flowcell | 0.5 TB space | (My exp (Neerja) – 1 TB)
 
+
 1. John will run sequencing and will ask to create realtime view link or hiseq viewer link for him. So that John can check the process of sequencing online.
 http://illumina.ucr.edu/illumina_runs/realtimeview/
+
 ~~~~~~~~
     [nkatiyar@hts illumina_runs]$ pwd
         /home/www/html/illumina_runs
@@ -79,7 +73,7 @@ FC112_realtime			   FC145_realtime  FC98_realtime       flowcell138_realtime	flo
 FC113_realtime			   FC146_realtime  FC99_realtime       flowcell139_realtime	flowcell166_realtime	flowcell187
 FC114_realtime			   FC147_realtime  flowceell132        flowcell140_realtime	flowcell167_realtime	flowcell188
 ~~~~~~~~
-        The sequencing instrument copy the data to /home/researchers/Runs/ This is real time copy.
+    The sequencing instrument copy the data to /home/researchers/Runs/ This is real time copy.
 
 Reply to John he can start. When he starts, he will ask to create hiseqviewer (realtime viewer) link to him.
 
