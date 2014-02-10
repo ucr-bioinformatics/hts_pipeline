@@ -39,10 +39,12 @@ Running
 
     You should delete the intensity files for old flowcells. We only keep them for a period of one month, starting from when you sent the email notification to the user regarding the availabilty of their FASTQs. 
 
-    __Pracital Sizes__
-    >2X101X7 cyles flowcell | ~1.5 TB space | (My experience (Neerja) – 3.0 TB)
-    >1X101X7 cycles flowcell | ~1 TB space | (My exp (Neerja) – 1.5 TB)
-    >50X7 cycles flowcell | 0.5 TB space | (My exp (Neerja) – 1 TB)
+__Pracital Sizes__
+| Cycles | Size | Observed |
+| ------ | ---- | -------- |
+| 2X101X7 cyles flowcell | ~1.5 TB space | (My experience (Neerja) – 3.0 TB) |
+| 1X101X7 cycles flowcell | ~1 TB space | (My exp (Neerja) – 1.5 TB) |
+| 50X7 cycles flowcell | 0.5 TB space | (My exp (Neerja) – 1 TB) |
 
 
 1. John will run sequencing and will ask to create realtime view link or hiseq viewer link for him. So that John can check the process of sequencing online.
