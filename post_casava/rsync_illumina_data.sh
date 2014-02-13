@@ -12,7 +12,7 @@ for FC in $FCs
 do
     echo "Starting $FC..."
     # Sync files over to NFS server
-    rsync -a --progress -e "ssh -i /root/.ssh/genomics_nfs_rsa" /home/www/html/illumina_runs/$FC/ genomics@nfs02.bioinfo.ucr.edu:/pool0/bigdata/genomics/shared/$FC
+    rsync -a --progress -e "ssh -i /root/.ssh/genomics_nfs_rsa" /home/casava_fastqs/$FC/ genomics@nfs02.bioinfo.ucr.edu:/pool0/bigdata/genomics/shared/$FC
     echo "...Transfer Complete"
 done
 
