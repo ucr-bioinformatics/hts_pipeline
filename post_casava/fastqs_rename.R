@@ -8,7 +8,7 @@
 #args <- c('219','2','SampleSheet.csv','.')
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) < 4) {
-    stop("USAGE:: script.R <FlowcellID> <NumberOfPairs> <SampleSheetPath> <FASTQPath>")
+    stop("USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath>")
 }
 
 # Get flowcell name
@@ -32,48 +32,51 @@ if (file.exists(args[3])){
 if (file.exists(args[4])){
     unaligned_path <- args[4]
 } else{
-    stop(paste("FASTQ path ", args[4]," does not exist."))
+    stop(paste("Unaligned path ", args[4]," does not exist."))
 }
 
-# Extract needed into
-projects <- samples$SampleProject
+# Trim off leading and trailing whitespace
+trim <- function (x) gsub("^\\s+|\\s+$", "", x)
 
-# For each pair iterate over samples and rename associated files
-for (p in pairs){
-    for (proj in unique(projects)){
-        sample_data <- samples[samples$SampleProject==proj,]
-        sampleids <- sample_data$SampleID        
-        for(sample in sampleids){
-            # Get lane and index for sample
-            lane <- sample_data[sample_data$SampleID==sample,]$Lane
-            index <- sample_data[sample_data$SampleID==sample,]$Index
+# Define function to be applied to each row
+gen_link <- function(x) {
+        project_id <-  trim(x[10])
+        sample_id <- trim(x[3])
+        lane <- trim(x[2])
+        index <- trim(x[5])
 
-            # Find files based on file name pattern
-            #file_name <- paste(sample,"_.*_L00",lane[i],"_R", p, ".*fastq.gz$", sep="")
-            fastq_path <- paste(unaligned_path,'/Project_',proj,'/Sample_',sample,'/',sep="")
-            file_name <- paste(sample,"_",index,"_L00",lane[i],"_R", p, ".*fastq.gz$", sep="")
-            files <- list.files(path=fastq_path,pattern=file_name)
+        # Find files based on file name pattern
+        #file_name <- paste(sample,"_.*_L00",lane[i],"_R", p, ".*fastq.gz$", sep="")
+        fastq_path <- paste(unaligned_path,'/Project_',project_id,'/Sample_',sample_id,'/',sep="")
+        file_name <- paste(sample_id,"_",index,"_L00",lane,"_R", p, ".*fastq.gz$", sep="")
+        files <- list.files(path=fastq_path,pattern=file_name)
+        #print( paste0(fastq_path,file_name) )
 
-            # If we found some files, create symlinks
-            if (length(files) > 0){
-                if (!is.na(index)){
-                    commands <- paste("ln -s ",fastq_path,'/',files, "  ", flowcell, "_lane",lane[i],"_pair",p,"_",index,".fastq.gz",sep="")
-                }else{
-                    commands <- paste("ln -s ",fastq_path,'/',files, "  ", flowcell, "_lane",lane[i],"_pair",p,".fastq.gz",sep="")
-                }
-                print(commands)
-                system(commands)
-            } else{
-               warning(paste("WARNING:: No files matching pattern ",file_name))
+        # If we found some files, create symlinks
+        if (length(files) > 0){
+            if (!is.na(index)){
+                commands <- paste("ln -s ",fastq_path,'/',files, "  ", flowcell, "_lane",lane[i],"_pair",p,"_",index,".fastq.gz",sep="")
+            }else{
+                commands <- paste("ln -s ",fastq_path,'/',files, "  ", flowcell, "_lane",lane[i],"_pair",p,".fastq.gz",sep="")
             }
+            print(commands)
+            system(commands)
+        } else{
+           warning(paste("WARNING:: No files matching pattern ",file_name))
         }
-    }
 }
 
-# Print first 50 warnings
-#if (length(warnings) > 0){
-#    warnings()
-#}
+# For each pair generate sym links for each row
+for (p in pairs){
+    apply(samples, 1, gen_link)
+}
 
-# Create QC sym-links
-# Unaligned/Basecall_Stats_
+# Print first warnings
+warn <- warnings()
+if (length(warn) > 0){
+    print(warn)
+}
+
+# Create QC sym-link
+system(paste('ln -s ', unaligned_path, '/Basecall_Stats_* ', 'qc', sep=""))
+
