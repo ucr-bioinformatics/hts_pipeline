@@ -78,5 +78,13 @@ if (length(warn) > 0){
 }
 
 # Create QC sym-link
-system(paste('ln -s ', unaligned_path, '/Basecall_Stats_* ', 'qc', sep=""))
+qcs <- list.files(path=unaligned_path, pattern='^qc[0-9]*$')
+if (length(qcs) > 1) {
+    last_qc <- qcs[-1]
+    next_qc <- paste('qc', is.numeric(gsub("^qc", '',last_qc))+1, sep="")
+}
+else {
+    next_qc <- 'qc'
+}
+system(paste('ln -s ', unaligned_path, '/Basecall_Stats_* ', next_qc, sep=""))
 
