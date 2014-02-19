@@ -55,9 +55,9 @@ gen_link <- function(x) {
         # If we found some files, create symlinks
         if (length(files) > 0){
             if (!is.na(index)){
-                commands <- paste("ln -s ",fastq_path,'/',files, "  ", flowcell, "_lane",lane[i],"_pair",p,"_",index,".fastq.gz",sep="")
+                commands <- paste("ln -s ",fastq_path,'/',files, "  ", flowcell, "_lane",lane,"_pair",p,"_",index,".fastq.gz",sep="")
             }else{
-                commands <- paste("ln -s ",fastq_path,'/',files, "  ", flowcell, "_lane",lane[i],"_pair",p,".fastq.gz",sep="")
+                commands <- paste("ln -s ",fastq_path,'/',files, "  ", flowcell, "_lane",lane,"_pair",p,".fastq.gz",sep="")
             }
             print(commands)
             system(commands)
