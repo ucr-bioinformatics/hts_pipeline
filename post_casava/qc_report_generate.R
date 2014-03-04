@@ -7,7 +7,7 @@
 # Get script arguments
 args <- commandArgs(trailingOnly = TRUE)
 #args <- c(221,2,'/shared/genomics/221/','/bigdata/nkatiyar/QC_flowcells/221/')
-if (length(args) < 2) {
+if (length(args) < 4) {
     stop("USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath>")
 }
 flowcellid <- args[1]
@@ -19,7 +19,7 @@ targets_path <- args[4]
 source("http://faculty.ucr.edu/~tgirke/Documents/R_BioCond/My_R_Scripts/fastqQuality.R")
 
 # For each lane target file, process PDF report
-for (lane in 1:8) {
+for (lane in 1) {
     file_pattern <- paste('^targets_lane', lane, '.txt$', sep="")
     target_lane <- list.files(path=targets_path, pattern=file_pattern)
 
@@ -47,13 +47,17 @@ for (lane in 1:8) {
     }
 
     # What files are we processing
-    print(myfiles)
+    	print("Printing myfiles...")
+	print(myfiles)
 
     # Generate PDF Report
     fqlist <- seeFastq(fastq=myfiles, batchsize=50000, klength=8)
     file_name <- paste("flowcell", flowcellid, "_lane", lane, "_fastqReport.pdf", sep="")
-    pdf(file_name, height=18, width=8*length(myfiles))
+    print("Printing report names")
+	print(file_name)
+	pdf(file_name, height=18, width=8*length(myfiles))
     seeFastqPlot(fqlist)
     dev.off()
 }
+warnings()
 
