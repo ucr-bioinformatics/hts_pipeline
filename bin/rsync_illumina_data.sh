@@ -1,0 +1,1 @@
+../post_casava/bin/rsync_illumina_data.sh
