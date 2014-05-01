@@ -50,9 +50,9 @@ gen_link <- function(x) {
         # Find files based on file name pattern
 	
 	if (run_type == "hiseq"){
-        	#file_name <- paste(sample,"_.*_L00",lane[i],"_R", p, ".*fastq.gz$", sep="")
-        	fastq_path <- paste(unaligned_path,'/Project_',project_id,'/Sample_',sample_id,'/',sep="")
-       		file_name <- paste(sample_id,".*_",index,"_L00",lane,"_R", p, ".*fastq.gz$", sep="")
+       	#file_name <- paste(sample,"_.*_L00",lane[i],"_R", p, ".*fastq.gz$", sep="")
+       	fastq_path <- paste(unaligned_path,'/Project_',project_id,'/Sample_',sample_id,'/',sep="")
+       	file_name <- paste(sample_id,".*_",index,"_L00",lane,"_R", p, ".*fastq.gz$", sep="")
 		files <- list.files(path=fastq_path,pattern=file_name) 
 	} else {
 		fastq_path <- unaligned_path
@@ -63,25 +63,27 @@ gen_link <- function(x) {
 		files <- c(files,files_undermine)
 	} 
 		
-        # If we found some files, create symlinks
-        if (length(files) > 0){
-		for(f in files) {
-			len <- length(grep("Undetermined",f))
-			if (len >= 1 ){
-				commands <- paste("ln -s ",fastq_path,'/',f, "  ", "Undetermined_lane",lane,"_pair",p,".fastq.gz",sep="")
-			}else{
-            			if (!is.na(index)){
-                		commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",p,"_",index,".fastq.gz",sep="")
-            			}else{
-                		commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",p,".fastq.gz",sep="")
-            			}
-			}
-            		print(commands)
-            		system(commands)
-		}
-        } else{
-           warning(paste("WARNING:: No files matching pattern ",file_name))
+    # If we found some files, create symlinks
+    if (length(files) > 0){
+        for(f in files) {
+            len <- length(grep("Undetermined",f))
+            if (len >= 1 ){
+                commands <- paste("ln -s ",fastq_path,'/',f, "  ", "Undetermined_lane",lane,"_pair",p,".fastq.gz",sep="")
+            }else{
+                if (!is.na(index)){
+                    commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",p,"_",index,".fastq.gz",sep="")
+                }else{
+                    commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",p,".fastq.gz",sep="")
+                }
+            }
+        
+            print(commands)
+            system(commands)
         }
+    } 
+    else {
+       warning(paste("WARNING:: No files matching pattern ",file_name))
+    }
 }
 
 # For each pair generate sym links for each row
