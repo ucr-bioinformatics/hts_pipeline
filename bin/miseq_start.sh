@@ -38,7 +38,6 @@ for dir in $dir_list; do
             # Send email notification
             /usr/sbin/sendmail -vt << EOF
 To: hts@biocluster.ucr.edu
-CC: jhayes@ucr.edu
 From: no-reply@biocluster.ucr.edu
 Subject: HTS Pipeline: Flowcell $FC_ID: Started
 
