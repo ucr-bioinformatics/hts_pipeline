@@ -4,15 +4,21 @@
 # Simple script to move files from Clay's upload to the shared bigdata #
 ########################################################################
 
-# Get flowcell IDs
-FCs=$1
+# Check Arguments
+EXPECTED_ARGS=2
+E_BADARGS=65
 
-# Loop through all flowcells
-for FC in $FCs
-do
-    echo echo "Starting $FC..."
-    # Be careful when running this, it DELETES the source files!
-    rsync -a --progress --remove-source-files /bigdata/cclark/flowcell$FC/ /shared/genomics/$FC
-    echo "...Transfer Complete"
-done
+if [ $# -ne $EXPECTED_ARGS ]
+then
+  echo "Usage: `basename $0` {FlowcellID} {/path/to/source}"
+  exit $E_BADARGS
+fi
+
+# Get args
+FC_ID=$1
+SOURCE_FC=$2
+
+echo echo "Starting $FC_ID..."
+rsync -a --progress --remove-source-files $SOURCE_FC/ /shared/genomics/$FC_ID
+echo "...Transfer Complete"
 
