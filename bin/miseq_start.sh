@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -l
 
 ###########################################
 # Check for MiSeq data and start pipeline #
@@ -47,6 +47,27 @@ EOF
 
             # Transfer miseq data
             rsync_miseq_data.sh $FC_ID $SOURCE_DIR/$dir
+            
+            ###############################################
+            # Here is an example of adding pipeline steps #
+            ###############################################
+            #
+            # Remember to eventually add proper error handling! 
+            #
+
+            # Create Sample Sheet
+            #if [ $? -eq 0 ]; then create_sample_sheet.R args 2>$ERROR_FILE; fi
+
+            # Rename Files
+            #if [ $? -eq 0 ]; then fastqs_rename.R args 2>$ERROR_FILE; fi
+
+            # Generate QC report
+            #if [ $? -eq 0 ]; then qc_report_generate.R args 2>$ERROR_FILE; fi
+
+            # Update Illumina web server URLs
+            #if [ $? -eq 0 ]; then sequence_url_update.R ards 2>$ERROR_FILE; fi
+
+            ##############################################
         fi
     fi
 done
