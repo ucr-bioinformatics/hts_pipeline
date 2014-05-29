@@ -4,6 +4,9 @@
 # Check for MiSeq data and start pipeline #
 ###########################################
 
+# Set vars
+source $HTS_PIPELINE_HOME/env_profile.sh
+
 # Make sure there is only one version of this running
 lockfile -r 0 /tmp/miseq_start.lock || exit 1
 
