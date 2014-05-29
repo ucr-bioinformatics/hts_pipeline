@@ -40,7 +40,7 @@ for dir in $dir_list; do
         # Check if symlink already exists in target directory
         if [ ! -h "$TARGET_DIR/$flowcellID" ]; then
             # Create symlink from source to target
-            ln -s $SOURCE_DIR/$flowcellID $TARGET_DIR/$flowcellID
+            ln -s $SOURCE_DIR/$dir $TARGET_DIR/$flowcellID
         else
             echo "Symlink $TARGET_DIR/$flowcellID already exists"
         fi
