@@ -51,18 +51,31 @@ gen_link <- function(x) {
 	
 	if (run_type == "hiseq"){
        	#file_name <- paste(sample,"_.*_L00",lane[i],"_R", p, ".*fastq.gz$", sep="")
-       	fastq_path <- paste(unaligned_path,'/Project_',project_id,'/Sample_',sample_id,'/',sep="")
+        fastq_path <- paste(unaligned_path,'/Project_',project_id,'/Sample_',sample_id,'/',sep="")
        	file_name <- paste(sample_id,".*_",index,"_L00",lane,"_R", p, ".*fastq.gz$", sep="")
-		files <- list.files(path=fastq_path,pattern=file_name) 
-	} else {
-		fastq_path <- unaligned_path
+        files <- list.files(path=fastq_path,pattern=file_name)
 
-		file_name <- paste(sample_id,".*_L00",lane,"_[R|I]", p, ".*fastq.gz$", sep="")
-		files <- list.files(path=fastq_path,pattern=file_name)
-		
-                file_name_undermine <-paste("Undetermined.*_L00",lane,"_[R|I]", p, ".*fastq.gz$", sep="")
-		files_undermine <- list.files(path=fastq_path,pattern=file_name_undermine)
-		files <- c(files,files_undermine)
+        # Get undetermined files
+        file_name_undermine <-paste("Undetermined.*_L00",lane,"_[R|I]", p, ".*fastq.gz$", sep="")
+        files_undermine <- list.files(path=fastq_path,pattern=file_name_undermine)
+
+        # Join fastqs and undetermined
+        files <- c(files,files_undermine)
+         
+	} else {
+        # Define path
+        fastq_path <- unaligned_path
+
+        # Get fastq files
+        file_name <- paste(sample_id,".*_L00",lane,"_[R|I]", p, ".*fastq.gz$", sep="")
+        files <- list.files(path=fastq_path,pattern=file_name)
+        
+        # Get undetermined files
+        file_name_undermine <-paste("Undetermined.*_L00",lane,"_[R|I]", p, ".*fastq.gz$", sep="")
+        files_undermine <- list.files(path=fastq_path,pattern=file_name_undermine)
+
+        # Join undetermined and others
+        files <- c(files,files_undermine)
 	}
 		
     # If we found some files, create symlinks
