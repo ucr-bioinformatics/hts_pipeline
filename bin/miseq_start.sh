@@ -34,7 +34,11 @@ for dir in $dir_list; do
     if [ "$dir" != '.' ]; then
         # Find sample sheet
         sample_sheet=`find $dir -name SampleSheet.csv`
+
         if [ ! -z $sample_sheet ]; then
+            # Determine sequencer run directory
+            run_dir=`dirname $sample_sheet | cut -d/ -f 3`
+
             # Determine flowcell ID
             FC_ID=`echo $dir | cut -dl -f4`
 
