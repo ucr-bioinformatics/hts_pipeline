@@ -56,8 +56,9 @@ gen_link <- function(x) {
         files <- list.files(path=fastq_path,pattern=file_name)
 
         # Get undetermined files
-        file_name_undermine <-paste("Undetermined.*_L00",lane,"_[R|I]", p, ".*fastq.gz$", sep="")
-        files_undermine <- list.files(path=fastq_path,pattern=file_name_undermine)
+        ufastq_path <- paste(unaligned_path,'/Undetermined_indices/Sample_lane',lane,'/',sep="")
+        file_name_undermine <-paste(".*Undetermined.*_L00",lane,"_[R|I]", p, ".*fastq.gz$", sep="")
+        files_undermine <- list.files(path=ufastq_path,pattern=file_name_undermine)
 
         # Join fastqs and undetermined
         files <- c(files,files_undermine)
@@ -65,6 +66,7 @@ gen_link <- function(x) {
 	} else {
         # Define path
         fastq_path <- unaligned_path
+        ufastq_path <- unaligned_path
 
         # Get fastq files
         file_name <- paste(sample_id,".*_L00",lane,"_[R|I]", p, ".*fastq.gz$", sep="")
@@ -72,7 +74,7 @@ gen_link <- function(x) {
         
         # Get undetermined files
         file_name_undermine <-paste("Undetermined.*_L00",lane,"_[R|I]", p, ".*fastq.gz$", sep="")
-        files_undermine <- list.files(path=fastq_path,pattern=file_name_undermine)
+        files_undermine <- list.files(path=ufastq_path,pattern=file_name_undermine)
 
         # Join undetermined and others
         files <- c(files,files_undermine)
@@ -85,9 +87,9 @@ gen_link <- function(x) {
             ilen <- length(grep(paste(".*_L00",lane,"_I", p, ".*fastq.gz$", sep=""),f))
 
             if (len >= 1 && ilen >= 1) {
-                commands <- paste("ln -s ",fastq_path,'/',f, "  ", "Undetermined_lane",lane,"_pair3",".fastq.gz",sep="")
+                commands <- paste("ln -s ",ufastq_path,'/',f, "  ", "Undetermined_lane",lane,"_pair3",".fastq.gz",sep="")
             }else if (len >= 1) {
-                commands <- paste("ln -s ",fastq_path,'/',f, "  ", "Undetermined_lane",lane,"_pair",p,".fastq.gz",sep="")
+                commands <- paste("ln -s ",ufastq_path,'/',f, "  ", "Undetermined_lane",lane,"_pair",p,".fastq.gz",sep="")
             }else if (ilen >= 1) {
                 commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair3","_",index,".fastq.gz",sep="")
             }else{
