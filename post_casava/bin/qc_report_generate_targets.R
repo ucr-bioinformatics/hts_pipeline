@@ -21,6 +21,9 @@ demultiplex_type <- args[6]
 # Pull Girke Code
 source("http://faculty.ucr.edu/~tgirke/Documents/R_BioCond/My_R_Scripts/fastqQuality.R")
 
+system(paste("mkdir ",fastq_path,"/fastq_report",sep="")
+setwd(paste(fastq_path,"/fastq_report/",sep="")
+
 project_id <- samplesheet$SampleProject
 sample_id <- samplesheet$SampleID
 print("sample_id")

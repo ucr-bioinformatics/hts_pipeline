@@ -76,24 +76,23 @@ EOF
             fi
 
             # Rename Files
-            #if [ $ERROR -eq 0 ]; then 
-            #    fastqs_rename.R args &>>$ERROR_FILE ||
-            #    (echo "ERROR: Files rename failed" >> $ERROR_FILE && ERROR=1)
-            #fi
+            if [ $ERROR -eq 0 ]; then 
+                fastqs_rename.R $FC_ID 2 SampleSheet.csv $run_dir miseq &>>$ERROR_FILE ||
+                (echo "ERROR: Files rename failed" >> $ERROR_FILE && ERROR=1)
+            fi
 
             # Generate QC report
-            #if [ $ERROR -eq 0 ]; then 
-            #    qc_report_generate.R args &>>$ERROR_FILE ||
-            #    (echo "ERROR: QC report generation failed" >> $ERROR_FILE && ERROR=1)
-            #fi
+            if [ $ERROR -eq 0 ]; then 
+                qc_report_generate_targets.R $FC_ID 2 $SHARED_GENOMICS/$FC_ID $SHARED_GENOMICS/$FC_ID $SHARED_GENOMICS/$FC_ID/SampleSheet.csv 1 &>>$ERROR_FILE ||
+                (echo "ERROR: QC report generation failed" >> $ERROR_FILE && ERROR=1)
+            fi
 
             # Update Illumina web server URLs
-            #if [ $ERROR -eq 0 ]; then 
-            #    sequence_url_update.R ards &>>$ERROR_FILE ||
-            #    (echo "ERROR: Illumina URL update failed" >> $ERROR_FILE && ERROR=1)
-            #fi
+            if [ $ERROR -eq 0 ]; then 
+                sequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID &>>$ERROR_FILE ||
+                (echo "ERROR: Illumina URL update failed" >> $ERROR_FILE && ERROR=1)
+            fi
 
-            ##############################################
         fi
     fi
 done
