@@ -103,5 +103,5 @@ rm -f miseq_start.lock
 rm -f /tmp/miseq_start.lock
 
 # Exit
-exit($ERROR)
+exit $ERROR
 
