@@ -34,7 +34,11 @@ for dir in $dir_list; do
     if [ "$dir" != '.' ]; then
         # Find sample sheet
         sample_sheet=`find $dir -name SampleSheet.csv`
+
         if [ ! -z $sample_sheet ]; then
+            # Determine sequencer run directory
+            run_dir=`dirname $sample_sheet | cut -d/ -f 3`
+
             # Determine flowcell ID
             FC_ID=`echo $dir | cut -dl -f4`
 
@@ -57,9 +61,9 @@ EOF
             #
             # Remember to eventually add proper error handling! 
             #
-
+		
             # Create Sample Sheet
-            #if [ $? -eq 0 ]; then create_sample_sheet.R args 2>$ERROR_FILE; fi
+            #if [ $? -eq 0 ]; then create_samplesheet.R $FC_ID SampleSheet.csv >$ERROR_FILE; fi
 
             # Rename Files
             #if [ $? -eq 0 ]; then fastqs_rename.R args 2>$ERROR_FILE; fi
