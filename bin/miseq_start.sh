@@ -44,39 +44,54 @@ for dir in $dir_list; do
             FC_ID=`echo $dir | cut -dl -f4`
 
             # Send email notification
-#            /usr/sbin/sendmail -vt << EOF
-#To: hts@biocluster.ucr.edu
-#From: no-reply@biocluster.ucr.edu
-#Subject: HTS Pipeline: Flowcell $FC_ID: Started
+            /usr/sbin/sendmail -vt << EOF
+To: hts@biocluster.ucr.edu
+From: no-reply@biocluster.ucr.edu
+Subject: HTS Pipeline: Flowcell $FC_ID: Started
 
-#Flowcell $FC_ID has come in and needs to be processed.
-#Thanks
-#EOF
-	
+Flowcell $FC_ID has come in and needs to be processed.
+Thanks
+EOF
+
             # Set error file
+            ERROR=0
             export ERROR_FILE=$SHARED_GENOMICS/$FC_ID/error.log
-
-            # Transfer miseq data
-            rsync_miseq_data.sh $FC_ID $SOURCE_DIR/$dir
+            mkdir -p $SHARED_GENOMICS/$FC_ID
+            echo "Starting Pipeline" > $ERROR_FILE
             
-            ###############################################
-            # Here is an example of adding pipeline steps #
-            ###############################################
-            #
-            # Remember to eventually add proper error handling! 
-            #
-		
+            ##################
+            # Pipeline Steps #
+            ##################
+            
+            # Transfer miseq data
+            if [ $ERROR -eq 0]; then
+                rsync_miseq_data.sh $FC_ID $SOURCE_DIR/$dir &>>$ERROR_FILE || 
+                (echo "ERROR:: Rsync transfer failed" >> $ERROR_FILE && ERROR=1)
+            fi
+            
             # Create Sample Sheet
-            if [ $? -eq 0 ]; then create_samplesheet.R $FC_ID SampleSheet.csv $run_dir 2>$ERROR_FILE; fi
+            if [ $ERROR -eq 0]; then 
+                create_samplesheet.R $FC_ID SampleSheet.csv $run_dir &>>$ERROR_FILE || 
+                (echo "ERROR: SampleSheet creation failed" >> $ERROR_FILE && ERROR=1)
+            fi
 
             # Rename Files
-            #if [ $? -eq 0 ]; then fastqs_rename.R args 2>$ERROR_FILE; fi
+            #if [ $ERROR -eq 0 ]; then 
+            #    fastqs_rename.R args &>>$ERROR_FILE ||
+            #    (echo "ERROR: Files rename failed" >> $ERROR_FILE && ERROR=1)
+            #fi
 
             # Generate QC report
-            #if [ $? -eq 0 ]; then qc_report_generate.R args 2>$ERROR_FILE; fi
+            #if [ $ERROR -eq 0 ]; then 
+            #    qc_report_generate.R args &>>$ERROR_FILE ||
+            #    (echo "ERROR: QC report generation failed" >> $ERROR_FILE && ERROR=1)
+            #fi
 
             # Update Illumina web server URLs
-            #if [ $? -eq 0 ]; then sequence_url_update.R ards 2>$ERROR_FILE; fi
+            #if [ $ERROR -eq 0 ]; then 
+            #    sequence_url_update.R ards &>>$ERROR_FILE ||
+            #    (echo "ERROR: Illumina URL update failed" >> $ERROR_FILE && ERROR=1)
+            #fi
 
             ##############################################
         fi
@@ -86,4 +101,7 @@ done
 # Remove lock files
 rm -f miseq_start.lock
 rm -f /tmp/miseq_start.lock
+
+# Exit
+exit($ERROR)
 

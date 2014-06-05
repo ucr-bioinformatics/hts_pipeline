@@ -33,7 +33,7 @@ for (i in c(1:lanes)) {
         sequence_url <-paste( "/illumina_runs/",flowcellid, "/", sep="")
 
         # if (pairs==0) { 
-        fastqfiles <- list.files(paste("/var/www/illumina_runs/",flowcellid,"/",sep=""), paste("lane",i,sep=""))
+        fastqfiles <- list.files(paste("./",flowcellid,"/",sep=""), paste("lane",i,sep=""))
         #}
 
         # Build fastq URLs
