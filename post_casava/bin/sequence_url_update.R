@@ -9,6 +9,8 @@ args <- commandArgs(trailingOnly = TRUE)
 if (length(args) < 3) {
     stop("USAGE:: script.R <FlowcellID> <NumberOfLanes> <FASTQPath>")
 }
+
+print("Starting Illumina website update")
 flowcellid <- args[1]
 lanes <- args[2]
 fastq_path <- args[3]
@@ -88,5 +90,6 @@ result <- dbGetQuery(con,command)
 #dbClearResult(dbListResults(con)[[1]])
 dis <- dbDisconnect(con)
 
+print("Completed illumina website update")
 # Exit program
 quit()

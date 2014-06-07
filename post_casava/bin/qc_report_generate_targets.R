@@ -7,9 +7,12 @@
 # Get script arguments
 args <- commandArgs(trailingOnly = TRUE)
 #args <- c(221,2,'/shared/genomics/221/','/bigdata/nkatiyar/QC_flowcells/221/')
-if (length(args) < 5) {
+if (length(args) < 6) {
     stop("USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>")
 }
+
+print("Starting generation of QC report")
+
 flowcellid <- args[1]
 num_pairs <- args[2]
 fastq_path <- args[3]
@@ -21,8 +24,8 @@ demultiplex_type <- args[6]
 # Pull Girke Code
 source("http://faculty.ucr.edu/~tgirke/Documents/R_BioCond/My_R_Scripts/fastqQuality.R")
 
-system(paste("mkdir ",fastq_path,"/fastq_report",sep="")
-setwd(paste(fastq_path,"/fastq_report/",sep="")
+system(paste("mkdir ",fastq_path,"/fastq_report",sep=""))
+setwd(paste(fastq_path,"/fastq_report/",sep=""))
 
 project_id <- samplesheet$SampleProject
 sample_id <- samplesheet$SampleID
@@ -232,5 +235,7 @@ for (lane in uniq_lane_list) {
     seeFastqPlot(fqlist)
     dev.off()
 }
+
+print("QC report completed")
 warnings()
 
