@@ -7,13 +7,18 @@
 # Get script arguments
 #args <- c('219','2','SampleSheet.csv','.')
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) < 5) {
-    stop("USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType>")
+if (length(args) < 6) {
+    stop("USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir>")
 }
 
+print("Starting fastq rename")
 # Get flowcell name
 flowcellid <- args[1]
 flowcell <- paste("flowcell",flowcellid,sep="")
+rundir <- args[6]
+
+shared_genomics <- Sys.getenv("SHARED_GENOMICS")
+setwd(paste(shared_genomics,"/",flowcellid,"/",sep=""))
 
 # Get number of pairs
 pairs <- c()
@@ -131,3 +136,4 @@ if(run_type == "hiseq"){
 	}
 	system(paste('ln -s ', unaligned_path, '/Basecall_Stats_* ', next_qc, sep=""))
 }
+print("Rename complete")
