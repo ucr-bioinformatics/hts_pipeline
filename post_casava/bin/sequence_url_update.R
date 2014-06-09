@@ -46,9 +46,8 @@ for (i in c(1:lanes)) {
     control <-  flowcell_table[paste("lane_",i,"_control",sep="")][[1]]
 
     if (control==0) {
-        # if (pairs==0) { 
-        fastqfiles <- list.files(paste("/var/www/illumina_runs/",flowcellid,"/",sep=""), paste("lane",i,sep=""))
-        #}
+         # if (pairs==0) { 
+	 fastqfiles <- list.files(paste(fastq_path,"/",sep=""), paste("lane",i,sep=""))
 
         # Build fastq URLs
 	fastqurl <- paste(sequence_url, fastqfiles,sep="")
