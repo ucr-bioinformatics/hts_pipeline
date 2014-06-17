@@ -151,6 +151,8 @@ for(lane in uniq_lane_list) {
 	}
 }
 
+print("checking done")
+
 # For each lane target file, process PDF report
 #for (lane in uniq_lane_list) {
 for (lane in uniq_lane_list) {
@@ -165,7 +167,7 @@ for (lane in uniq_lane_list) {
         warning(msg)
         next
     }
-
+	print("reached next")
     # Format files object
     if (num_pairs == 1) {
 	if(demultiplex_type == 1 )
@@ -210,14 +212,14 @@ for (lane in uniq_lane_list) {
     		fqlist <- seeFastq(fastq=myfiles, batchsize=50000, klength=8)
     	}
 	else
-	{
 		myfiles1 <- paste(fastq_path, targets$FileName1, sep="")
                 names(myfiles1) <-paste(targets$SampleName, "_pair1", sep="")
                 myfiles2 <- paste(fastq_path, targets$FileName2, sep="")
                 names(myfiles2) <-paste(targets$SampleName, "_pair2", sep="")
                 myfiles3 <- paste(fastq_path, targets$FileName3, sep="")
                 names(myfiles3) <-paste(targets$SampleName, "_pair3", sep="")
-		myfiles <- append(myfiles1, myfiles2, myfiles3)
+		myfiles_tmp <- append(myfiles1, myfiles2)
+		myfiles <- append(myfiles_tmp , myfiles3)
 		# What files are we processing
         	print("Printing myfiles...")
         	print(myfiles)
