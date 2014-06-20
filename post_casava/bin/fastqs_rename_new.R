@@ -1,0 +1,139 @@
+#!/usr/bin/env Rscript
+
+### Generate renamed sym-links for FASTQ files
+## Jordan Hayes
+## 2/3/2014
+
+# Get script arguments
+args <- commandArgs(trailingOnly = TRUE)
+if (length(args) < 6) {
+    stop("USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <Demultiplex-type 1- CASAVA 2- user will demultiplex>")
+}
+
+# Get flowcell name
+flowcellid <- args[1]
+flowcell <- paste("flowcell",flowcellid,sep="")
+
+# Get number of pairs
+pairs <- c()
+for (i in 1:args[2]){
+    pairs <- c(pairs,i)
+}
+
+# Get SampleSheet
+if (file.exists(args[3])){
+    samples <- read.csv(args[3])
+} else{
+    stop(paste("SampleSheet ", args[3]," does not exist."))
+}
+
+# Make sure FASTQ path exists
+if (file.exists(args[4])){
+    unaligned_path <- args[4]
+} else{
+    stop(paste("Unaligned path ", args[4]," does not exist."))
+}
+
+run_type <- args[5]
+
+demultiplex_type <- args[6]
+
+# Trim off leading and trailing whitespace
+trim <- function (x) gsub("^\\s+|\\s+$", "", x)
+
+# Define function to be applied to each row
+gen_link <- function(x) {
+        project_id <-  trim(x[10])
+        sample_id <- trim(x[3])
+        lane <- trim(x[2])
+        index <- trim(x[5])
+
+        # Find files based on file name pattern
+	
+	if (run_type == "hiseq"){
+       	#file_name <- paste(sample,"_.*_L00",lane[i],"_R", p, ".*fastq.gz$", sep="")
+	fastq_path <- paste(unaligned_path,'/Project_',project_id,'/Sample_',sample_id,'/',sep="")
+        if (demultiplex_type == 2){
+        	file_name <- paste(sample_id,"_NoIndex","_L00",lane,"_R", p, ".*fastq.gz$", sep="")
+                }
+        else{
+        	file_name <- paste(sample_id,".*_",index,"_L00",lane,"_R", p, ".*fastq.gz$", sep="")
+             }
+        files <- list.files(path=fastq_path,pattern=file_name)
+
+        # Get undetermined files
+        ufastq_path <- paste(unaligned_path,'/Undetermined_indices/Sample_lane',lane,'/',sep="")
+        file_name_undermine <-paste(".*Undetermined.*_L00",lane,"_[R|I]", p, ".*fastq.gz$", sep="")
+        files_undermine <- list.files(path=ufastq_path,pattern=file_name_undermine)
+
+        # Join fastqs and undetermined
+        files <- c(files,files_undermine)
+         
+	} else {
+        # Define path
+        fastq_path <- unaligned_path
+        ufastq_path <- unaligned_path
+
+        # Get fastq files
+        file_name <- paste(sample_id,"_L00",lane,"_[R|I]", p, ".*fastq.gz$", sep="")
+        files <- list.files(path=fastq_path,pattern=file_name)
+        
+        # Get undetermined files
+        file_name_undermine <-paste("Undetermined.*_L00",lane,"_[R|I]", p, ".*fastq.gz$", sep="")
+        files_undermine <- list.files(path=ufastq_path,pattern=file_name_undermine)
+
+        # Join undetermined and others
+        files <- c(files,files_undermine)
+	}
+		
+    # If we found some files, create symlinks
+    if (length(files) > 0){
+        for(f in files) {
+            len <- length(grep("Undetermined",f))
+            ilen <- length(grep(paste(".*_L00",lane,"_I", p, ".*fastq.gz$", sep=""),f))
+
+            if (len >= 1 && ilen >= 1) {
+                commands <- paste("ln -s ",ufastq_path,'/',f, "  ", "Undetermined_lane",lane,"_pair3",".fastq.gz",sep="")
+            }else if (len >= 1) {
+                commands <- paste("ln -s ",ufastq_path,'/',f, "  ", "Undetermined_lane",lane,"_pair",p,".fastq.gz",sep="")
+            }else if (ilen >= 1) {
+                commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair3","_",index,".fastq.gz",sep="")
+            }else{
+                if (!is.na(index)) {
+                    commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",p,"_",index,".fastq.gz",sep="")
+                }else{
+                    commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",p,".fastq.gz",sep="")
+                }
+            }
+        
+            print(commands)
+            system(commands)
+        }
+    } 
+    else {
+       warning(paste("WARNING:: No files matching pattern ",file_name))
+    }
+}
+
+# For each pair generate sym links for each row
+for (p in pairs){
+    apply(samples, 1, gen_link)
+}
+
+# Print first warnings
+warn <- warnings()
+if (length(warn) > 0){
+    print(warn)
+}
+
+if(run_type == "hiseq"){
+# Create QC sym-link
+	qcs <- list.files(path=unaligned_path, pattern='^qc[0-9]*$')
+	if (length(qcs) > 1) {
+    		last_qc <- qcs[-1]
+    		next_qc <- paste('qc', is.numeric(gsub("^qc", '',last_qc))+1, sep="")
+	}else {
+    		next_qc <- 'qc'
+	}
+	system(paste('ln -s ', unaligned_path, '/Basecall_Stats_* ', next_qc, sep=""))
+}

@@ -8,6 +8,8 @@
 #     flowcell ID reaches 999.              #
 #############################################
 
+FCID=$1
+
 # Set DIRs
 FLOWCELL_DIR=/home/researchers/RunAnalysis
 ARCHIVE_DIR=/home/www/html/illumina_runs
@@ -26,7 +28,7 @@ echo $file
 back="${file#"${file%%[[:digit:]]*}"}"
 curr="${back%%[^[:digit:]]*}"
 echo $curr
-FCID=$((curr + 1))
+#FCID=$((curr + 1))
 
 # Create compressed archive of flowcell
 tar -zcvf flowcell$FCID.tar.gz -C $FLOWCELL_DIR flowcell$FCID/
