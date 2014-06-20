@@ -18,7 +18,7 @@ fi
 FC_ID=$1
 SOURCE_FC=$2
 
-echo echo "Starting $FC_ID..."
+echo "Starting $FC_ID..."
 rsync -a --progress --remove-source-files $SOURCE_FC/ $SHARED_GENOMICS/$FC_ID
 echo "...Transfer Complete"
 
