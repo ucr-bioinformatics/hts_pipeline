@@ -7,9 +7,12 @@
 # Get script arguments
 args <- commandArgs(trailingOnly = TRUE)
 #args <- c(221,2,'/shared/genomics/221/','/bigdata/nkatiyar/QC_flowcells/221/')
-if (length(args) < 5) {
+if (length(args) < 6) {
     stop("USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>")
 }
+
+print("Starting generation of QC report")
+
 flowcellid <- args[1]
 num_pairs <- args[2]
 fastq_path <- args[3]
@@ -21,6 +24,10 @@ demultiplex_type <- args[6]
 # Pull Girke Code
 source("http://faculty.ucr.edu/~tgirke/Documents/R_BioCond/My_R_Scripts/fastqQuality.R")
 
+#Create directory for fastq report.
+system(paste("mkdir ",fastq_path,"/fastq_report",sep=""))
+setwd(paste(fastq_path,"/fastq_report/",sep=""))
+
 project_id <- samplesheet$SampleProject
 sample_id <- samplesheet$SampleID
 print("sample_id")
@@ -30,12 +37,13 @@ print("lane_samplesheet")
 print(lane_samplesheet)
 index <- samplesheet$Index
 chk <- unlist(lane_samplesheet)
-print(chk)
-print(".........")
+
+#Generate list of lane numbers.
 uniq_lane_list <- unique(unlist(lane_samplesheet))
 print("uniq_lane_list")
 print(uniq_lane_list)
 cnt=1
+
 for(lane in uniq_lane_list) {
 	print("lane")
 	print(lane)
@@ -53,11 +61,11 @@ for(lane in uniq_lane_list) {
 	targets_filename <-c(paste(targets_path,"targets_lane",lane,".txt",sep=""))
 	print(length(samp_file_list))
 	
-	if(num_pairs==1)
+	if(num_pairs==1) # Single-end
 	{
 		for (f in 1:length(samp_file_list))
 		{
-			if(demultiplex_type==2)
+			if(demultiplex_type==2) # Single-end and user will demultiplex
 			{
 				#index[cnt]=""
 				pattern_file1 <- c(paste("flowcell",flowcellid,"_","lane",lane,"_","pair1","_R1.fastq.gz",sep=""))
@@ -70,7 +78,7 @@ for(lane in uniq_lane_list) {
                 		sample_num=sample_num+1
                 		cnt=cnt+1
 			}		
-			else
+			else # Single-end and CASAVA will demultiplex
 			{	
 				concat="_"
 				pattern_file <- c(paste("flowcell",flowcellid,"_","lane",lane,"_","pair1",concat,index[cnt],".fastq.gz",sep=""))
@@ -96,11 +104,11 @@ for(lane in uniq_lane_list) {
 			write.table(list_out,targets_filename, quote=FALSE, row.names=FALSE, sep="\t")	
 		}	
 	}
-        if(num_pairs==2)
+        if(num_pairs==2) #Paired-end
         {
 		for (f in 1:(length(samp_file_list)/2))
                 {
-			if(demultiplex_type==2)
+			if(demultiplex_type==2) #Paired-end and user will demultiplex
                 	{
                  		index[cnt]=""
 				concat=""
@@ -115,7 +123,7 @@ for(lane in uniq_lane_list) {
                 		sample_num=sample_num+1
                 		cnt=cnt+1
                 	}	
-                	else
+                	else #Paired-end and CASAVA will demultiplex
                 	{	
                         	concat="_"
                 		pattern_file1 <- c(paste("flowcell",flowcellid,"_","lane",lane,"_","pair1",concat,index[cnt],".fastq.gz",sep=""))
@@ -145,6 +153,8 @@ for(lane in uniq_lane_list) {
 	}
 }
 
+print("checking done")
+
 # For each lane target file, process PDF report
 #for (lane in uniq_lane_list) {
 for (lane in uniq_lane_list) {
@@ -159,7 +169,7 @@ for (lane in uniq_lane_list) {
         warning(msg)
         next
     }
-
+	print("reached next")
     # Format files object
     if (num_pairs == 1) {
 	if(demultiplex_type == 1 )
@@ -204,14 +214,14 @@ for (lane in uniq_lane_list) {
     		fqlist <- seeFastq(fastq=myfiles, batchsize=50000, klength=8)
     	}
 	else
-	{
 		myfiles1 <- paste(fastq_path, targets$FileName1, sep="")
                 names(myfiles1) <-paste(targets$SampleName, "_pair1", sep="")
                 myfiles2 <- paste(fastq_path, targets$FileName2, sep="")
                 names(myfiles2) <-paste(targets$SampleName, "_pair2", sep="")
                 myfiles3 <- paste(fastq_path, targets$FileName3, sep="")
                 names(myfiles3) <-paste(targets$SampleName, "_pair3", sep="")
-		myfiles <- append(myfiles1, myfiles2, myfiles3)
+		myfiles_tmp <- append(myfiles1, myfiles2)
+		myfiles <- append(myfiles_tmp , myfiles3)
 		# What files are we processing
         	print("Printing myfiles...")
         	print(myfiles)
@@ -229,5 +239,7 @@ for (lane in uniq_lane_list) {
     seeFastqPlot(fqlist)
     dev.off()
 }
+
+print("QC report completed")
 warnings()
 

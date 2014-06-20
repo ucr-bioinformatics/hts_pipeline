@@ -23,6 +23,22 @@ con <- dbConnect(MySQL(), user="***REMOVED***", password="***REMOVED***",dbname=
 # Get sample and project ids
 flowcell_table <- dbGetQuery(con,paste("SELECT * FROM flowcell_list where flowcell_id = ", flowcellid," LIMIT 1",sep=""))
 
+sequence_url <-paste( "/illumina_runs/",flowcellid, "/", sep="")
+
+# Check if Bustard Summary exists for each 'qc' sym-link
+qc_url <- c()
+if (length(qcs) > 0) {
+    for (qc in qcs){
+        qc_url <- cbind(qc_url, paste(sequence_url, qc, "/BustardSummary.xml",sep="") )
+    }
+    qc_url <- paste(qc_url,collapse="\n")
+}
+
+# Update CASAVA Bustard Summary in flowcell_list table
+command <-paste("UPDATE `flowcell_list` SET `qc_url` = '", qc_url, "' WHERE `flowcell_id` =", flowcellid, " LIMIT 1",sep="")
+result <- dbGetQuery(con,command)
+writeLines(paste("QC_URL:: \n",qc_url))
+
 # Update sequence_url and quality_url in sample_list table
 for (i in c(1:lanes)) {
     project_id <- flowcell_table[paste("lane_",i,"_project",sep="")][[1]]
@@ -30,11 +46,8 @@ for (i in c(1:lanes)) {
     control <-  flowcell_table[paste("lane_",i,"_control",sep="")][[1]]
 
     if (control==0) {
-        sequence_url <-paste( "/illumina_runs/",flowcellid, "/", sep="")
-
-        # if (pairs==0) { 
-        fastqfiles <- list.files(paste("./",flowcellid,"/",sep=""), paste("lane",i,sep=""))
-        #}
+         # if (pairs==0) { 
+	 fastqfiles <- list.files(paste(fastq_path,"/",sep=""), paste("lane",i,sep=""))
 
         # Build fastq URLs
 	fastqurl <- paste(sequence_url, fastqfiles,sep="")
@@ -58,6 +71,7 @@ for (i in c(1:lanes)) {
         } else {
             qual_url <- ""
         }
+	qual_url <-c(qual_url,qc_url)
 
         command <- paste("UPDATE `sample_list` SET `sequence_url` = '", fastqurl,"',`quality_url` = '", qual_url, "' WHERE `sample_list`.`sample_id` =", sample_id, " AND `sample_list`.`project_id` =", project_id, " LIMIT 1",sep="")
 	dbGetQuery(con,command)
@@ -66,19 +80,6 @@ for (i in c(1:lanes)) {
     }
 }
 
-# Check if Bustard Summary exists for each 'qc' sym-link
-qc_url <- c()
-if (length(qcs) > 0) {
-    for (qc in qcs){
-        qc_url <- cbind(qc_url, paste(sequence_url, qc, "/BustardSummary.xml",sep="") )
-    }
-    qc_url <- paste(qc_url,collapse="\n")
-}
-
-# Update CASAVA Bustard Summary in flowcell_list table
-command <-paste("UPDATE `flowcell_list` SET `qc_url` = '", qc_url, "' WHERE `flowcell_id` =", flowcellid, " LIMIT 1",sep="")
-result <- dbGetQuery(con,command)
-writeLines(paste("QC_URL:: \n",qc_url))
 
 # Update status of flowcell to pipeline completed
 command <- paste("UPDATE `projects`.`flowcell_list` SET `status` = 'pipeline completed' WHERE `flowcell_list`.`flowcell_id` =", flowcellid, " LIMIT 1",sep="")

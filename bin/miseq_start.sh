@@ -7,9 +7,6 @@
 # Set vars
 source $HTS_PIPELINE_HOME/env_profile.sh
 
-# Make sure there is only one version of this running
-lockfile -r 0 /tmp/miseq_start.lock || exit 1
-
 # Check Arguments
 EXPECTED_ARGS=1
 E_BADARGS=65
@@ -17,7 +14,6 @@ E_BADARGS=65
 if [ $# -ne $EXPECTED_ARGS ]
 then
   echo "Usage: `basename $0` {/path/to/source}"
-  rm -f /tmp/miseq_start.lock
   exit $E_BADARGS
 fi
 
@@ -25,7 +21,7 @@ SOURCE_DIR=$1
 
 # Change directory to source
 cd $SOURCE_DIR
-lockfile -r 0 miseq_start.lock || exit 1
+#lockfile -r 0 miseq_start.lock || exit 1
 
 # Get list of Run directories
 dir_list=`find . -maxdepth 1 -type d`
@@ -64,44 +60,42 @@ EOF
             ##################
             
             # Transfer miseq data
-            if [ $ERROR -eq 0]; then
+            if [ $ERROR -eq 0 ]; then
                 rsync_miseq_data.sh $FC_ID $SOURCE_DIR/$dir &>>$ERROR_FILE || 
                 (echo "ERROR:: Rsync transfer failed" >> $ERROR_FILE && ERROR=1)
             fi
             
             # Create Sample Sheet
-            if [ $ERROR -eq 0]; then 
+            if [ $ERROR -eq 0 ]; then 
                 create_samplesheet.R $FC_ID SampleSheet.csv $run_dir &>>$ERROR_FILE || 
                 (echo "ERROR: SampleSheet creation failed" >> $ERROR_FILE && ERROR=1)
             fi
 
             # Rename Files
-            #if [ $ERROR -eq 0 ]; then 
-            #    fastqs_rename.R args &>>$ERROR_FILE ||
-            #    (echo "ERROR: Files rename failed" >> $ERROR_FILE && ERROR=1)
-            #fi
+            if [ $ERROR -eq 0 ]; then 
+                fastqs_rename.R $FC_ID 2 $run_dir/SampleSheet.csv $SHARED_GENOMICS/$FC_ID/$run_dir miseq $run_dir &>>$ERROR_FILE ||
+                (echo "ERROR: Files rename failed" >> $ERROR_FILE && ERROR=1)
+            fi
 
             # Generate QC report
-            #if [ $ERROR -eq 0 ]; then 
-            #    qc_report_generate.R args &>>$ERROR_FILE ||
-            #    (echo "ERROR: QC report generation failed" >> $ERROR_FILE && ERROR=1)
-            #fi
+            if [ $ERROR -eq 0 ]; then 
+                qc_report_generate_targets.R $FC_ID 2 $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv 1 &>>$ERROR_FILE ||
+                (echo "ERROR: QC report generation failed" >> $ERROR_FILE && ERROR=1)
+            fi
 
             # Update Illumina web server URLs
-            #if [ $ERROR -eq 0 ]; then 
-            #    sequence_url_update.R ards &>>$ERROR_FILE ||
-            #    (echo "ERROR: Illumina URL update failed" >> $ERROR_FILE && ERROR=1)
-            #fi
+            if [ $ERROR -eq 0 ]; then 
+                sequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID &>>$ERROR_FILE ||
+                (echo "ERROR: Illumina URL update failed" >> $ERROR_FILE && ERROR=1)
+            fi
 
-            ##############################################
         fi
     fi
 done
 
 # Remove lock files
-rm -f miseq_start.lock
-rm -f /tmp/miseq_start.lock
+#rm -f miseq_start.lock
 
 # Exit
-exit($ERROR)
+exit $ERROR
 

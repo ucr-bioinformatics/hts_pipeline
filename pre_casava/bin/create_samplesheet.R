@@ -46,5 +46,6 @@ for (j in (1:len_a)){
 	line <- cat(paste(label,i,j,"",a$index[j],"","N","","nkatiyar",project_id,sep=","),file="SampleSheet.csv","\n", append=TRUE)
 		}
 
+print("Samplesheet created")
 #read.table(header=FALSE, text=s)
 
