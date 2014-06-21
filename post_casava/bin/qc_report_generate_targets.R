@@ -63,13 +63,13 @@ for(lane in uniq_lane_list) {
 	
 	if(num_pairs==1) # Single-end
 	{
-		for (f in 1:length(samp_file_list))
-		{
-			if(demultiplex_type==2) # Single-end and user will demultiplex
-			{
+		if(demultiplex_type==2) # Single-end and user will demultiplex
+                {
+			for (f in 1:(length(samp_file_list)/2))
+			{		
 				#index[cnt]=""
-				pattern_file1 <- c(paste("flowcell",flowcellid,"_","lane",lane,"_","pair1","_R1.fastq.gz",sep=""))
-				pattern_file2 <- c(paste("flowcell",flowcellid,"_","lane",lane,"_","pair2","_R2.fastq.gz",sep=""))
+				pattern_file1 <- c(paste("flowcell",flowcellid,"_","lane",lane,"_","pair1",".fastq.gz",sep=""))
+				pattern_file2 <- c(paste("flowcell",flowcellid,"_","lane",lane,"_","pair2",".fastq.gz",sep=""))
 				print(pattern_file1)
 				file_list1 <- append(file_list1, pattern_file1)
                 		file_list2 <- append(file_list2, pattern_file2)
@@ -77,9 +77,12 @@ for(lane in uniq_lane_list) {
                 		samp_list <- append(samp_list,sample_name)
                 		sample_num=sample_num+1
                 		cnt=cnt+1
-			}		
-			else # Single-end and CASAVA will demultiplex
+			}	
+		}	
+		else # Single-end and CASAVA will demultiplex
 			{	
+				for (f in 1:length(samp_file_list))
+				{
 				concat="_"
 				pattern_file <- c(paste("flowcell",flowcellid,"_","lane",lane,"_","pair1",concat,index[cnt],".fastq.gz",sep=""))
 				file_list <- append(file_list, pattern_file)
@@ -87,8 +90,9 @@ for(lane in uniq_lane_list) {
 				samp_list <- append(samp_list,sample_name)
 				sample_num=sample_num+1
 				cnt=cnt+1
-			}
-		}		
+				}	
+			}	
+	
 		if(demultiplex_type==2)	
 		{	
 			print(samp_list)
@@ -214,6 +218,7 @@ for (lane in uniq_lane_list) {
     		fqlist <- seeFastq(fastq=myfiles, batchsize=50000, klength=8)
     	}
 	else
+	{
 		myfiles1 <- paste(fastq_path, targets$FileName1, sep="")
                 names(myfiles1) <-paste(targets$SampleName, "_pair1", sep="")
                 myfiles2 <- paste(fastq_path, targets$FileName2, sep="")
