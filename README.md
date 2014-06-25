@@ -18,3 +18,7 @@ Analysis
 ========
 1. Align Reads
 2. Trim Reads
+
+Dependencies
+============
+1. data.table (CRAN R package)
