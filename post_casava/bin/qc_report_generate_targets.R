@@ -36,6 +36,7 @@ lane_samplesheet <- samplesheet$Lane
 print("lane_samplesheet")
 print(lane_samplesheet)
 index <- samplesheet$Index
+print(index)
 chk <- unlist(lane_samplesheet)
 
 #Generate list of lane numbers.
@@ -67,9 +68,17 @@ for(lane in uniq_lane_list) {
                 {
 			for (f in 1:(length(samp_file_list)/2))
 			{		
-				#index[cnt]=""
-				pattern_file1 <- c(paste("flowcell",flowcellid,"_","lane",lane,"_","pair1",".fastq.gz",sep=""))
-				pattern_file2 <- c(paste("flowcell",flowcellid,"_","lane",lane,"_","pair2",".fastq.gz",sep=""))
+				if(index[cnt]=="")
+					{
+                                	pattern_file1 <- c(paste("flowcell",flowcellid,"_","lane",lane,"_","pair1",".fastq.gz",sep=""))
+                                	pattern_file2 <- c(paste("flowcell",flowcellid,"_","lane",lane,"_","pair2",".fastq.gz",sep=""))
+					}
+				else
+					{
+					concat="_"
+					pattern_file1 <- c(paste("flowcell",flowcellid,"_","lane",lane,"_","pair1",concat,index[cnt],".fastq.gz",sep=""))
+					pattern_file2 <- c(paste("flowcell",flowcellid,"_","lane",lane,"_","pair2",concat,index[cnt],".fastq.gz",sep=""))
+				        }
 				print(pattern_file1)
 				file_list1 <- append(file_list1, pattern_file1)
                 		file_list2 <- append(file_list2, pattern_file2)
@@ -156,8 +165,6 @@ for(lane in uniq_lane_list) {
 		}
 	}
 }
-
-print("checking done")
 
 # For each lane target file, process PDF report
 #for (lane in uniq_lane_list) {
