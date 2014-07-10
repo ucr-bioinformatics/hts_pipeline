@@ -40,6 +40,7 @@ for dir in $dir_list; do
             FC_ID=`echo $dir | cut -dl -f4`
 
             # Send email notification
+            echo "Sending Mail"
             /usr/sbin/sendmail -vt << EOF
 To: hts@biocluster.ucr.edu
 From: no-reply@biocluster.ucr.edu
@@ -67,7 +68,7 @@ EOF
             
             # Create Sample Sheet
             if [ $ERROR -eq 0 ]; then 
-                create_samplesheet.R $FC_ID SampleSheet.csv $run_dir &>>$ERROR_FILE || 
+                create_samplesheet_miseq.R $FC_ID SampleSheet.csv $run_dir &>>$ERROR_FILE || 
                 (echo "ERROR: SampleSheet creation failed" >> $ERROR_FILE && ERROR=1)
             fi
 
