@@ -74,13 +74,13 @@ EOF
 
             # Rename Files
             if [ $ERROR -eq 0 ]; then 
-                fastqs_rename.R $FC_ID 2 $run_dir/SampleSheet.csv $SHARED_GENOMICS/$FC_ID/$run_dir miseq $run_dir &>>$ERROR_FILE ||
+                fastqs_rename.R $FC_ID 1 $run_dir/SampleSheet.csv $run_dir miseq $run_dir &>>$ERROR_FILE ||
                 (echo "ERROR: Files rename failed" >> $ERROR_FILE && ERROR=1)
             fi
 
             # Generate QC report
             if [ $ERROR -eq 0 ]; then 
-                qc_report_generate_targets.R $FC_ID 2 $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv 1 &>>$ERROR_FILE ||
+                qc_report_generate_targets.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv 1 &>>$ERROR_FILE ||
                 (echo "ERROR: QC report generation failed" >> $ERROR_FILE && ERROR=1)
             fi
 
