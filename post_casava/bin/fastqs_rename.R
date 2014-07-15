@@ -48,14 +48,14 @@ trim <- function (x) gsub("^\\s+|\\s+$", "", x)
 
 # Define function to be applied to each row
 gen_link <- function(x) {
-        project_id <-  trim(x[10])
-        sample_id <- trim(x[3])
-        lane <- trim(x[2])
-        index <- trim(x[5])
+    project_id <-  trim(x[10])
+    sample_id <- trim(x[3])
+    lane <- trim(x[2])
+    index <- trim(x[5])
 
-        # Find files based on file name pattern
+    # Find files based on file name pattern
 	
-	if (run_type == "hiseq"){
+    if (run_type == "hiseq"){
        	#file_name <- paste(sample,"_.*_L00",lane[i],"_R", p, ".*fastq.gz$", sep="")
         fastq_path <- paste(unaligned_path,'/Project_',project_id,'/Sample_',sample_id,'/',sep="")
        	file_name <- paste(sample_id,".*_",index,"_L00",lane,"_R", p, ".*fastq.gz$", sep="")
@@ -69,13 +69,13 @@ gen_link <- function(x) {
         # Join fastqs and undetermined
         files <- c(files,files_undermine)
          
-	} else {
+    } else {
         # Define path
         fastq_path <- unaligned_path
         ufastq_path <- unaligned_path
 
         # Get fastq files
-        file_name <- paste(sample_id,"_L00",lane,"_R", p, ".*fastq.gz$", sep="")
+        file_name <- paste("[^0-9]",sample_id,"_L00",lane,"_R", p, ".*fastq.gz$", sep="")
         files <- list.files(path=fastq_path,pattern=file_name)
         
         # Get undetermined files
@@ -83,48 +83,53 @@ gen_link <- function(x) {
         files_undermine <- list.files(path=ufastq_path,pattern=file_name_undermine)
 
         # Get fastq files
-        ifile_name <- paste(sample_id,"_L00",lane,"_I", p, ".*fastq.gz$", sep="")
+        ifile_name <- paste("[^0-9]",sample_id,"_L00",lane,"_I", p, ".*fastq.gz$", sep="")
         ifiles <- list.files(path=fastq_path,pattern=ifile_name)
 
         # Get undetermined files
         ifile_name_undermine <-paste("Undetermined.*_L00",lane,"_I", p, ".*fastq.gz$", sep="")
         ifiles_undermine <- list.files(path=ufastq_path,pattern=ifile_name_undermine)
-        index_pair_num <- (length(files)/num_samples)+1
         
         # Join undetermined and others
-        files <- c(files,ifiles,files_undermine,ifiles_undermine)
-        } 
+        files <- list(files,ifiles,files_undermine,ifiles_undermine)
+    } 
 	
-    # If we found some files, create symlinks
-    if (length(files) > 0){
-        for(f in files) {
-            len <- length(grep("Undetermined",f))
-            ilen <- length(grep(paste(".*_L00",lane,"_I", p, ".*fastq.gz$", sep=""),f))
-            
-            if (len >= 1 && ilen<1) {
-                commands <- paste("ln -s ",ufastq_path,'/',f, "  ", "Undetermined_lane",lane,"_pair",p,".fastq.gz",sep="")
-            }else if (ilen >= 1) {
-                commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",index_pair_num,"_",index,".fastq.gz",sep="")
-                commands <- paste("ln -s ",ufastq_path,'/',f, "  ", "Undetermined_lane",lane,"_pair",index_pair_num,".fastq.gz",sep="")
-                index_pair_num <- index_pair_num + 1
-            }else{
-                if (!is.na(index)) {
-                    commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",p,"_",index,".fastq.gz",sep="")
-                }else{
-                    commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",p,".fastq.gz",sep="")
+    # If we found some files, create symlinks  
+    for ( i in 1:length(files)) {
+        for(f in files[i]) {
+            if ( length(f) > 0) {
+                if ( i==4 ) {
+                    # Processes Undetermined Index files 
+                    commands <- paste("ln -s ",ufastq_path,'/',f, "  ", "Undetermined_lane",lane,"_pair",index_pair_num,".fastq.gz",sep="")
+                    #index_pair_num <- index_pair_num + 1
+                } else if ( i==3 ) { 
+                    # Processes Undetermined files
+                    commands <- paste("ln -s ",ufastq_path,'/',f, "  ", "Undetermined_lane",lane,"_pair",p,".fastq.gz",sep="")
+                } else if ( i==2 ) {
+                    # Processes Index files (I1,I2,etc...)
+                    commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",index_pair_num,"_",index,".fastq.gz",sep="")
+                } else if ( i==1 ) {
+                    # Processes sequence files (R1,R2,etc...)
+                    if (!is.na(index)) {
+                        commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",p,"_",index,".fastq.gz",sep="")
+                    } else {
+                        commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",p,".fastq.gz",sep="")
+                    }
+                } else {
+                    warning(paste("ERROR: Index",i,"out of bounds."))
                 }
-            }
         
-            print(commands)
-            system(commands)
+                print(commands)
+                #system(commands)
+            } else {
+               #warning(paste("WARNING:: No files matching pattern ",file_name))
+            }
         }
     } 
-    else {
-       warning(paste("WARNING:: No files matching pattern ",file_name))
-    }
 }
 
 # For each pair generate sym links for each row
+index_pair_num <- pairs[length(pairs)]
 for (p in pairs){
     apply(samples, 1, gen_link)
 }
