@@ -120,9 +120,9 @@ gen_link <- function(x) {
                 }
         
                 print(commands)
-                #system(commands)
+                system(commands)
             } else {
-               #warning(paste("WARNING:: No files matching pattern ",file_name))
+               warning(paste("WARNING:: No files matching pattern ",file_name," i=",i))
             }
         }
     } 
