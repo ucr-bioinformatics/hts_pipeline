@@ -28,6 +28,10 @@ label <- flowcell_table$label
 
 samplesheet_file <- read.table(samplesheet, header=TRUE, sep="\t",stringsAsFactors = !default.stringsAsFactors(),strip.white = TRUE)
 num_lanes <- length(samplesheet_file$Indices)
+lane <- samplesheet_file$Lane
+lane <- gsub("Lane","", lane)
+#print(lane)
+
 Indices_new <- samplesheet_file$Indices
 Indices_new <- gsub(" ","", Indices_new)
 Indices_new <- gsub("and",",", Indices_new)
@@ -45,6 +49,6 @@ for (j in (1:num_lanes)){
 	for (k in (1:index_len[[1]])){
 		#print(k)
 		index_val <- gsub(" ", "", index_list[[1]][k])
-		line <- cat(paste("\n",label,",",j,",",k,",,",index_val,",,","N,",",","nkatiyar,",project_id_new,sep=""),file="SampleSheet.csv", append=TRUE)
+		line <- cat(paste("\n",label,",",lane[j],",",k,",,",index_val,",,","N,",",","nkatiyar,",project_id_new,sep=""),file="SampleSheet.csv", append=TRUE)
 	}
 }
