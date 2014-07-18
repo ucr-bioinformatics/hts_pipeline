@@ -212,6 +212,7 @@ for (lane in uniq_lane_list) {
      else if (num_pairs == 2) {
 	if(demultiplex_type == 1 )
         {
+                print("Just testing num pairs 2 and demultiplex type 1")
         	myfiles1 <- paste(fastq_path, targets$FileName1, sep="")
         	names(myfiles1) <-paste(targets$SampleName, "_pair1", sep="")
         	myfiles2 <- paste(fastq_path, targets$FileName2, sep="")
@@ -222,7 +223,7 @@ for (lane in uniq_lane_list) {
         	print(myfiles)
         	print("Generating report now")
     		# Generate PDF Report
-    		fqlist <- seeFastq(fastq=myfiles, batchsize=50000, klength=8)
+    		fqlist <- seeFastq(fastq=myfiles, batchsize=50000, klength=2)
     	}
 	else
 	{
