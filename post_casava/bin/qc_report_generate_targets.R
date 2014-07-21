@@ -36,6 +36,7 @@ lane_samplesheet <- samplesheet$Lane
 print("lane_samplesheet")
 print(lane_samplesheet)
 index <- samplesheet$Index
+print("Index")
 print(index)
 chk <- unlist(lane_samplesheet)
 
@@ -68,7 +69,7 @@ for(lane in uniq_lane_list) {
                 {
 			for (f in 1:(length(samp_file_list)/2))
 			{		
-				if(index[cnt]=="")
+				if(is.na(index[cnt]))
 					{
                                 	pattern_file1 <- c(paste("flowcell",flowcellid,"_","lane",lane,"_","pair1",".fastq.gz",sep=""))
                                 	pattern_file2 <- c(paste("flowcell",flowcellid,"_","lane",lane,"_","pair2",".fastq.gz",sep=""))
