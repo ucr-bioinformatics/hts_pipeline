@@ -60,14 +60,14 @@ if [ -f $sample_sheet ]; then
     # Create Sample Sheet
     if [ $ERROR -eq 0 ]; then 
         echo -e "==== SAMPLE SHEET STEP ====\ncreate_samplesheet_miseq.R $FC_ID SampleSheet.csv $run_dir" >> $ERROR_FILE
-        #create_samplesheet_miseq.R $FC_ID SampleSheet.csv $run_dir &>>$ERROR_FILE || 
+        create_samplesheet_miseq.R $FC_ID SampleSheet.csv $run_dir &>>$ERROR_FILE || 
         (echo "ERROR: SampleSheet creation failed" >> $ERROR_FILE && ERROR=1)
     fi
 
     # Rename Files
     if [ $ERROR -eq 0 ]; then 
         echo -e "==== RENAME STEP ====\nfastqs_rename.R $FC_ID 3 $run_dir/SampleSheet.csv $run_dir miseq $run_dir" >> $ERROR_FILE
-        #fastqs_rename.R $FC_ID 3 $run_dir/SampleSheet.csv $run_dir miseq $run_dir &>>$ERROR_FILE ||
+        fastqs_rename.R $FC_ID 3 $run_dir/SampleSheet.csv $run_dir miseq $run_dir &>>$ERROR_FILE ||
         (echo "ERROR: Files rename failed" >> $ERROR_FILE && ERROR=1)
     fi
 
@@ -76,14 +76,14 @@ if [ -f $sample_sheet ]; then
         PAIR=1
         MUX=1
         echo -e "==== QC STEP ====\nqc_report_generate_targets.R $FC_ID $PAIR $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv $MUX" >> $ERROR_FILE
-        #qc_report_generate_targets.R $FC_ID $PAIR $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv $MUX &>>$ERROR_FILE ||
+        qc_report_generate_targets.R $FC_ID $PAIR $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv $MUX &>>$ERROR_FILE ||
         (echo "ERROR: QC report generation failed" >> $ERROR_FILE && ERROR=1)
     fi
 
     # Update Illumina web server URLs
     if [ $ERROR -eq 0 ]; then 
         echo -e "==== URL STEP ====\nsequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID" >> $ERROR_FILE
-        #sequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID &>>$ERROR_FILE ||
+        sequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID &>>$ERROR_FILE ||
         (echo "ERROR: Illumina URL update failed" >> $ERROR_FILE && ERROR=1)
     fi
 
