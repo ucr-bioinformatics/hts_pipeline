@@ -1,14 +1,14 @@
-#!/bin/bash -l
+#!/bin/bash
 
-###########################################
-# Check for MiSeq data and start pipeline #
-###########################################
+#############################################
+# Check for MiSeq data and execute pipeline #
+#############################################
 
-# Set vars
+# Set global vars
 source $HTS_PIPELINE_HOME/env_profile.sh
 
 # Check Arguments
-EXPECTED_ARGS=1
+EXPECTED_ARGS=2
 E_BADARGS=65
 
 if [ $# -ne $EXPECTED_ARGS ]
@@ -17,85 +17,79 @@ then
   exit $E_BADARGS
 fi
 
-SOURCE_DIR=$1
-
 # Change directory to source
+SOURCE_DIR=$1
 cd $SOURCE_DIR
-#lockfile -r 0 miseq_start.lock || exit 1
 
-# Get list of Run directories
-dir_list=`find . -maxdepth 1 -type d`
-# Iterate over each Run directory
-for dir in $dir_list; do
-    # Check if directory is not source directory
-    if [ "$dir" != '.' ]; then
-        # Find sample sheet
-        sample_sheet=`find $dir -name SampleSheet.csv`
+# Check for SampleSheet
+sample_sheet=$2
 
-        if [ ! -z $sample_sheet ]; then
-            # Determine sequencer run directory
-            run_dir=`dirname $sample_sheet | cut -d/ -f 3`
+if [ -f $sample_sheet ]; then
+    # Determine sequencer run directory
+    run_dir=`dirname $sample_sheet`
+    dir=`dirname $run_dir`
+    run_dir=`echo $run_dir | cut -d/ -f 3`
+    
+    # Set lock file
+    lockfile -r 0 $dir/miseq_start.lock || ( echo "Could not create $dir/miseq_start.lock" && exit 1 )
 
-            # Determine flowcell ID
-            FC_ID=`echo $dir | cut -dl -f4`
+    # Determine flowcell ID
+    FC_ID=`echo $dir | cut -dl -f4`
 
-            # Send email notification
-            echo "Sending Mail"
-            /usr/sbin/sendmail -vt << EOF
-To: hts@biocluster.ucr.edu
-From: no-reply@biocluster.ucr.edu
-Subject: HTS Pipeline: Flowcell $FC_ID: Started
-
-Flowcell $FC_ID has come in and needs to be processed.
-Thanks
-EOF
-
-            # Set error file
-            ERROR=0
-            export ERROR_FILE=$SHARED_GENOMICS/$FC_ID/error.log
-            mkdir -p $SHARED_GENOMICS/$FC_ID
-            echo "Starting Pipeline" > $ERROR_FILE
-            
-            ##################
-            # Pipeline Steps #
-            ##################
-            
-            # Transfer miseq data
-            if [ $ERROR -eq 0 ]; then
-                rsync_miseq_data.sh $FC_ID $SOURCE_DIR/$dir &>>$ERROR_FILE || 
-                (echo "ERROR:: Rsync transfer failed" >> $ERROR_FILE && ERROR=1)
-            fi
-            
-            # Create Sample Sheet
-            if [ $ERROR -eq 0 ]; then 
-                create_samplesheet_miseq.R $FC_ID SampleSheet.csv $run_dir &>>$ERROR_FILE || 
-                (echo "ERROR: SampleSheet creation failed" >> $ERROR_FILE && ERROR=1)
-            fi
-
-            # Rename Files
-            if [ $ERROR -eq 0 ]; then 
-                fastqs_rename.R $FC_ID 3 $run_dir/SampleSheet.csv $run_dir miseq $run_dir &>>$ERROR_FILE ||
-                (echo "ERROR: Files rename failed" >> $ERROR_FILE && ERROR=1)
-            fi
-
-            # Generate QC report
-            if [ $ERROR -eq 0 ]; then 
-                qc_report_generate_targets.R $FC_ID 2 $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv 2 &>>$ERROR_FILE ||
-                (echo "ERROR: QC report generation failed" >> $ERROR_FILE && ERROR=1)
-            fi
-
-            # Update Illumina web server URLs
-            if [ $ERROR -eq 0 ]; then 
-                sequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID &>>$ERROR_FILE ||
-                (echo "ERROR: Illumina URL update failed" >> $ERROR_FILE && ERROR=1)
-            fi
-
+    # Set error file
+    ERROR=0
+    export ERROR_FILE=$SHARED_GENOMICS/$FC_ID/error.log
+    mkdir -p $SHARED_GENOMICS/$FC_ID
+    echo "Starting Pipeline" > $ERROR_FILE
+    
+    ##################
+    # Pipeline Steps #
+    ##################
+    
+    # Transfer miseq data
+    if [ $ERROR -eq 0 ]; then
+        echo -e "==== RSYNC STEP ====\nrsync_miseq_data.sh $FC_ID $SOURCE_DIR/$dir" >> $ERROR_FILE
+        rsync_miseq_data.sh $FC_ID $SOURCE_DIR/$dir &>> $ERROR_FILE
+        if [ $? -eq 0 ]; then
+            rmdir $SOURCE_DIR/$dir/$run_dir && rmdir $SOURCE_DIR/$dir
+        else
+            echo "ERROR:: Rsync transfer failed" >> $ERROR_FILE && ERROR=1
         fi
     fi
-done
+    
+    # Create Sample Sheet
+    if [ $ERROR -eq 0 ]; then 
+        echo -e "==== SAMPLE SHEET STEP ====\ncreate_samplesheet_miseq.R $FC_ID SampleSheet.csv $run_dir" >> $ERROR_FILE
+        #create_samplesheet_miseq.R $FC_ID SampleSheet.csv $run_dir &>>$ERROR_FILE || 
+        (echo "ERROR: SampleSheet creation failed" >> $ERROR_FILE && ERROR=1)
+    fi
 
-# Remove lock files
-#rm -f miseq_start.lock
+    # Rename Files
+    if [ $ERROR -eq 0 ]; then 
+        echo -e "==== RENAME STEP ====\nfastqs_rename.R $FC_ID 3 $run_dir/SampleSheet.csv $run_dir miseq $run_dir" >> $ERROR_FILE
+        #fastqs_rename.R $FC_ID 3 $run_dir/SampleSheet.csv $run_dir miseq $run_dir &>>$ERROR_FILE ||
+        (echo "ERROR: Files rename failed" >> $ERROR_FILE && ERROR=1)
+    fi
+
+    # Generate QC report
+    if [ $ERROR -eq 0 ]; then
+        PAIR=1
+        MUX=1
+        echo -e "==== QC STEP ====\nqc_report_generate_targets.R $FC_ID $PAIR $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv $MUX" >> $ERROR_FILE
+        #qc_report_generate_targets.R $FC_ID $PAIR $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv $MUX &>>$ERROR_FILE ||
+        (echo "ERROR: QC report generation failed" >> $ERROR_FILE && ERROR=1)
+    fi
+
+    # Update Illumina web server URLs
+    if [ $ERROR -eq 0 ]; then 
+        echo -e "==== URL STEP ====\nsequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID" >> $ERROR_FILE
+        #sequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID &>>$ERROR_FILE ||
+        (echo "ERROR: Illumina URL update failed" >> $ERROR_FILE && ERROR=1)
+    fi
+
+    # Remove lock files
+    rm -f $SHARED_GENOMICS/$FC_ID/miseq_start.lock
+fi
 
 # Exit
 exit $ERROR
