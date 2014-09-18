@@ -73,7 +73,7 @@ gen_link <- function(x) {
         files_undermine <- list.files(path=ufastq_path,pattern=file_name_undermine)
 
         # Join fastqs and undetermined
-        files <- c(files,files_undermine)
+        files <- list(files,list(),files_undermine,list())
          
     } else {
         # Define path
