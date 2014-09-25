@@ -18,7 +18,7 @@ qcs <- list.files(path='.',pattern='qc[1-9]*')
 
 # Connect to Database
 require(RMySQL, quietly = TRUE)
-con <- dbConnect(MySQL(), user="webuser", password="5any77z1",dbname="projects", host="illumina.bioinfo.ucr.edu")
+con <- dbConnect(MySQL(), user="webuser", password="5any77z1",dbname="projects", host="illumina.int.bioinfo.ucr.edu")
 
 # Get sample and project ids
 flowcell_table <- dbGetQuery(con,paste("SELECT * FROM flowcell_list where flowcell_id = ", flowcellid," LIMIT 1",sep=""))
