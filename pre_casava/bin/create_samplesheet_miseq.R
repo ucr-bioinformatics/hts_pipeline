@@ -31,13 +31,16 @@ i=1
 label <- flowcell_table$label
 project_id <- flowcell_table[paste("lane_",i,"_project",sep="")][[1]]
 
-#samplesheet_file <- scan("SampleSheet.csv")
+conn=file(samplesheet,open="r")
+line_num <-grep('Data',readLines(samplesheet))
+
+close(conn)
+
+#a <- read.delim(samplesheet, sep=",")
+#line_data <- rownames(a[ grep("Data",a[,1]), ])
+#line_num <- as.numeric(as.character(line_data))
 
 library(data.table)
-a <- read.delim(samplesheet, sep=",")
-line_data <- rownames(a[ grep("Data",a[,1]), ])
-line_num <- as.numeric(as.character(line_data))
-
 a = fread(samplesheet, skip=(line_num+1))
 len_a <- length(a$index)
 
