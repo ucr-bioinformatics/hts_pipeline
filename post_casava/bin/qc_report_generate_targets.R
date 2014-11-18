@@ -207,7 +207,7 @@ for (lane in uniq_lane_list) {
         	print(myfiles)
         	print("Generating report now")
     		# Generate PDF Report
-    		fqlist <- seeFastq(fastq=myfiles, batchsize=50000, klength=2)
+    		fqlist <- seeFastq(fastq=myfiles, batchsize=50000, klength=8)
 	}
 	 		}
      else if (num_pairs == 2) {
@@ -224,7 +224,7 @@ for (lane in uniq_lane_list) {
         	print(myfiles)
         	print("Generating report now")
     		# Generate PDF Report
-    		fqlist <- seeFastq(fastq=myfiles, batchsize=50000, klength=2)
+    		fqlist <- seeFastq(fastq=myfiles, batchsize=50000, klength=8)
     	}
 	else
 	{

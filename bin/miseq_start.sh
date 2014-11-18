@@ -67,14 +67,14 @@ if [ -f $sample_sheet ]; then
     # Rename Files
     if [ $ERROR -eq 0 ]; then 
         echo -e "==== RENAME STEP ====\nfastqs_rename.R $FC_ID 3 $run_dir/SampleSheet.csv $run_dir miseq $run_dir" >> $ERROR_FILE
-        fastqs_rename.R $FC_ID 3 $run_dir/SampleSheet.csv $run_dir miseq $run_dir &>>$ERROR_FILE ||
+        fastqs_rename.R $FC_ID 2 $run_dir/SampleSheet.csv $run_dir miseq $run_dir &>>$ERROR_FILE ||
         (echo "ERROR: Files rename failed" >> $ERROR_FILE && ERROR=1)
     fi
 
     # Generate QC report
     if [ $ERROR -eq 0 ]; then
         PAIR=1
-        MUX=1
+        MUX=2
         echo -e "==== QC STEP ====\nqc_report_generate_targets.R $FC_ID $PAIR $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv $MUX" >> $ERROR_FILE
         qc_report_generate_targets.R $FC_ID $PAIR $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv $MUX &>>$ERROR_FILE ||
         (echo "ERROR: QC report generation failed" >> $ERROR_FILE && ERROR=1)

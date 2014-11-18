@@ -73,7 +73,7 @@ gen_link <- function(x) {
         files_undermine <- list.files(path=ufastq_path,pattern=file_name_undermine)
 
         # Join fastqs and undetermined
-        files <- c(files,files_undermine)
+        files <- list(files,list(),files_undermine,list())
          
     } else {
         # Define path
@@ -113,7 +113,12 @@ gen_link <- function(x) {
                     commands <- paste("ln -s ",ufastq_path,'/',f, "  ", "Undetermined_lane",lane,"_pair",p,".fastq.gz",sep="")
                 } else if ( i==2 ) {
                     # Processes Index files (I1,I2,etc...)
-                    commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",index_pair_num,"_",index,".fastq.gz",sep="")
+                    if (!is.na(index)) {
+                        commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",index_pair_num,"_",index,".fastq.gz",sep="")
+                    }
+                    else {
+                        commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",index_pair_num,".fastq.gz",sep="")
+                    }
                 } else if ( i==1 ) {
                     # Processes sequence files (R1,R2,etc...)
                     if (!is.na(index)) {
