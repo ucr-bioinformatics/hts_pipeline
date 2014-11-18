@@ -20,8 +20,8 @@ con <- dbConnect(MySQL(), user="***REMOVED***", password="***REMOVED***",dbname=
 
 # Get sample and project ids
 flowcell_table <- dbGetQuery(con,paste("SELECT * FROM flowcell_list where flowcell_id = ", flowcellid," LIMIT 1",sep=""))
-lane=1
-i=1
+#lane=1
+#i=1
 label <- flowcell_table$label
 
 #samplesheet_file <- scan("SampleSheet.csv")
@@ -31,16 +31,20 @@ num_lanes <- length(samplesheet_file$Indices)
 lane <- samplesheet_file$Lane
 lane <- gsub("Lane","", lane)
 #print(lane)
+lane <- lapply(lane, as.numeric)
 
 Indices_new <- samplesheet_file$Indices
 Indices_new <- gsub(" ","", Indices_new)
 Indices_new <- gsub("and",",", Indices_new)
+#print(Indices_new)
+cnt = 0
 
 cat(paste("FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SampleProject", sep=","),file="SampleSheet.csv")
 
 for (j in lane){
-	print(j)
-	index_list <- strsplit(Indices_new[j],",")
+	#print(j)
+	cnt=cnt+1
+	index_list <- strsplit(Indices_new[cnt],",")
 	#print(index_list[[1]][1])
 	index_len <- (lapply(index_list, function(x) length(x)))
 	#print(index_len[[1]])
@@ -51,6 +55,6 @@ for (j in lane){
 	for (k in (1:index_len[[1]])){
 		#print(k)
 		index_val <- gsub(" ", "", index_list[[1]][k])
-		line <- cat(paste("\n",label,",",lane[j],",",k,",,",index_val,",,","N,",",","nkatiyar,",project_id_new,sep=""),file="SampleSheet.csv", append=TRUE)
+		line <- cat(paste("\n",label,",",j,",",k,",,",index_val,",,","N,",",","nkatiyar,",project_id_new,sep=""),file="SampleSheet.csv", append=TRUE)
 	}
 }
