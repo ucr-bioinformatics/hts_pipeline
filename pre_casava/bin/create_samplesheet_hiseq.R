@@ -38,13 +38,15 @@ Indices_new <- gsub("and",",", Indices_new)
 
 cat(paste("FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SampleProject", sep=","),file="SampleSheet.csv")
 
-for (j in (1:num_lanes)){
+for (j in lane){
+	print(j)
 	index_list <- strsplit(Indices_new[j],",")
 	#print(index_list[[1]][1])
 	index_len <- (lapply(index_list, function(x) length(x)))
 	#print(index_len[[1]])
 	#print(length(index_len))
 	project_id <- flowcell_table[paste("lane_",j,"_project",sep="")][[1]]
+	#print(project_id)
 	project_id_new <- gsub(" ","",project_id)
 	for (k in (1:index_len[[1]])){
 		#print(k)
