@@ -10,7 +10,7 @@ echo "started running"
 source $HTS_PIPELINE_HOME/env_profile.sh
 
 # Change directory to source
-SOURCE_DIR='/bigdata/cclark/'
+SOURCE_DIR='/bigdata/genomics/cclark/'
 cd $SOURCE_DIR
 
 # Get list of Run directories

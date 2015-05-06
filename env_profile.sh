@@ -8,5 +8,5 @@ else
 fi
 
 # Set genomics data path
-export SHARED_GENOMICS=/shared/genomics
+export SHARED_GENOMICS=/bigdata/genomics/shared
 
