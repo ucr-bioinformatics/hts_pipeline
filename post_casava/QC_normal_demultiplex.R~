@@ -1,0 +1,32 @@
+#!/usr/bin/env Rscript
+
+### Generate FASTQ Quality report in PDF format
+## Neerja Katiyar
+## 2/4/2014
+
+# Pull Girke Code
+source("http://faculty.ucr.edu/~tgirke/Documents/R_BioCond/My_R_Scripts/fastqQuality.R")
+
+# Get targets
+target_lanes <- list.files(path='.',pattern='targets_lane[0-8].txt')
+
+# For each lane target file, process PDF report
+for (target_lane in target_lanes){
+    # Get targets (FASTQ files) for specific lane
+    targets <- read.delim(target_lane)
+
+    # Format files object
+    myfiles1 <- paste("data/", targets$FileName1, sep="")
+    names(myfiles1) <-paste(targets$SampleName,"_pair1",sep="")
+    myfiles2 <- paste("data/", targets$FileName2, sep="")
+    names(myfiles1) <-paste(targets$SampleName,"_pair2",sep="")
+    myfiles <- append(myfiles1,myfiles2)
+    #names(myfiles) <- targets$SampleName
+
+    # What files are we processing
+    print(myfiles)
+
+    # Generate PDF Report
+    fqlist <- seeFastq(fastq=myfiles, batchsize=50000, klength=8)
+    pdf("flowcell219_lane1_fastqReport.pdf", height=18, width=4*length(myfiles)); seeFastqPlot(fqlist); dev.off()
+}
