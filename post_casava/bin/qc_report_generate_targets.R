@@ -20,6 +20,7 @@ targets_path <- args[4]
 samplesheet <- read.csv(args[5])
 demultiplex_type <- args[6]
 #run_type <- args[6]
+shared_genomics <- Sys.getenv("SHARED_GENOMICS")
 
 # Pull Girke Code
 source("http://faculty.ucr.edu/~tgirke/Documents/R_BioCond/My_R_Scripts/fastqQuality.R")
@@ -56,7 +57,7 @@ for(lane in uniq_lane_list) {
 	file_list2 <- c()
 	file_list3 <- c()
 	sample_num=1
-	samp_path <- c(paste("/shared/genomics/",flowcellid,"/",sep=""))
+	samp_path <- c(paste(shared_genomics,flowcellid,"/",sep=""))
         pattern_f <- c(paste("^flowcell",flowcellid,"_","lane",lane,"_",'*',sep=""))
 	print(pattern_f)
 	samp_file_list <- list.files(path=samp_path, pattern=pattern_f)
