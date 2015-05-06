@@ -207,7 +207,7 @@ for (lane in uniq_lane_list) {
         	print(myfiles)
         	print("Generating report now")
     		# Generate PDF Report
-    		fqlist <- seeFastq(fastq=myfiles, batchsize=50000, klength=8)
+    		fqlist <- seeFastq(fastq=myfiles, batchsize=50000, klength=4)
 	}
 	 		}
      else if (num_pairs == 2) {
@@ -241,7 +241,7 @@ for (lane in uniq_lane_list) {
         	print(myfiles)
         	print("Generating report now")
     		# Generate PDF Report
-    		fqlist <- seeFastq(fastq=myfiles, batchsize=50000, klength=8)
+    		fqlist <- seeFastq(fastq=myfiles, batchsize=50000, klength=4)
 	}
 #    else {
 #        stop(paste("ERROR::", num_pairs, "pairs not supported."))
