@@ -48,8 +48,8 @@ print(uniq_lane_list)
 cnt=1
 
 for(lane in uniq_lane_list) {
-	print("lane")
-	print(lane)
+	#print("lane")
+	#print(lane)
 	targets_filename <-c(paste(targets_path,"targets_lane",lane,".txt",sep=""))	
 	file_list <- c()
 	samp_list <- c()
@@ -57,13 +57,20 @@ for(lane in uniq_lane_list) {
 	file_list2 <- c()
 	file_list3 <- c()
 	sample_num=1
-	samp_path <- c(paste(shared_genomics,flowcellid,"/",sep=""))
-        pattern_f <- c(paste("^flowcell",flowcellid,"_","lane",lane,"_",'*',sep=""))
-	print(pattern_f)
+	samp_path <- c(paste(shared_genomics,"/",flowcellid,"/",sep=""))
+    pattern_f <- c(paste("flowcell",flowcellid,"_","lane",lane,"_",'*',sep=""))
+	#print(pattern_f)
+    #print("Checking samp_path now... ")
+    #print(samp_path)
+    #print("Checking pattern...")
+    #print(pattern_f)
 	samp_file_list <- list.files(path=samp_path, pattern=pattern_f)
 	targets_filename <-c(paste(targets_path,"targets_lane",lane,".txt",sep=""))
-	print(length(samp_file_list))
-	
+	#print("Length of sample file list")
+    #print(length(samp_file_list))
+    #print("Printing sample file names")
+    #print(samp_file_list)	
+
 	if(num_pairs==1) # Single-end
 	{
 		if(demultiplex_type==2) # Single-end and user will demultiplex
@@ -81,13 +88,12 @@ for(lane in uniq_lane_list) {
 					pattern_file1 <- c(paste("flowcell",flowcellid,"_","lane",lane,"_","pair1",concat,index[cnt],".fastq.gz",sep=""))
 					pattern_file2 <- c(paste("flowcell",flowcellid,"_","lane",lane,"_","pair2",concat,index[cnt],".fastq.gz",sep=""))
 				        }
-				print(pattern_file1)
 				file_list1 <- append(file_list1, pattern_file1)
-                		file_list2 <- append(file_list2, pattern_file2)
-                		sample_name <- paste("Sample",sample_num,sep="")
-                		samp_list <- append(samp_list,sample_name)
-                		sample_num=sample_num+1
-                		cnt=cnt+1
+                file_list2 <- append(file_list2, pattern_file2)
+                sample_name <- paste("Sample",sample_num,sep="")
+                samp_list <- append(samp_list,sample_name)
+                sample_num=sample_num+1
+                cnt=cnt+1
 			}	
 		}	
 		else # Single-end and CASAVA will demultiplex
@@ -107,8 +113,9 @@ for(lane in uniq_lane_list) {
 		if(demultiplex_type==2)	
 		{	
 			print(samp_list)
-        		list_out <- cbind(FileName1=file_list1, FileName2=file_list2, SampleName=samp_list)
-        		print("list_out")
+        	list_out <- cbind(FileName1=file_list1, FileName2=file_list2, SampleName=samp_list)
+            print("Checking")
+        	print("list_out")
 			print(list_out)
 			write.table(list_out,targets_filename, quote=FALSE, row.names=FALSE, sep="\t")
 		}	
