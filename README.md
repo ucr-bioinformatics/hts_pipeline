@@ -7,10 +7,12 @@ Pre-CASAVA
 CASAVA
 ======
 1. Run CASAVA
+2. Copy SampleSheet from BaseCalls to FASTQs directory (beside the Unaligned output)
 
 Post-CASAVA
 ===========
-1. Rename FASTQ files
+1. Rsync data from HTS to Biocluster
+2. Rename FASTQ files
 3. Generate QC report
 2. Update links on Illumina web server
 
