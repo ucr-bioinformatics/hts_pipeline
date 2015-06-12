@@ -1,16 +1,16 @@
 Pre-CASAVA
 ==========
-1. Move sequencer run directory from Runs to RunAnalysis # Note: on the HTS system
+1. Move sequencer run directory from Runs to RunAnalysis # (working on the HTS system)
 2. Create symlink from run directory back to Runs
 3. Build SampleSheet
       cd /home/researchers/RunAnalysis/flowcell322
-    # note: in case John's excel is not tab-delimited, then run
-      iconv -f original_charset -t utf-8 originalfile > newfile
+            # note: in case John's excel file is not tab-delimited, then run
+            iconv -f original_charset -t utf-8 originalfile > newfile
       run ~/hts_pipeline/pre_casava/bin/create_samplesheet_hiseq.R
-    # USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
-                              
-                # <Samplesheet> Excel sheet given by John
-                # <Rundir>  /home/researchers/RunAnalysis/flowcell322/150514_SN279_0465_BC64T6ACXX/
+      USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
+      # <FlowcellID> flowcell number
+      # <Samplesheet> Excel sheet given by John
+      # <Rundir>  /home/researchers/RunAnalysis/flowcell322/150514_SN279_0465_BC64T6ACXX/
 
 CASAVA
 ======
