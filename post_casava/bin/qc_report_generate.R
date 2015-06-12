@@ -19,7 +19,7 @@ targets_path <- args[4]
 source("http://faculty.ucr.edu/~tgirke/Documents/R_BioCond/My_R_Scripts/fastqQuality.R")
 
 # For each lane target file, process PDF report
-for (lane in 1:8) {
+for (lane in 1) {
     file_pattern <- paste('^targets_lane', lane, '.txt$', sep="")
     target_lane <- list.files(path=targets_path, pattern=file_pattern)
 
