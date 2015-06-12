@@ -41,6 +41,8 @@ Post-CASAVA
             # <TargetsPath> ./
             # <SampleSheetPath> SampleSheet.csv
             # <Demultiplex type> 1 for CASAVA, 2 if user will demultiplex
+Note - In case, we need to run CASAVA again for some lane individually, we need to add the link to Summary Statistics.
+            ln -s Unaligned_newlane/Basecall_Stats_C64T6ACXX/ qc1
 
 4. Update links on Illumina web server
       ~/hts_pipeline/post_casava/bin/sequence_url_update.R
