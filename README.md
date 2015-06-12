@@ -11,7 +11,7 @@ Pre-CASAVA
 3. Build SampleSheet
       cd /home/researchers/RunAnalysis/flowcell322
             # note: in case John's excel file is not tab-delimited, then run
-            iconv -f original_charset -t utf-8 originalfile > newfile
+            iconv -f UTF-16 -t UTF-8 originalfile > newfile
       run ~/hts_pipeline/pre_casava/bin/create_samplesheet_hiseq.R
       USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
       # <FlowcellID> flowcell number
