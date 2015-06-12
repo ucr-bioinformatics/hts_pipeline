@@ -1,7 +1,13 @@
 Pre-CASAVA
 ==========
 1. Move sequencer run directory from Runs to RunAnalysis # (working on the HTS system)
-2. Create symlink from run directory back to Runs
+      cd /home/researchers/RunAnalysis/
+      mkdir flowcellnum
+      cd flowcellnum
+      mv /home/researchers/Runs/140513_SN279_0413_AH9G1MADXX flowcellnum 
+2. Create symlink from run directory back to Runs (If John asks to put flowcell on SAV)
+      cd /home/researchers/Runs/
+      ln -s /home/researchers/RunAnalysis/flowcellnum .
 3. Build SampleSheet
       cd /home/researchers/RunAnalysis/flowcell322
             # note: in case John's excel file is not tab-delimited, then run
