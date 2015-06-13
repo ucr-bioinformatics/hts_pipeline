@@ -21,6 +21,12 @@ Pre-CASAVA
 CASAVA
 ======
 1. Run CASAVA
+a) If CASAVA will demultiplex
+/home/rsun/illuminasoftware/CASAVA-1.8.2/bin/configureBclToFastq.pl --input-dir Data/Intensities/BaseCalls/ --sample-sheet SampleSheet2.csv --fastq-cluster-count 600000000 --ignore-missing-stats --ignore-missing-bcl --output-dir /home/casava_fastqs/324/Unaligned2
+
+b) If user will demultiplex
+/home/rsun/illuminasoftware/CASAVA-1.8.2/bin/configureBclToFastq.pl --input-dir Data/Intensities/BaseCalls/ --sample-sheet SampleSheet1.csv --fastq-cluster-count 600000000 --ignore-missing-stats --ignore-missing-bcl --output-dir /home/casava_fastqs/324/Unaligned1 --use-bases-mask Y*,Y*
+
 2. Copy SampleSheet from BaseCalls to FASTQs directory (besides the Unaligned output)
 
 Post-CASAVA
