@@ -31,8 +31,8 @@ Post-CASAVA
 2. Rename FASTQ files
       ~/hts_pipeline/post_casava/bin/fastqs_rename.R
       USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir> <Demultiplex-type 1- CASAVA 2- user will demultiplex>
-            # <FlowcellID> flowcell number
-            # <NumberOfFiles> (1) if user has to demultiplex: 3 for paired-end, 2 for single-end; (2) if we have to demultiplex: 2 for paired-end, 1 for single-end
+            # <FlowcellID> flowcell number, e.g. 322
+            # <NumberOfFiles> If we have to demultiplex: 2 for paired-end, 1 for single-end. If user has to demultiplex: 3 for paired-end, 2 for single-end
             # <SampleSheet> SampleSheet.csv
             # <UnalignedPath> Unaligned/
             # <RunType> hiseq or miseq
@@ -41,19 +41,19 @@ Post-CASAVA
 3. Generate QC report
       ~/hts_pipeline/post_casava/bin/qc_report_generate_targets.R
       USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>
-            # <FlowcellID> flowcell number 
+            # <FlowcellID> flowcell number, e.g. 322 
             # <NumberOfPairs> 1 for single-end data, and 2 for paired-end
             # <FASTQPath> /bigdata/genomics/shared/322/
             # <TargetsPath> ./
             # <SampleSheetPath> SampleSheet.csv
             # <Demultiplex type> 1 for CASAVA, 2 if user will demultiplex
-Note: In case, we need to run CASAVA again for some lanes individually, we need to add the link to Summary Statistics, i.e. to create new qc1 directory.
-            ln -s Unaligned_newlane/Basecall_Stats_C64T6ACXX/ qc1
+Note: In case, we need to run CASAVA again for some lanes individually, we need to add the link to Summary Statistics, i.e. to create new qc_lane directory.
+            ln -s Unaligned_newlane/Basecall_Stats_C64T6ACXX/ qc_lane
 
 4. Update links on Illumina web server
       ~/hts_pipeline/post_casava/bin/sequence_url_update.R
       USAGE:: script.R <FlowcellID> <NumberOfLanes> <FASTQPath>
-            # <FlowcellID> flowcell number             
+            # <FlowcellID> flowcell number, e.g. 322             
             # <NumberOfLanes> 8 for Hi-seq, and 1 for Mi-seq
             # <FASTQPath> /bigdata/genomics/shared/322
 
