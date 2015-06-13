@@ -21,12 +21,6 @@ Pre-CASAVA
 CASAVA
 ======
 1. Run CASAVA
-a) If CASAVA will demultiplex
-/home/rsun/illuminasoftware/CASAVA-1.8.2/bin/configureBclToFastq.pl --input-dir Data/Intensities/BaseCalls/ --sample-sheet SampleSheet2.csv --fastq-cluster-count 600000000 --ignore-missing-stats --ignore-missing-bcl --output-dir /home/casava_fastqs/324/Unaligned2
-
-b) If user will demultiplex
-/home/rsun/illuminasoftware/CASAVA-1.8.2/bin/configureBclToFastq.pl --input-dir Data/Intensities/BaseCalls/ --sample-sheet SampleSheet1.csv --fastq-cluster-count 600000000 --ignore-missing-stats --ignore-missing-bcl --output-dir /home/casava_fastqs/324/Unaligned1 --use-bases-mask Y*,Y*
-
 2. Copy SampleSheet from BaseCalls to FASTQs directory (besides the Unaligned output)
 
 Post-CASAVA
@@ -49,11 +43,11 @@ Post-CASAVA
       USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>
             # <FlowcellID> flowcell number 
             # <NumberOfPairs> 1 for single-end data, and 2 for paired-end
-            # <FASTQPath> /bigdata/genomics/shared/322
+            # <FASTQPath> /bigdata/genomics/shared/322/
             # <TargetsPath> ./
             # <SampleSheetPath> SampleSheet.csv
             # <Demultiplex type> 1 for CASAVA, 2 if user will demultiplex
-Note - In case, we need to run CASAVA again for some lane individually, we need to add the link to Summary Statistics.
+Note: In case, we need to run CASAVA again for some lanes individually, we need to add the link to Summary Statistics, i.e. to create new qc1 directory.
             ln -s Unaligned_newlane/Basecall_Stats_C64T6ACXX/ qc1
 
 4. Update links on Illumina web server
