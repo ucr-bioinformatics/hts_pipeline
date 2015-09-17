@@ -21,6 +21,13 @@ Pre-CASAVA
 CASAVA
 ======
 1. Run CASAVA
+      (i) On the HTS systen, go to /home/casava_fastqs/flowcellnum/ and run the following:
+      (ii) /opt/bcl2fastq/1.8.4/bin/configureBclToFastq.pl --input-dir /home/researchers/RunAnalysis/flowcell338/150715_SN279_0478_AC7T7YACXX/Data/Intensities/BaseCalls --sample-sheet /home/researchers/RunAnalysis/flowcell338/150715_SN279_0478_AC7T7YACXX/Data/Intensities/BaseCalls/SampleSheet.csv --fastq-cluster-count 600000000 --ignore-missing-stats --output-dir /home/casava_fastqs/338/Unaligned
+      (iii) cd Unaligned/
+      (iv) nohup make -j 8
+
+Note: inside Unaligend/ directory, check inside the Basecall_Stats_C7T7YACXX directory for the file "Demultiplex_Stats.htm"; if present, the casava process has run normally. Also check for nohup.out file for any errors. 
+
 2. Copy SampleSheet from BaseCalls to FASTQs directory (besides the Unaligned output)
 
 Post-CASAVA
