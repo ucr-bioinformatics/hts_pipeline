@@ -1,0 +1,1 @@
+../casava/bin/bcl2fastq_run.sh
