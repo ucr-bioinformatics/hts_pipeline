@@ -88,7 +88,7 @@ Note: In case, we need to run CASAVA again for some lanes individually, we need 
     * **NumberOfLanes** - 8 for Hi-seq, and 1 for Mi-seq
     * **FASTQPath** - /bigdata/genomics/shared/322
 
-MiSeq pipeline
+**MiSeq pipeline**
 
 Create the flowcell directory under /bigdata/genomics/shared/
 ```
@@ -125,12 +125,34 @@ Error: USAGE:: script.R <FlowcellID> <NumberOfLanes> <FASTQPath>
 Execution halted
 ```
 
-NextSeq
+**NextSeq**
+
+Log onto pigeon and create the flowcell directory
+```
+cd /bigdata/genomics/shared/
+mkdir flowcell_num
+```
 
 Copy the data from hts to pigeon
 
 ```
-scp username@hts.int.bioinfo.ucr.edu:/bigdata/genomics/shared/flowcell_num
+scp username@hts.int.bioinfo.ucr.edu:/bigdata/genomics/shared/flowcell_num/
+```
+
+Run bcl2fastq for demultiplexing
+```
+bcl2fastq_run.sh
+Usage: bcl2fastq_run.sh {FlowcellID} {RunDirectoryName}
+```
+
+Rename fastqs
+```
+fastqs_rename.R
+USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir> <Demultiplex-type 1- CASAVA 2- user will demultiplex>
+```
+
+
+
 
 
 
