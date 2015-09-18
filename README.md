@@ -18,7 +18,6 @@ Pre-CASAVA
     ```
     cd /home/researchers/RunAnalysis/flowcell322
     ```
-
 In case John's excel file is not tab-delimited, then run
     ```
     iconv -f UTF-16 -t UTF-8 originalfile > newfile
