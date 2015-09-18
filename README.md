@@ -130,19 +130,28 @@ Execution halted
 Log onto pigeon and create the flowcell directory
 ```
 cd /bigdata/genomics/shared/
-mkdir flowcell_num
+mkdir flowcell_number (eg.350)
+cd /bigdata/genomics/shared/RunAnalysis/
+mkdir flowcell_num (eg. flowcell_350)
 ```
 
 Copy the data from hts to pigeon
 
 ```
-scp username@hts.int.bioinfo.ucr.edu:/bigdata/genomics/shared/flowcell_num/
+scp username@hts.int.bioinfo.ucr.edu:/bigdata/genomics/shared/RunAnalysis/
 ```
 
 Run bcl2fastq for demultiplexing
 ```
 bcl2fastq_run.sh
 Usage: bcl2fastq_run.sh {FlowcellID} {RunDirectoryName}
+```
+
+Create samplesheet for NextSeq (similar to NextSeq)
+```
+cp /bigdata/genomics/shared/RunAnalysis/flowcell_num/150903_NB501124_0002_AHHNG7BGXX/SampleSheet.csv /bigdata/genomics/shared/150903_NB501124_0002_AHHNG7BGXX/
+create_samplesheet_nextseq.R
+USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
 ```
 
 Rename fastqs
@@ -163,9 +172,11 @@ Generate QC report (same as HiSeq and MiSeq)
 qc_report_generate_targets.R
 USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>
 ```
-
-
-
+Update sequence urls
+```
+sequence_url_update_nextseq.R
+USAGE:: script.R <FlowcellID> <NumberOfLanes> <FASTQPath>
+```
 
 
 Analysis
