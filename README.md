@@ -70,27 +70,25 @@ Post-CASAVA
     USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>
     ```
     
-        # <FlowcellID> flowcell number, e.g. 322 
-        # <NumberOfPairs> 1 for single-end data, and 2 for paired-end
-        # <FASTQPath> /bigdata/genomics/shared/322/
-        # <TargetsPath> ./
-        # <SampleSheetPath> SampleSheet.csv
-        # <Demultiplex type> 1 for CASAVA, 2 if user will demultiplex
+    * **FlowcellID** - flowcell number, e.g. 322 
+    * **NumberOfPairs** - 1 for single-end data, and 2 for paired-end
+    * **FASTQPath** - /bigdata/genomics/shared/322/
+    * **TargetsPath** - ./
+    * **SampleSheetPath** - SampleSheet.csv
+    * **Demultiplex type** - 1 for CASAVA, 2 if user will demultiplex
 Note: In case, we need to run CASAVA again for some lanes individually, we need to add the link to Summary Statistics, i.e. to create new qc_lane directory.
-            
     ```
     ln -s Unaligned_newlane/Basecall_Stats_C64T6ACXX/ qc_lane
     ```
-        
+    
 4. Update links on Illumina web server
     ```
     ~/hts_pipeline/post_casava/bin/sequence_url_update.R
     USAGE:: script.R <FlowcellID> <NumberOfLanes> <FASTQPath>
     ```
-        
-        # <FlowcellID> flowcell number, e.g. 322             
-        # <NumberOfLanes> 8 for Hi-seq, and 1 for Mi-seq
-        # <FASTQPath> /bigdata/genomics/shared/322
+    * **FlowcellID** - flowcell number, e.g. 322             
+    * **NumberOfLanes** - 8 for Hi-seq, and 1 for Mi-seq
+    * **FASTQPath** - /bigdata/genomics/shared/322
 
 Analysis
 ========
