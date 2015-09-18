@@ -23,9 +23,10 @@ In case John's excel file is not tab-delimited, then run
     iconv -f UTF-16 -t UTF-8 originalfile > newfile
     run ~/hts_pipeline/pre_casava/bin/create_samplesheet_hiseq.R
     USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
-    # <FlowcellID> flowcell number
-    # <Samplesheet> Excel sheet given by John
-    # <Rundir>  /home/researchers/RunAnalysis/flowcell322/150514_SN279_0465_BC64T6ACXX/
+    ```
+    * **FlowcellID** - flowcell number
+    * **Samplesheet** - Excel sheet given by John
+    * **Rundir** - /home/researchers/RunAnalysis/flowcell322/150514_SN279_0465_BC64T6ACXX/
     ```
 
 CASAVA
