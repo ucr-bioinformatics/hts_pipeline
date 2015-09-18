@@ -138,10 +138,10 @@ mkdir flowcell_num (eg. flowcell_350)
 Copy the data from hts to pigeon
 
 ```
-scp username@hts.int.bioinfo.ucr.edu:/bigdata/genomics/shared/RunAnalysis/
+scp -r username@hts.int.bioinfo.ucr.edu:/home/researchers/Runs/150903_NB501124_0002_AHHNG7BGXX pigeon.bioinfo.ucr.edu:/bigdata/genomics/shared/RunAnalysis/flowcellID/
 ```
 
-Run bcl2fastq for demultiplexing
+Run bcl2fastq for demultiplexing inside flowcellID directory
 ```
 bcl2fastq_run.sh
 Usage: bcl2fastq_run.sh {FlowcellID} {RunDirectoryName}
@@ -149,7 +149,7 @@ Usage: bcl2fastq_run.sh {FlowcellID} {RunDirectoryName}
 
 Create samplesheet for NextSeq (similar to NextSeq)
 ```
-cp /bigdata/genomics/shared/RunAnalysis/flowcell_num/150903_NB501124_0002_AHHNG7BGXX/SampleSheet.csv /bigdata/genomics/shared/150903_NB501124_0002_AHHNG7BGXX/
+cp /bigdata/genomics/shared/RunAnalysis/flowcell_num/150903_NB501124_0002_AHHNG7BGXX/SampleSheet.csv /bigdata/genomics/shared/flowcellID/150903_NB501124_0002_AHHNG7BGXX/
 create_samplesheet_nextseq.R
 USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
 ```
