@@ -112,7 +112,29 @@ fastqs_rename.R
 Error: USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir> <Demultiplex-type 1- CASAVA 2- user will demultiplex>
 ```
 
-Generate QC report
+Generate QC report (Same as HiSeq)
+```
+qc_report_generate_targets.R
+USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>
+```
+
+Create urls and update the database (same as HiSeq)
+```
+sequence_url_update.R
+Error: USAGE:: script.R <FlowcellID> <NumberOfLanes> <FASTQPath>
+Execution halted
+```
+
+NextSeq
+
+Copy the data from hts to pigeon
+
+```
+scp username@hts.int.bioinfo.ucr.edu:/bigdata/genomics/shared/flowcell_num
+
+
+
+
 
 
 
