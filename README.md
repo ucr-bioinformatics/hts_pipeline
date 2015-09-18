@@ -96,10 +96,23 @@ cd /bigdata/genomics/shared/
 mkdir flowcell_num
 ```
 
-```
 Copy the flowcell directory
+```
 cp /bigdata/genomics/cclark/flowcell_num /bigdata/genomics/shared/flowcell_num
 ```
+
+Create samplesheet for follow up scripts after demultiplexing
+```
+create_samplesheet_miseq.R
+USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
+```
+Rename fastqs
+```
+fastqs_rename.R
+Error: USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir> <Demultiplex-type 1- CASAVA 2- user will demultiplex>
+```
+
+Generate QC report
 
 
 
