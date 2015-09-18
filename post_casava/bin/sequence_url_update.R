@@ -48,6 +48,7 @@ for (i in c(1:lanes)) {
     if (control==0) {
          # if (pairs==0) { 
 	 fastqfiles <- list.files(paste(fastq_path,"/",sep=""), paste("lane",i,sep=""))
+     print(fastqfiles)
 
         # Build fastq URLs
 	fastqurl <- paste(sequence_url, fastqfiles,sep="")
