@@ -37,7 +37,6 @@ On the HTS systen, go to /home/casava_fastqs/flowcellnum/ and run the following:
     cd Unaligned/
     nohup make -j 8
     ```
-   
 Note: inside Unaligend/ directory, check inside the Basecall_Stats_C7T7YACXX directory for the file "Demultiplex_Stats.htm"; if present, the casava process has run normally. Also check for nohup.out file for any errors. 
 
 2. Copy SampleSheet from BaseCalls to FASTQs directory (besides the Unaligned output)
