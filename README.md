@@ -31,7 +31,7 @@ In case John's excel file is not tab-delimited, then run
 CASAVA
 ======
 1. Run CASAVA
-On the HTS systen, go to /home/casava_fastqs/flowcellnum/ and run the following:
+On the HTS system, go to /home/casava_fastqs/flowcellnum/ and run the following:
     ```
     /opt/bcl2fastq/1.8.4/bin/configureBclToFastq.pl --input-dir /home/researchers/RunAnalysis/flowcell338/150715_SN279_0478_AC7T7YACXX/Data/Intensities/BaseCalls --sample-sheet /home/researchers/RunAnalysis/flowcell338/150715_SN279_0478_AC7T7YACXX/Data/Intensities/BaseCalls/SampleSheet.csv --fastq-cluster-count 600000000 --ignore-missing-stats --output-dir /home/casava_fastqs/338/Unaligned
     cd Unaligned/
