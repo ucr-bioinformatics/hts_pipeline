@@ -88,6 +88,25 @@ Note: In case, we need to run CASAVA again for some lanes individually, we need 
     * **NumberOfLanes** - 8 for Hi-seq, and 1 for Mi-seq
     * **FASTQPath** - /bigdata/genomics/shared/322
 
+MiSeq pipeline
+
+Create the flowcell directory under /bigdata/genomics/shared/
+```
+cd /bigdata/genomics/shared/
+mkdir flowcell_num
+```
+
+```
+Copy the flowcell directory
+cp /bigdata/genomics/cclark/flowcell_num /bigdata/genomics/shared/flowcell_num
+```
+
+
+
+
+
+
+
 Analysis
 ========
 1. Align Reads
