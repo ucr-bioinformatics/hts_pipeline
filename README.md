@@ -27,7 +27,6 @@ In case John's excel file is not tab-delimited, then run
     * **FlowcellID** - flowcell number
     * **Samplesheet** - Excel sheet given by John
     * **Rundir** - /home/researchers/RunAnalysis/flowcell322/150514_SN279_0465_BC64T6ACXX/
-    ```
 
 CASAVA
 ======
