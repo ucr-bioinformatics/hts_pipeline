@@ -31,7 +31,7 @@ In case John's excel file is not tab-delimited, then run
 CASAVA
 ======
 1. Run CASAVA
-On the HTS systen, go to /home/casava_fastqs/flowcellnum/ and run the following:
+On the HTS system, go to /home/casava_fastqs/flowcellnum/ and run the following:
     ```
     /opt/bcl2fastq/1.8.4/bin/configureBclToFastq.pl --input-dir /home/researchers/RunAnalysis/flowcell338/150715_SN279_0478_AC7T7YACXX/Data/Intensities/BaseCalls --sample-sheet /home/researchers/RunAnalysis/flowcell338/150715_SN279_0478_AC7T7YACXX/Data/Intensities/BaseCalls/SampleSheet.csv --fastq-cluster-count 600000000 --ignore-missing-stats --output-dir /home/casava_fastqs/338/Unaligned
     cd Unaligned/
@@ -87,6 +87,97 @@ Note: In case, we need to run CASAVA again for some lanes individually, we need 
     * **FlowcellID** - flowcell number, e.g. 322             
     * **NumberOfLanes** - 8 for Hi-seq, and 1 for Mi-seq
     * **FASTQPath** - /bigdata/genomics/shared/322
+
+**MiSeq pipeline**
+
+Create the flowcell directory under /bigdata/genomics/shared/
+```
+cd /bigdata/genomics/shared/
+mkdir flowcell_num
+```
+
+Copy the flowcell directory
+```
+cp /bigdata/genomics/cclark/flowcell_num /bigdata/genomics/shared/flowcell_num
+```
+
+Create samplesheet for follow up scripts after demultiplexing
+```
+create_samplesheet_miseq.R
+USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
+```
+Rename fastqs
+```
+fastqs_rename.R
+Error: USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir> <Demultiplex-type 1- CASAVA 2- user will demultiplex>
+```
+
+Generate QC report (Same as HiSeq)
+```
+qc_report_generate_targets.R
+USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>
+```
+
+Create urls and update the database (same as HiSeq)
+```
+sequence_url_update.R
+Error: USAGE:: script.R <FlowcellID> <NumberOfLanes> <FASTQPath>
+Execution halted
+```
+
+**NextSeq**
+
+Log onto pigeon and create the flowcell directory
+```
+cd /bigdata/genomics/shared/
+mkdir flowcell_number (eg.350)
+cd /bigdata/genomics/shared/RunAnalysis/
+mkdir flowcell_num (eg. flowcell_350)
+```
+
+Copy the data from hts to pigeon
+
+```
+scp -r username@hts.int.bioinfo.ucr.edu:/home/researchers/Runs/150903_NB501124_0002_AHHNG7BGXX pigeon.bioinfo.ucr.edu:/bigdata/genomics/shared/RunAnalysis/flowcellID/
+```
+
+Run bcl2fastq for demultiplexing inside flowcellID directory
+```
+bcl2fastq_run.sh
+Usage: bcl2fastq_run.sh {FlowcellID} {RunDirectoryName}
+```
+
+Create samplesheet for NextSeq (similar to NextSeq)
+```
+cp /bigdata/genomics/shared/RunAnalysis/flowcell_num/150903_NB501124_0002_AHHNG7BGXX/SampleSheet.csv /bigdata/genomics/shared/flowcellID/150903_NB501124_0002_AHHNG7BGXX/
+create_samplesheet_nextseq.R
+USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
+```
+
+Rename fastqs
+```
+fastqs_rename.R
+USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir> <Demultiplex-type 1- CASAVA 2- user will demultiplex>
+```
+    * **FlowcellID** - flowcell number, e.g. 322
+    * **NumberOfFiles** - If we have to demultiplex: 2 for paired-end, 1 for single-end. If user has to demultiplex: 3 for paired-end, 2 for single-end
+    * **SampleSheet** - SampleSheet.csv
+    * **UnalignedPath** - Path to the run directory 
+    * **RunType** - nextseq
+    * **RunDir** - Run directory (Example: 150903_NB501124_0002_AHHNG7BGXX)
+    * **Demultiplex-type** - 1 for CASAVA, 2 if user will demultiplex
+
+Generate QC report (same as HiSeq and MiSeq)
+```
+qc_report_generate_targets.R
+USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>
+```
+Update sequence urls
+```
+sequence_url_update_nextseq.R
+USAGE:: script.R <FlowcellID> <NumberOfLanes> <FASTQPath>
+```
+
 
 Analysis
 ========
