@@ -107,9 +107,12 @@ Create samplesheet for follow up scripts after demultiplexing
 cd /bigdata/genomics/shared/flowcell_ID/
 create_samplesheet_miseq.R
 USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
-# <FlowcellID> 351
-# <Samplesheet> /bigdata/genomics/shared/351/150921_M02457_0067_000000000-AJ7YY/SampleSheet.csv
 ```
+* **FlowcellID** - flowcell number, e.g. 351
+* **Samplesheet** - /bigdata/genomics/shared/351/150921_M02457_0067_000000000-AJ7YY/SampleSheet.csv
+* **Rundir** - 150921_M02457_0067_000000000-AJ7YY/
+
+
 Rename fastqs
 ```
 fastqs_rename.R
