@@ -89,6 +89,7 @@ Note: In case, we need to run CASAVA again for some lanes individually, we need 
     * **FASTQPath** - /bigdata/genomics/shared/322
 
 **MiSeq pipeline**
+==================
 
 Create the flowcell directory under /bigdata/genomics/shared/
 ```
@@ -98,13 +99,16 @@ mkdir flowcell_num # e.g. 351
 
 Copy the flowcell directory
 ```
-cp /bigdata/genomics/cclark/flowcell_num /bigdata/genomics/shared/flowcell_num
+cp /bigdata/genomics/cclark/flowcell_num /bigdata/genomics/shared/flowcell_ID
 ```
 
 Create samplesheet for follow up scripts after demultiplexing
 ```
+cd /bigdata/genomics/shared/flowcell_ID/
 create_samplesheet_miseq.R
 USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
+# <FlowcellID> 351
+# <Samplesheet> /bigdata/genomics/shared/351/150921_M02457_0067_000000000-AJ7YY/SampleSheet.csv
 ```
 Rename fastqs
 ```
