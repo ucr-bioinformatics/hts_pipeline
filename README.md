@@ -93,7 +93,7 @@ Note: In case, we need to run CASAVA again for some lanes individually, we need 
 Create the flowcell directory under /bigdata/genomics/shared/
 ```
 cd /bigdata/genomics/shared/
-mkdir flowcell_num
+mkdir flowcell_num # e.g. 351
 ```
 
 Copy the flowcell directory
