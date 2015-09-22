@@ -118,12 +118,27 @@ Rename fastqs
 fastqs_rename.R
 Error: USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir> <Demultiplex-type 1- CASAVA 2- user will demultiplex>
 ```
+* **FlowcellID** - flowcell number, e.g. 351
+* **NumberOfFiles** - 2 (if there are two *.fastq.gz files inside the directory; not considering the Undetermined files)
+* **SampleSheet** - 150921_M02457_0067_000000000-AJ7YY/SampleSheet.csv
+* **UnalignedPath** - 150921_M02457_0067_000000000-AJ7YY/
+* **RunType** - miseq
+* **RunDir** - 150921_M02457_0067_000000000-AJ7YY/
+* **Demultiplex-type** - 2
+
 
 Generate QC report (Same as HiSeq)
 ```
 qc_report_generate_targets.R
 USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>
 ```
+* **FlowcellID** - flowcell number, e.g. 351
+* **NumberOfPairs** - 1 (for single-end data), 2 (for paired-end data)
+* **FASTQPath** - /bigdata/genomics/shared/351/
+* **TargetsPath** - ./
+* **SampleSheetPath** - 150921_M02457_0067_000000000-AJ7YY/SampleSheet.csv
+* **Demultiplex type** - 2
+
 
 Create urls and update the database (same as HiSeq)
 ```
@@ -131,8 +146,13 @@ sequence_url_update.R
 Error: USAGE:: script.R <FlowcellID> <NumberOfLanes> <FASTQPath>
 Execution halted
 ```
+* **FlowcellID** - flowcell number, e.g. 351
+* **NumberOfLanes** - 1
+* **FASTQPath** - /bigdata/genomics/shared/351/
+
 
 **NextSeq**
+===========
 
 Log onto pigeon and create the flowcell directory
 ```
