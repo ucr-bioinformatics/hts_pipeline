@@ -27,6 +27,33 @@ In case John's excel file is not tab-delimited, then run
     * **FlowcellID** - flowcell number
     * **Samplesheet** - Excel sheet given by John
     * **Rundir** - /home/researchers/RunAnalysis/flowcell322/150514_SN279_0465_BC64T6ACXX/
+In order to run the new version of bcl2fastq we need a SampleSheet with a `[Data]` section. To create this you can use the following template:
+```
+[Header]
+IEMFileVersion,4
+Investigator Name,Neerja Katiyar
+Experiment Name,350
+Date,9/23/2015
+Workflow,GenerateFASTQ
+Application,HiSeq FASTQ Only
+Assay,TruSeq Small RNA
+Description,human small rna
+Chemistry,Default
+
+[Reads]
+50
+
+[Settings]
+ReverseComplement,0
+
+[Data]
+Lane,Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Project,Description
+```
+Then run the following to add the barcodes to the template SampleSheet mentioned above:
+```
+    grep -P '^C7M' SampleSheet.csv | awk -F ',' '{print $2","$3",,,,,"$5","$10","}' >> SampleSheet_old.csv
+```
+The grep regexp should match the run directory name.
 
 CASAVA
 ======
