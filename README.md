@@ -51,7 +51,7 @@ Lane,Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Pro
 ```
 Then run the following to add the barcodes to the template SampleSheet mentioned above:
 ```
-    grep -P '^C7M' SampleSheet.csv | awk -F ',' '{print $2","$3",,,,,"$5","$10","}' >> SampleSheet_old.csv
+grep -P '^C7M' SampleSheet.csv | awk -F ',' '{print $2","$3",,,,,"$5","$10","}' >> SampleSheet_old.csv
 ```
 The grep regexp should match the run directory name.
 
