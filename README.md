@@ -174,7 +174,7 @@ bcl2fastq_run.sh
 Usage: bcl2fastq_run.sh {FlowcellID} {RunDirectoryName}
 ```
 
-Create samplesheet for NextSeq (similar to NextSeq)
+Create samplesheet for NextSeq (similar to MiSeq)
 ```
 cp /bigdata/genomics/shared/RunAnalysis/flowcell_num/150903_NB501124_0002_AHHNG7BGXX/SampleSheet.csv /bigdata/genomics/shared/flowcellID/150903_NB501124_0002_AHHNG7BGXX/
 create_samplesheet_nextseq.R
