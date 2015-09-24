@@ -25,6 +25,15 @@ flowcell_table <- dbGetQuery(con,paste("SELECT * FROM flowcell_list where flowce
 
 sequence_url <-paste( "/illumina_runs/",flowcellid, "/", sep="")
 
+# Check if Bustard Summary exists for each 'qc' sym-link
+qc_url <- c()
+if (length(qcs) > 0) {
+    for (qc in qcs){
+        qc_url <- cbind(qc_url, paste(sequence_url, qc, "/",sep="") )
+    }
+    qc_url <- paste(qc_url,collapse="\n")
+}
+
 # Update CASAVA Bustard Summary in flowcell_list table
 command <-paste("UPDATE `flowcell_list` SET `qc_url` = '", qc_url, "' WHERE `flowcell_id` =", flowcellid, " LIMIT 1",sep="")
 result <- dbGetQuery(con,command)
