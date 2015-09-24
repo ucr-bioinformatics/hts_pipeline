@@ -25,15 +25,6 @@ flowcell_table <- dbGetQuery(con,paste("SELECT * FROM flowcell_list where flowce
 
 sequence_url <-paste( "/illumina_runs/",flowcellid, "/", sep="")
 
-# Check if Bustard Summary exists for each 'qc' sym-link
-qc_url <- c()
-if (length(qcs) > 0) {
-    for (qc in qcs){
-        qc_url <- cbind(qc_url, paste(sequence_url, qc, "/BustardSummary.xml",sep="") )
-    }
-    qc_url <- paste(qc_url,collapse="\n")
-}
-
 # Update CASAVA Bustard Summary in flowcell_list table
 command <-paste("UPDATE `flowcell_list` SET `qc_url` = '", qc_url, "' WHERE `flowcell_id` =", flowcellid, " LIMIT 1",sep="")
 result <- dbGetQuery(con,command)
@@ -54,13 +45,14 @@ for (i in c(1:lanes)) {
 	fastqurl <- paste(sequence_url, fastqfiles,sep="")
 	fastqurl <- paste(fastqurl, collapse="\n")
 
-        # Build CASAVA Demultiplex URLs for each 'qc' directory
-        quality_url <- c()
-        for (qc in qcs){
-            quality_url <- cbind(quality_url, paste(sequence_url,qc,"/",sep="")) 
-        }
+    # Build CASAVA Demultiplex URLs for each 'qc' directory
+    quality_url <- c()
+    for (qc in qcs){
+        quality_url <- cbind(quality_url, paste(sequence_url,qc,"/",sep=""))
+        qc_url <- cbind(quality_url, paste(sequence_url,qc,"/",sep="")) 
+    }
 
-        # Define FASTQ Qualtiy Report PDF path
+    # Define FASTQ Qualtiy Report PDF path
 	fq_pdf_report <- paste("fastq_report/flowcell",flowcellid,"_lane",i,"_fastqReport.pdf",sep="")
 	# Check if FASTQ Quality Report PDF exists
 	if(file.exists(fq_pdf_report)){
@@ -74,7 +66,7 @@ for (i in c(1:lanes)) {
         }
 	qual_url <-c(qual_url,qc_url)
 
-        command <- paste("UPDATE `sample_list` SET `sequence_url` = '", fastqurl,"',`quality_url` = '", qual_url, "' WHERE `sample_list`.`sample_id` =", sample_id, " AND `sample_list`.`project_id` =", project_id, " LIMIT 1",sep="")
+    command <- paste("UPDATE `sample_list` SET `sequence_url` = '", fastqurl,"',`quality_url` = '", qual_url, "' WHERE `sample_list`.`sample_id` =", sample_id, " AND `sample_list`.`project_id` =", project_id, " LIMIT 1",sep="")
 	dbGetQuery(con,command)
         writeLines(paste("Updated FASTQs:: \n",fastqurl))
         writeLines(paste("QUAL_URL:: \n",qual_url))
