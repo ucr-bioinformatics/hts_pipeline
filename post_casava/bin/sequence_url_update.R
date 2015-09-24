@@ -57,7 +57,7 @@ for (i in c(1:lanes)) {
         # Build CASAVA Demultiplex URLs for each 'qc' directory
         quality_url <- c()
         for (qc in qcs){
-            quality_url <- cbind(quality_url, paste(sequence_url,qc,"/Demultiplex_Stats.htm",sep="")) 
+            quality_url <- cbind(quality_url, paste(sequence_url,qc,"/",sep="")) 
         }
 
         # Define FASTQ Qualtiy Report PDF path
