@@ -58,17 +58,18 @@ gen_link <- function(x) {
 	
     if (run_type == "hiseq"){
        	#file_name <- paste(sample,"_.*_L00",lane[i],"_R", p, ".*fastq.gz$", sep="")
-        fastq_path <- paste(unaligned_path,'/Project_',project_id,'/Sample_',sample_id,'/',sep="")
+        fastq_path <- paste(unaligned_path,'/',project_id,'/',sep="")
         if (demultiplex_type == 2){
                 file_name <- paste(sample_id,"_NoIndex","_L00",lane,"_R", p, ".*fastq.gz$", sep="")
                 }
         else{
-                file_name <- paste(sample_id,".*_",index,"_L00",lane,"_R", p, ".*fastq.gz$", sep="")
-             }
+                file_name <- paste(sample_id,".*_L00",lane,"_R", p, ".*fastq.gz$", sep="")
+        }
+        print(paste(fastq_path,file_name))
         files <- list.files(path=fastq_path,pattern=file_name)       	
 
         # Get undetermined files
-        ufastq_path <- paste(unaligned_path,'/Undetermined_indices/Sample_lane',lane,'/',sep="")
+        ufastq_path <- paste(unaligned_path,'/',sep="")
         file_name_undermine <-paste(".*Undetermined.*_L00",lane,"_[R|I]", p, ".*fastq.gz$", sep="")
         files_undermine <- list.files(path=ufastq_path,pattern=file_name_undermine)
 
@@ -151,19 +152,7 @@ if (length(warn) > 0){
     print(warn)
 }
 
-if(run_type == "hiseq"){
-# Create QC sym-link
-	qcs <- list.files(path=unaligned_path, pattern='^qc[0-9]*$')
-	if (length(qcs) > 1) {
-    		last_qc <- qcs[-1]
-    		next_qc <- paste('qc', is.numeric(gsub("^qc", '',last_qc))+1, sep="")
-	}else {
-    		next_qc <- 'qc'
-	}
-	system(paste('ln -s ', unaligned_path, '/Basecall_Stats_* ', next_qc, sep=""))
-}
-
-if(run_type == "nextseq"){
+if(run_type == "nextseq" || run_type == "hiseq"){
 # Create QC sym-link
     qcs <- list.files(path=unaligned_path, pattern='^qc[0-9]*$')
     if (length(qcs) > 1) {
