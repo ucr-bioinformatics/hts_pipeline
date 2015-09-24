@@ -28,37 +28,37 @@ In case John's excel file is not tab-delimited, then run
     * **Samplesheet** - Excel sheet given by John
     * **Rundir** - /home/researchers/RunAnalysis/flowcell322/150514_SN279_0465_BC64T6ACXX/
 4. Prepare proper formatted SampleSheet
-Rename SampleSheet.csv to SampleSheet_new.csv
-```
-mv SampleSheet.csv SampleSheet_new.csv
-```
-In order to run the new version of bcl2fastq we need a SampleSheet with a `[Data]` section. To create this you can create a file with the name SampleSheet.csv with the following template:
-```
-[Header]
-IEMFileVersion,4
-Investigator Name,Neerja Katiyar
-Experiment Name,350
-Date,9/23/2015
-Workflow,GenerateFASTQ
-Application,HiSeq FASTQ Only
-Assay,TruSeq Small RNA
-Description,human small rna
-Chemistry,Default
-
-[Reads]
-50
-
-[Settings]
-ReverseComplement,0
-
-[Data]
-Lane,Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Project,Description
-```
-Then run the following to add the barcodes to the template SampleSheet mentioned above:
-```
-grep -P '^C7M' SampleSheet_new.csv | awk -F ',' '{print $2","$3",,,,,"$5","$10","}' >> SampleSheet.csv
-```
-The grep regexp should match the run directory name.
+    Rename SampleSheet.csv to SampleSheet_new.csv
+    ```
+    mv SampleSheet.csv SampleSheet_new.csv
+    ```
+    In order to run the new version of bcl2fastq we need a SampleSheet with a `[Data]` section. To create this you can create a file with the name SampleSheet.csv with the following template:
+    ```
+    [Header]
+    IEMFileVersion,4
+    Investigator Name,Neerja Katiyar
+    Experiment Name,350
+    Date,9/23/2015
+    Workflow,GenerateFASTQ
+    Application,HiSeq FASTQ Only
+    Assay,TruSeq Small RNA
+    Description,human small rna
+    Chemistry,Default
+    
+    [Reads]
+    50
+    
+    [Settings]
+    ReverseComplement,0
+    
+    [Data]
+    Lane,Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Project,Description
+    ```
+    Then run the following to add the barcodes to the template SampleSheet mentioned above:
+    ```
+    grep -P '^C7M' SampleSheet_new.csv | awk -F ',' '{print $2","$3",,,,,"$5","$10","}' >> SampleSheet.csv
+    ```
+    The grep regexp should match the run directory name.
 
 CASAVA
 ======
@@ -80,10 +80,10 @@ On the HTS system, go to /home/casava_fastqs/flowcellnum/ and run the following:
     This should allow the Illumina web server to server the index.html.
 
 2. Rename/Move previous SampleSheet.csv to SampleSheet_old.csv
-```
-mv SampleSheet.csv SampleSheet_old.csv # [Data] format
-mv SampleSheet_new.csv SampleSheet.csv # Old CASAVA format, no [Data] section
-```
+    ```
+    mv SampleSheet.csv SampleSheet_old.csv # [Data] format
+    mv SampleSheet_new.csv SampleSheet.csv # Old CASAVA format, no [Data] section
+    ```
 
 Post-CASAVA
 ===========
