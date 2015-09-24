@@ -230,13 +230,13 @@ Rename fastqs
 fastqs_rename.R
 USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir> <Demultiplex-type 1- CASAVA 2- user will demultiplex>
 ```
-    * **FlowcellID** - flowcell number, e.g. 322
-    * **NumberOfFiles** - If we have to demultiplex: 2 for paired-end, 1 for single-end. If user has to demultiplex: 3 for paired-end, 2 for single-end
-    * **SampleSheet** - SampleSheet.csv
-    * **UnalignedPath** - Path to the run directory 
-    * **RunType** - nextseq
-    * **RunDir** - Run directory (Example: 150903_NB501124_0002_AHHNG7BGXX)
-    * **Demultiplex-type** - 1 for CASAVA, 2 if user will demultiplex
+* **FlowcellID** - flowcell number, e.g. 322
+* **NumberOfFiles** - If we have to demultiplex: 2 for paired-end, 1 for single-end. If user has to demultiplex: 3 for paired-end, 2 for single-end
+* **SampleSheet** - SampleSheet.csv
+* **UnalignedPath** - Path to the run directory 
+* **RunType** - nextseq
+* **RunDir** - Run directory (Example: 150903_NB501124_0002_AHHNG7BGXX)
+* **Demultiplex-type** - 1 for CASAVA, 2 if user will demultiplex
 
 Generate QC report (same as HiSeq and MiSeq)
 ```
