@@ -27,8 +27,12 @@ In case John's excel file is not tab-delimited, then run
     * **FlowcellID** - flowcell number
     * **Samplesheet** - Excel sheet given by John
     * **Rundir** - /home/researchers/RunAnalysis/flowcell322/150514_SN279_0465_BC64T6ACXX/
-
-In order to run the new version of bcl2fastq we need a SampleSheet with a `[Data]` section. To create this you can create a file with the name SampleSheet_old.csv with the following template:
+4. Prepare proper formatted SampleSheet
+Rename SampleSheet.csv to SampleSheet_new.csv
+```
+mv SampleSheet.csv SampleSheet_new.csv
+```
+In order to run the new version of bcl2fastq we need a SampleSheet with a `[Data]` section. To create this you can create a file with the name SampleSheet.csv with the following template:
 ```
 [Header]
 IEMFileVersion,4
@@ -52,7 +56,7 @@ Lane,Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Pro
 ```
 Then run the following to add the barcodes to the template SampleSheet mentioned above:
 ```
-grep -P '^C7M' SampleSheet.csv | awk -F ',' '{print $2","$3",,,,,"$5","$10","}' >> SampleSheet_old.csv
+grep -P '^C7M' SampleSheet_new.csv | awk -F ',' '{print $2","$3",,,,,"$5","$10","}' >> SampleSheet.csv
 ```
 The grep regexp should match the run directory name.
 
@@ -61,13 +65,22 @@ CASAVA
 1. Run CASAVA
 On the HTS system, go to /home/casava_fastqs/flowcellnum/ and run the following:
     ```
-    /opt/bcl2fastq/1.8.4/bin/configureBclToFastq.pl --input-dir /home/researchers/RunAnalysis/flowcell338/150715_SN279_0478_AC7T7YACXX/Data/Intensities/BaseCalls --sample-sheet /home/researchers/RunAnalysis/flowcell338/150715_SN279_0478_AC7T7YACXX/Data/Intensities/BaseCalls/SampleSheet.csv --fastq-cluster-count 600000000 --ignore-missing-stats --output-dir /home/casava_fastqs/338/Unaligned
-    cd Unaligned/
-    nohup make -j 8
+    qsub -I
+    module load bcl2fastq
+    cd /bigdata/genomics/shared/RunAnalysis/flowcell350
+    nohup bcl2fastq --runfolder-dir=150918_SN279_0487_AC7M9UACXX/ --processing-threads=64 --demultiplexing-threads=12 --loading-threads=4 --writing-threads=4 --output-dir=/bigdata/genomics/shared/350/150918_SN279_0487_AC7M9UACXX
     ```
-Note: inside Unaligend/ directory, check inside the Basecall_Stats_C7T7YACXX directory for the file "Demultiplex_Stats.htm"; if present, the casava process has run normally. Also check for nohup.out file for any errors. 
+Note: inside the output folder there should be a Reports/html directory, check inside this directory for the file "index.html". Then create a symlink like so:
+```
+ln -s Reports/html qc
+```
+This should allow the Illumina web server to server the index.html.
 
-2. Copy SampleSheet from BaseCalls to FASTQs directory (besides the Unaligned output)
+2. Rename/Move previous SampleSheet.csv to SampleSheet_old.csv
+```
+mv SampleSheet.csv SampleSheet_old.csv # [Data] format
+mv SampleSheet_new.csv SampleSheet.csv # Old CASAVA format, no [Data] section
+```
 
 Post-CASAVA
 ===========
