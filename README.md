@@ -70,11 +70,14 @@ On the HTS system, go to /home/casava_fastqs/flowcellnum/ and run the following:
     cd /bigdata/genomics/shared/RunAnalysis/flowcell350
     nohup bcl2fastq --runfolder-dir=150918_SN279_0487_AC7M9UACXX/ --processing-threads=64 --demultiplexing-threads=12 --loading-threads=4 --writing-threads=4 --output-dir=/bigdata/genomics/shared/350/150918_SN279_0487_AC7M9UACXX
     ```
-Note: inside the output folder there should be a Reports/html directory, check inside this directory for the file "index.html". Then create a symlink like so:
-```
-ln -s Reports/html qc
-```
-This should allow the Illumina web server to server the index.html.
+    Note: inside the output folder there should be a Reports/html directory, check inside this directory for the file "index.html". 
+
+    Then create a symlink like so:
+    ```
+    ln -s Reports/html qc
+    ```
+    
+    This should allow the Illumina web server to server the index.html.
 
 2. Rename/Move previous SampleSheet.csv to SampleSheet_old.csv
 ```
