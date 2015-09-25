@@ -105,6 +105,11 @@ Post-CASAVA
     * **RunType** - hiseq or miseq
     * **RunDir** - Unaligned/
     * **Demultiplex-type** - 1 for CASAVA, 2 if user will demultiplex
+
+**Note**: it is a good idea to check any duplicate symlinks inside the directory. So run the following command:
+```
+readlink * | sort | uniq -d
+```
     
 3. Generate QC report
     ```
