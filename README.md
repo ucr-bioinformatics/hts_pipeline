@@ -105,6 +105,11 @@ Post-CASAVA
     * **RunType** - hiseq or miseq
     * **RunDir** - Unaligned/
     * **Demultiplex-type** - 1 for CASAVA, 2 if user will demultiplex
+
+    **Note**: it is a good idea to check any duplicate symlinks inside the directory. So run the following command:
+    ```
+    readlink * | sort | uniq -d
+    ```
     
 3. Generate QC report
     ```
@@ -117,7 +122,7 @@ Post-CASAVA
     * **FASTQPath** - /bigdata/genomics/shared/322/
     * **TargetsPath** - ./
     * **SampleSheetPath** - SampleSheet.csv
-    * **Demultiplex type** - 1 for CASAVA, 2 if user will demultiplex
+    * **Demultiplex type** - 1 for CASAVA, 2 if user will demultiplex.
 Note: In case, we need to run CASAVA again for some lanes individually, we need to add the link to Summary Statistics, i.e. to create new qc_lane directory.
     ```
     ln -s Unaligned_newlane/Basecall_Stats_C64T6ACXX/ qc_lane
@@ -168,7 +173,7 @@ Error: USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPat
 * **UnalignedPath** - 150921_M02457_0067_000000000-AJ7YY/
 * **RunType** - miseq
 * **RunDir** - 150921_M02457_0067_000000000-AJ7YY/
-* **Demultiplex-type** - 2
+* **Demultiplex-type** - 1
 
 
 Generate QC report (Same as HiSeq)
@@ -181,7 +186,7 @@ USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleS
 * **FASTQPath** - /bigdata/genomics/shared/351/
 * **TargetsPath** - ./
 * **SampleSheetPath** - 150921_M02457_0067_000000000-AJ7YY/SampleSheet.csv
-* **Demultiplex type** - 2
+* **Demultiplex type** - 1
 
 
 Create urls and update the database (same as HiSeq)
