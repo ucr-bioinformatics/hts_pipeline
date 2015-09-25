@@ -181,7 +181,7 @@ USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleS
 * **FASTQPath** - /bigdata/genomics/shared/351/
 * **TargetsPath** - ./
 * **SampleSheetPath** - 150921_M02457_0067_000000000-AJ7YY/SampleSheet.csv
-* **Demultiplex type** - 2
+* **Demultiplex type** - 1
 
 
 Create urls and update the database (same as HiSeq)
