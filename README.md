@@ -168,7 +168,7 @@ Error: USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPat
 * **UnalignedPath** - 150921_M02457_0067_000000000-AJ7YY/
 * **RunType** - miseq
 * **RunDir** - 150921_M02457_0067_000000000-AJ7YY/
-* **Demultiplex-type** - 2
+* **Demultiplex-type** - 1
 
 
 Generate QC report (Same as HiSeq)
