@@ -63,7 +63,7 @@ gen_link <- function(x) {
                 file_name <- paste(sample_id,"_NoIndex","_L00",lane,"_R", p, ".*fastq.gz$", sep="")
                 }
         else{
-                file_name <- paste(sample_id,".*_L00",lane,"_R", p, ".*fastq.gz$", sep="")
+                file_name <- paste(sample_id,"_.*_L00",lane,"_R", p, ".*fastq.gz$", sep="")
         }
         print(paste(fastq_path,file_name))
         files <- list.files(path=fastq_path,pattern=file_name)       	
