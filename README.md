@@ -122,7 +122,7 @@ Post-CASAVA
     * **FASTQPath** - /bigdata/genomics/shared/322/
     * **TargetsPath** - ./
     * **SampleSheetPath** - SampleSheet.csv
-    * **Demultiplex type** - 1 for CASAVA, 2 if user will demultiplex
+    * **Demultiplex type** - 1 for CASAVA, 2 if user will demultiplex.
 Note: In case, we need to run CASAVA again for some lanes individually, we need to add the link to Summary Statistics, i.e. to create new qc_lane directory.
     ```
     ln -s Unaligned_newlane/Basecall_Stats_C64T6ACXX/ qc_lane
