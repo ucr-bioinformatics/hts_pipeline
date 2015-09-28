@@ -20,9 +20,12 @@ cd $SHARED_GENOMICS/RunAnalysis/flowcell$fc_id
 echo "Creating output directory..."
 mkdir -p $SHARED_GENOMICS/$fc_id/$run_dir
 echo "Running bcl2fastq for demultiplexing..."
-if [[ ! $base_mask == "NA" ]]; then
+
+if [[ ! "${base_mask}" == "NA" ]]; then
+    echo -e "\tRunning with BaseMask ${base_mask}"
     nohup bcl2fastq --use-bases-mask=$base_mask --runfolder-dir=$run_dir --processing-threads=64 --demultiplexing-threads=12 --loading-threads=4 --writing-threads=4 --output-dir=$SHARED_GENOMICS/$fc_id/$run_dir > $SHARED_GENOMICS/$fc_id/nohup.out &
 else
+    echo -e "\tRunning with out BaseMask"
     nohup bcl2fastq --runfolder-dir=$run_dir --processing-threads=64 --demultiplexing-threads=12 --loading-threads=4 --writing-threads=4 --output-dir=$SHARED_GENOMICS/$fc_id/$run_dir > $SHARED_GENOMICS/$fc_id/nohup.out &
 fi
 
