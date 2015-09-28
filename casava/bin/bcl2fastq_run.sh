@@ -23,9 +23,9 @@ echo "Running bcl2fastq for demultiplexing..."
 
 if [[ ! "${base_mask}" == "NA" ]]; then
     echo -e "\tRunning with BaseMask ${base_mask}"
-    bcl2fastq --use-bases-mask=$base_mask --runfolder-dir=$run_dir --processing-threads=64 --demultiplexing-threads=12 --loading-threads=4 --writing-threads=4 --output-dir=$SHARED_GENOMICS/$fc_id/$run_dir > $SHARED_GENOMICS/$fc_id/nohup.out &
+    bcl2fastq --use-bases-mask=$base_mask --runfolder-dir=$run_dir --processing-threads=64 --demultiplexing-threads=12 --loading-threads=4 --writing-threads=4 --output-dir=$SHARED_GENOMICS/$fc_id/$run_dir 2>&1 | tee $SHARED_GENOMICS/$fc_id/nohup.out
 else
     echo -e "\tRunning with out BaseMask"
-    bcl2fastq --runfolder-dir=$run_dir --processing-threads=64 --demultiplexing-threads=12 --loading-threads=4 --writing-threads=4 --output-dir=$SHARED_GENOMICS/$fc_id/$run_dir > $SHARED_GENOMICS/$fc_id/nohup.out &
+    bcl2fastq --runfolder-dir=$run_dir --processing-threads=64 --demultiplexing-threads=12 --loading-threads=4 --writing-threads=4 --output-dir=$SHARED_GENOMICS/$fc_id/$run_dir 2>&1 | tee $SHARED_GENOMICS/$fc_id/nohup.out
 fi
 
