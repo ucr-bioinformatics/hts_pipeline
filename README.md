@@ -110,6 +110,10 @@ Post-CASAVA
     ```
     readlink * | sort | uniq -d
     ```
+    It is also a good idea to check and make sure that the proper barcodes are assigned the correct symlink:
+    ```
+    for fastq in $(ls flowcell344_lane*.fastq.gz); do file_barcode=$(echo $fastq | cut -d_ -f4 |cut -d. -f1); barcode=$(zcat $fastq |head -n1 | cut -d: -f10); echo "$barcode $file_barcode"; if [[ "$barcode" != "$file_barcode" ]]; then echo "FAILED"; fi; done
+    ```
     
 3. Generate QC report
     ```
