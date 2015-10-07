@@ -6,7 +6,7 @@ E_BADARGS=65
 
 if [ $# -ne $EXPECTED_ARGS ]
 then
-  echo "Usage: `basename $0` {FlowcellID} {RunDirectoryName} {BaseMask} {SampleSheet} {Mismatch}"
+  echo "Usage: `basename $0` {FlowcellID} {RunDirectoryName} {BaseMask} {SampleSheet} {Mismatch, default=1}"
   exit $E_BADARGS
 fi
 
