@@ -246,6 +246,7 @@ Rename fastqs
 ```
 fastqs_rename.R
 USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir> <Demultiplex-type 1- CASAVA 2- user will demultiplex>
+Example : fastqs_rename.R 356 2 /bigdata/genomics/shared/356/151005_NB501124_0005_AHHNY7BGXX/SampleSheet.csv 151005_NB501124_0005_AHHNY7BGXX/ nextseq 151005_NB501124_0005_AHHNY7BGXX/ 1
 ```
 * **FlowcellID** - flowcell number, e.g. 322
 * **NumberOfFiles** - If we have to demultiplex: 2 for paired-end, 1 for single-end. If user has to demultiplex: 3 for paired-end, 2 for single-end
@@ -259,6 +260,7 @@ Generate QC report (same as HiSeq and MiSeq)
 ```
 qc_report_generate_targets.R
 USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>
+Example : qc_report_generate_targets.R 356 2 /bigdata/genomics/shared/356/ ./ /bigdata/genomics/shared/356/151005_NB501124_0005_AHHNY7BGXX/SampleSheet.csv 1
 ```
 Update sequence urls
 ```
