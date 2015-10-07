@@ -224,7 +224,7 @@ scp -r username@hts.int.bioinfo.ucr.edu:/home/researchers/Runs/150903_NB501124_0
 Run bcl2fastq for demultiplexing inside flowcellID directory
 ```
 bcl2fastq_run.sh
-Usage: bcl2fastq_run.sh {FlowcellID} {RunDirectoryName} {BaseMask} {SampleSheet} {Mismatch, default=1}
+Usage:: bcl2fastq_run.sh {FlowcellID} {RunDirectoryName} {BaseMask} {SampleSheet} {Mismatch, default=1}
 Example : bcl2fastq_run.sh 356 151005_NB501124_0005_AHHNY7BGXX NA /bigdata/genomics/shared/356/SampleSheet.csv 0
 ```
 * **FlowcellID** - flowcell number, e.g. 322
@@ -239,6 +239,7 @@ cp SampleSheet.csv /bigdata/genomics/shared/356/151005_NB501124_0005_AHHNY7BGXX/
 
 create_samplesheet_nextseq.R
 USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
+Example : create_samplesheet_nextseq.R 356 /bigdata/genomics/shared/356/151005_NB501124_0005_AHHNY7BGXX/SampleSheet.csv 151005_NB501124_0005_AHHNY7BGXX/
 ```
 
 Rename fastqs
