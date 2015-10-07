@@ -224,14 +224,19 @@ scp -r username@hts.int.bioinfo.ucr.edu:/home/researchers/Runs/150903_NB501124_0
 Run bcl2fastq for demultiplexing inside flowcellID directory
 ```
 bcl2fastq_run.sh
-Usage: bcl2fastq_run.sh {FlowcellID} {RunDirectoryName} {BaseMask}
+Usage: bcl2fastq_run.sh {FlowcellID} {RunDirectoryName} {BaseMask} {SampleSheet} {Mismatch, default=1}
+Example : bcl2fastq_run.sh 356 151005_NB501124_0005_AHHNY7BGXX NA /bigdata/genomics/shared/356/SampleSheet.csv 0
 ```
 * **FlowcellID** - flowcell number, e.g. 322
 * **RunDirectoryName** - Run directory (Example: 150903_NB501124_0002_AHHNG7BGXX)
-* **BaseMask** - NA for default (barcode length = 6) If barcode length = 8, BaseMask value will be Y*,I8
+* **BaseMask** - NA for default (barcode length = 6) If barcode length = 8, BaseMask value will be Y*,I8 (single-end), Y*,I8, Y* for paired-end.
+*  **SampleSheet** - Absolute path for SampleSheet
+*  **Mismatch** - Barcode mismatch (Default=1, if program shows error, then use mismatch=0 instead).
 Create samplesheet for NextSeq (similar to MiSeq)
 ```
-cp /bigdata/genomics/shared/RunAnalysis/flowcell_num/150903_NB501124_0002_AHHNG7BGXX/SampleSheet.csv /bigdata/genomics/shared/flowcellID/150903_NB501124_0002_AHHNG7BGXX/
+Copy Samplesheet to Run directory
+cp SampleSheet.csv /bigdata/genomics/shared/356/151005_NB501124_0005_AHHNY7BGXX/
+
 create_samplesheet_nextseq.R
 USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
 ```
