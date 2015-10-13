@@ -38,6 +38,7 @@ Indices_new <- gsub(" ","", Indices_new)
 Indices_new <- gsub("and",",", Indices_new)
 #print(Indices_new)
 cnt = 0
+sample_id=0
 
 cat(paste("FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SampleProject", sep=","),file="SampleSheet.csv")
 
@@ -54,7 +55,8 @@ for (j in lane){
 	project_id_new <- gsub(" ","",project_id)
 	for (k in (1:index_len[[1]])){
 		#print(k)
+        sample_id = sample_id +1
 		index_val <- gsub(" ", "", index_list[[1]][k])
-		line <- cat(paste("\n",label,",",j,",",k,",,",index_val,",,","N,",",","nkatiyar,",project_id_new,sep=""),file="SampleSheet.csv", append=TRUE)
+		line <- cat(paste("\n",label,",",j,",",sample_id,",,",index_val,",,","N,",",","nkatiyar,",project_id_new,sep=""),file="SampleSheet.csv", append=TRUE)
 	}
 }
