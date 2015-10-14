@@ -229,7 +229,7 @@ Example : bcl2fastq_run.sh 356 151005_NB501124_0005_AHHNY7BGXX NA /bigdata/genom
 ```
 * **FlowcellID** - flowcell number, e.g. 322
 * **RunDirectoryName** - Run directory (Example: 150903_NB501124_0002_AHHNG7BGXX)
-* **BaseMask** - NA for default (barcode length = 6) If barcode length = 8, BaseMask value will be Y*,I8 (single-end), Y*,I8, Y* for paired-end.
+* **BaseMask** - NA for default (barcode length = 6) If barcode length = 8, BaseMask value will be Y**,I8 (single-end), Y**,I8, Y* for paired-end.
 *  **SampleSheet** - Absolute path for SampleSheet
 *  **Mismatch** - Barcode mismatch (Default=1, if program shows error, then use mismatch=0 instead).
 Create samplesheet for NextSeq (similar to MiSeq)
