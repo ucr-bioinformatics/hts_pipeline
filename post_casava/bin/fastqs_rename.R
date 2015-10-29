@@ -107,25 +107,25 @@ gen_link <- function(x) {
             if ( length(f) > 0) {
                 if ( i==4 ) {
                     # Processes Undetermined Index files 
-                    commands <- paste("ln -s ",ufastq_path,'/',f, "  ", "Undetermined_lane",lane,"_pair",index_pair_num,"_m1.fastq.gz",sep="")
+                    commands <- paste("ln -s ",ufastq_path,'/',f, "  ", "Undetermined_lane",lane,"_pair",index_pair_num,".fastq.gz",sep="")
                     #index_pair_num <- index_pair_num + 1
                 } else if ( i==3 ) { 
                     # Processes Undetermined files
-                    commands <- paste("ln -s ",ufastq_path,'/',f, "  ", "Undetermined_lane",lane,"_pair",p,"_m1.fastq.gz",sep="")
+                    commands <- paste("ln -s ",ufastq_path,'/',f, "  ", "Undetermined_lane",lane,"_pair",p,".fastq.gz",sep="")
                 } else if ( i==2 ) {
                     # Processes Index files (I1,I2,etc...)
                     if (!is.na(index)) {
-                        commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",index_pair_num,"_",index,"_m1.fastq.gz",sep="")
+                        commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",index_pair_num,"_",index,".fastq.gz",sep="")
                     }
                     else {
-                        commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",index_pair_num,"_m1.fastq.gz",sep="")
+                        commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",index_pair_num,".fastq.gz",sep="")
                     }
                 } else if ( i==1 ) {
                     # Processes sequence files (R1,R2,etc...)
                     if (!is.na(index)) {
-                        commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",p,"_",index,"_m1.fastq.gz",sep="")
+                        commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",p,"_",index,".fastq.gz",sep="")
                     } else {
-                        commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",p,"_m1.fastq.gz",sep="")
+                        commands <- paste("ln -s ",fastq_path,'/',f, "  ", flowcell, "_lane",lane,"_pair",p,".fastq.gz",sep="")
                     }
                 } else {
                     warning(paste("ERROR: Index",i,"out of bounds."))
