@@ -2,6 +2,15 @@ Pre-CASAVA
 ==========
 1. Move sequencer run directory from Runs to RunAnalysis # (working on the HTS system)
     ```
+    If copying data from external hard drive.
+    cd /bigdata/genomics/shared/
+    mkdir flowcellnum
+    Next, we need to copy the data from hard drive to the server.
+    rsync -a 151103_SN279_0493_AC84L3ACXX nkatiyar@pigeon.bioinfo.ucr.edu:/bigdata/genomics/shared/flowcellnum
+    We can now move the raw data to the RunAnalysis folder.
+    cd /bigdata/genomics/shared/
+    mv flowcellnum /bigdata/genomics/shared/
+    
     cd /home/researchers/RunAnalysis/
     mkdir flowcellnum
     cd flowcellnum
