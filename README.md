@@ -251,12 +251,13 @@ Rename Sample sheet of the /365 directory
 ```
 mv SampleSheet.csv SampleSheet_nextseq.csv
 ```
-
+```
 create_samplesheet_nextseq.R
 USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
 Example : create_samplesheet_nextseq.R 356 /bigdata/genomics/shared/356/151005_NB501124_0005_AHHNY7BGXX/SampleSheet.csv 151005_NB501124_0005_AHHNY7BGXX/
 ```
-Rename fastqs
+
+Make sure you are in /365 directory. Rename fastqs then:
 
 ```
 fastqs_rename.R
@@ -273,6 +274,8 @@ Example : fastqs_rename.R 356 2 /bigdata/genomics/shared/356/151005_NB501124_000
 
 Generate QC report (same as HiSeq and MiSeq)
 ```
+qsub -I -q highmem -l nodes=1:ppn=8,mem=50gb,walltime=20:00:00
+cd bigdata/genomics/shared/365/
 qc_report_generate_targets.R
 USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>
 Example : qc_report_generate_targets.R 356 2 /bigdata/genomics/shared/356/ ./ /bigdata/genomics/shared/356/151005_NB501124_0005_AHHNY7BGXX/SampleSheet.csv 1
