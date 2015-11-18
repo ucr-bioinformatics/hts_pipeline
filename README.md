@@ -220,21 +220,20 @@ Log onto pigeon and create the flowcell directory
 ```
 cd /bigdata/genomics/shared/
 mkdir flowcell_number (eg.350)
-cd /bigdata/genomics/shared/RunAnalysis/
-mkdir flowcell_num (eg. flowcell_350)
+cd /bigdata/genomics/cclark/
+sudo rsync -a flowcell365/ /bigdata/genomics/shared/RunAnalysis/flowcell365
+sudo chown -R root.root /bigdata/genomics/shared/RunAnalysis/flowcell365
+sudo chmod -R go-w /bigdata/genomics/shared/RunAnalysis/flowcell365
 ```
 
-Copy the data from hts to pigeon
-
 ```
-scp -r username@hts.int.bioinfo.ucr.edu:/home/researchers/Runs/150903_NB501124_0002_AHHNG7BGXX pigeon.bioinfo.ucr.edu:/bigdata/genomics/shared/RunAnalysis/flowcellID/
+cd /bigdata/genomics/shared/365/
 ```
-
-Run bcl2fastq for demultiplexing inside flowcellID directory
+Place sample sheet from Clay's e-mail to this directory. Run bcl2fastq for demultiplexing inside flowcellID directory as
 ```
-bcl2fastq_run.sh
+qsub -l nodes=1:ppn=64,mem=50gb,walltime=10:00:00 -d . -F "365 151116_NB501124_0009_AHHNHLBGXX NA /bigdata/genomics/shared/365/SampleSheet.csv 1" ~/hts_pipeline/bin/bcl2fastq_run.sh
 Usage:: bcl2fastq_run.sh {FlowcellID} {RunDirectoryName} {BaseMask} {SampleSheet} {Mismatch, default=1}
-Example : bcl2fastq_run.sh 356 151005_NB501124_0005_AHHNY7BGXX NA /bigdata/genomics/shared/356/SampleSheet.csv 0
+Example: bcl2fastq_run.sh 356 151005_NB501124_0005_AHHNY7BGXX NA /bigdata/genomics/shared/356/SampleSheet.csv 1
 ```
 * **FlowcellID** - flowcell number, e.g. 322
 * **RunDirectoryName** - Run directory (Example: 150903_NB501124_0002_AHHNG7BGXX)
