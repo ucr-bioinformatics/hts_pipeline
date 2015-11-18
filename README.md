@@ -290,7 +290,8 @@ USAGE:: script.R <FlowcellID> <NumberOfLanes> <FASTQPath>
 * **NumberOfLanes** - 4
 * **FASTQPath** - /bigdata/genomics/shared/365/
 
-**General notes**: 
+**General notes**:   
+
 1. Check if the URLs are working, if you get an error message like "Permission denied", then set appropriate permissions, for example:
 ```
 chmod a+rx fastq_report
