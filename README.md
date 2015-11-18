@@ -240,17 +240,24 @@ Example: bcl2fastq_run.sh 356 151005_NB501124_0005_AHHNY7BGXX NA /bigdata/genomi
 * **BaseMask** - NA for default (barcode length = 6) If barcode length = 8, BaseMask value will be Y*,I8 (single-end), Y*,I8, Y* for paired-end.
 *  **SampleSheet** - Absolute path for SampleSheet
 *  **Mismatch** - Barcode mismatch (Default=1, if program shows error, then use mismatch=0 instead).
+
 Create samplesheet for NextSeq (similar to MiSeq)
 ```
 Copy Samplesheet to Run directory
 cp SampleSheet.csv /bigdata/genomics/shared/356/151005_NB501124_0005_AHHNY7BGXX/
+```
+
+Rename Sample sheet of the /365 directory
+```
+mv SampleSheet.csv SampleSheet_nextseq.csv
+```
 
 create_samplesheet_nextseq.R
 USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
 Example : create_samplesheet_nextseq.R 356 /bigdata/genomics/shared/356/151005_NB501124_0005_AHHNY7BGXX/SampleSheet.csv 151005_NB501124_0005_AHHNY7BGXX/
 ```
-
 Rename fastqs
+
 ```
 fastqs_rename.R
 USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir> <Demultiplex-type 1- CASAVA 2- user will demultiplex>
