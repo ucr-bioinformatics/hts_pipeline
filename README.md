@@ -291,7 +291,17 @@ USAGE:: script.R <FlowcellID> <NumberOfLanes> <FASTQPath>
 * **FASTQPath** - /bigdata/genomics/shared/365/
 
 **General notes**: 
-1. In case the barcode length is not 6, one can use the --use-bases-mask option such as below for barcode length of 7:
+1. Check if the URLs are working, if you get an error message like "Permission denied", then set appropriate permissions, for example:
+```
+chmod a+rx fastq_report
+chmod a+rx 151116_NB501124_0009_AHHNHLBGXX # similarly for other directories
+```
+or
+```
+find Reports/ -type d | xargs chmod a+rx # change permission for all sub-directories
+```
+
+2. In case the barcode length is not 6, one can use the --use-bases-mask option such as below for barcode length of 7:
 ```
 /opt/bcl2fastq/1.8.4/bin/configureBclToFastq.pl --input-dir /home/researchers/RunAnalysis/flowcell344/150814_SN279_0481_AC7KC5ACXX/Data/Intensities/BaseCalls --sample-sheet /home/researchers/RunAnalysis/flowcell344/150814_SN279_0481_AC7KC5ACXX/Data/Intensities/BaseCalls/SampleSheet.csv --fastq-cluster-count 600000000 --use-bases-mask Y*,I7,Y* --output-dir /home/casava_fastqs/344/Unaligned_Lane7-8
 ```
