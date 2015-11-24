@@ -2,6 +2,15 @@ Pre-CASAVA
 ==========
 1. Move sequencer run directory from Runs to RunAnalysis # (working on the HTS system)
     ```
+    If copying data from external hard drive.
+    cd /bigdata/genomics/shared/
+    mkdir flowcellnum
+    Next, we need to copy the data from hard drive to the server.
+    rsync -a 151103_SN279_0493_AC84L3ACXX nkatiyar@pigeon.bioinfo.ucr.edu:/bigdata/genomics/shared/flowcellnum
+    We can now move the raw data to the RunAnalysis folder.
+    cd /bigdata/genomics/shared/
+    mv flowcellnum /bigdata/genomics/shared/
+    
     cd /home/researchers/RunAnalysis/
     mkdir flowcellnum
     cd flowcellnum
@@ -211,38 +220,45 @@ Log onto pigeon and create the flowcell directory
 ```
 cd /bigdata/genomics/shared/
 mkdir flowcell_number (eg.350)
-cd /bigdata/genomics/shared/RunAnalysis/
-mkdir flowcell_num (eg. flowcell_350)
+cd /bigdata/genomics/cclark/
+sudo rsync -a flowcell365/ /bigdata/genomics/shared/RunAnalysis/flowcell365
+sudo chown -R root.root /bigdata/genomics/shared/RunAnalysis/flowcell365
+sudo chmod -R go-w /bigdata/genomics/shared/RunAnalysis/flowcell365
 ```
 
-Copy the data from hts to pigeon
-
 ```
-scp -r username@hts.int.bioinfo.ucr.edu:/home/researchers/Runs/150903_NB501124_0002_AHHNG7BGXX pigeon.bioinfo.ucr.edu:/bigdata/genomics/shared/RunAnalysis/flowcellID/
+cd /bigdata/genomics/shared/365/
 ```
-
-Run bcl2fastq for demultiplexing inside flowcellID directory
+Place sample sheet from Clay's e-mail to this directory. Run bcl2fastq for demultiplexing inside flowcellID directory as
 ```
-bcl2fastq_run.sh
+qsub -l nodes=1:ppn=64,mem=50gb,walltime=10:00:00 -d . -F "365 151116_NB501124_0009_AHHNHLBGXX NA /bigdata/genomics/shared/365/SampleSheet.csv 1" ~/hts_pipeline/bin/bcl2fastq_run.sh
 Usage:: bcl2fastq_run.sh {FlowcellID} {RunDirectoryName} {BaseMask} {SampleSheet} {Mismatch, default=1}
-Example : bcl2fastq_run.sh 356 151005_NB501124_0005_AHHNY7BGXX NA /bigdata/genomics/shared/356/SampleSheet.csv 0
+Example: bcl2fastq_run.sh 356 151005_NB501124_0005_AHHNY7BGXX NA /bigdata/genomics/shared/356/SampleSheet.csv 1
 ```
 * **FlowcellID** - flowcell number, e.g. 322
 * **RunDirectoryName** - Run directory (Example: 150903_NB501124_0002_AHHNG7BGXX)
 * **BaseMask** - NA for default (barcode length = 6) If barcode length = 8, BaseMask value will be Y*,I8 (single-end), Y*,I8, Y* for paired-end.
 *  **SampleSheet** - Absolute path for SampleSheet
 *  **Mismatch** - Barcode mismatch (Default=1, if program shows error, then use mismatch=0 instead).
+
 Create samplesheet for NextSeq (similar to MiSeq)
 ```
 Copy Samplesheet to Run directory
 cp SampleSheet.csv /bigdata/genomics/shared/356/151005_NB501124_0005_AHHNY7BGXX/
+```
 
+Rename Sample sheet of the /365 directory
+```
+mv SampleSheet.csv SampleSheet_nextseq.csv
+```
+```
 create_samplesheet_nextseq.R
 USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
 Example : create_samplesheet_nextseq.R 356 /bigdata/genomics/shared/356/151005_NB501124_0005_AHHNY7BGXX/SampleSheet.csv 151005_NB501124_0005_AHHNY7BGXX/
 ```
 
-Rename fastqs
+Make sure you are in /365 directory. Rename fastqs then:
+
 ```
 fastqs_rename.R
 USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir> <Demultiplex-type 1- CASAVA 2- user will demultiplex>
@@ -258,6 +274,8 @@ Example : fastqs_rename.R 356 2 /bigdata/genomics/shared/356/151005_NB501124_000
 
 Generate QC report (same as HiSeq and MiSeq)
 ```
+qsub -I -q highmem -l nodes=1:ppn=8,mem=50gb,walltime=20:00:00
+cd bigdata/genomics/shared/365/
 qc_report_generate_targets.R
 USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>
 Example : qc_report_generate_targets.R 356 2 /bigdata/genomics/shared/356/ ./ /bigdata/genomics/shared/356/151005_NB501124_0005_AHHNY7BGXX/SampleSheet.csv 1
@@ -268,8 +286,22 @@ sequence_url_update_nextseq.R
 USAGE:: script.R <FlowcellID> <NumberOfLanes> <FASTQPath>
 ```
 
-**General notes**:  
-1. In case the barcode length is not 6, one can use the --use-bases-mask option such as below for barcode length of 7:
+* **FlowcellID** - flowcell number, e.g. 365
+* **NumberOfLanes** - 4
+* **FASTQPath** - /bigdata/genomics/shared/365/
+
+**General notes**:   
+
+1. Check if the URLs are working, if you get an error message like "Permission denied", then set appropriate permissions, for example:
+```
+chmod a+rx fastq_report
+chmod a+rx 151116_NB501124_0009_AHHNHLBGXX # similarly for other directories
+```
+or
+```
+find Reports/ -type d | xargs chmod a+rx # change permission for all sub-directories
+```
+2. In case the barcode length is not 6, one can use the --use-bases-mask option such as below for barcode length of 7:
 ```
 /opt/bcl2fastq/1.8.4/bin/configureBclToFastq.pl --input-dir /home/researchers/RunAnalysis/flowcell344/150814_SN279_0481_AC7KC5ACXX/Data/Intensities/BaseCalls --sample-sheet /home/researchers/RunAnalysis/flowcell344/150814_SN279_0481_AC7KC5ACXX/Data/Intensities/BaseCalls/SampleSheet.csv --fastq-cluster-count 600000000 --use-bases-mask Y*,I7,Y* --output-dir /home/casava_fastqs/344/Unaligned_Lane7-8
 ```
