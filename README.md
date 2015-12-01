@@ -174,6 +174,11 @@ USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
 * **Samplesheet** - /bigdata/genomics/shared/351/150921_M02457_0067_000000000-AJ7YY/SampleSheet.csv
 * **Rundir** - 150921_M02457_0067_000000000-AJ7YY/
 
+In the case of dual barcodes (i5 and i7) barcodes, please use the following script to create the samplesheet.
+```
+create_samplesheet_miseq_i5_i7.R
+USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
+```
 
 Rename fastqs
 ```
