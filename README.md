@@ -105,7 +105,7 @@ Post-CASAVA
 2. Rename FASTQ files
     ```
     ~/hts_pipeline/post_casava/bin/fastqs_rename.R
-    USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir> <Demultiplex-type 1- CASAVA 2- user will demultiplex>
+    USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir>
     ```
     * **FlowcellID** - flowcell number, e.g. 322
     * **NumberOfFiles** - If we have to demultiplex: 2 for paired-end, 1 for single-end. If user has to demultiplex: 3 for paired-end, 2 for single-end
@@ -113,7 +113,6 @@ Post-CASAVA
     * **UnalignedPath** - Unaligned/
     * **RunType** - hiseq or miseq
     * **RunDir** - Unaligned/
-    * **Demultiplex-type** - 1 for CASAVA, 2 if user will demultiplex
 
     **Note**: it is a good idea to check any duplicate symlinks inside the directory. So run the following command:
     ```
