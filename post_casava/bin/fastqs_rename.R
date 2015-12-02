@@ -8,7 +8,7 @@
 #args <- c('219','2','SampleSheet.csv','.')
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) < 6) {
-    stop("USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir> <Demultiplex-type 1- CASAVA 2- user will demultiplex>")
+    stop("USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir>")
 }
 
 print("Starting fastq rename")
@@ -42,7 +42,6 @@ if (file.exists(args[4])){
 }
 
 run_type <- args[5]
-demultiplex_type <- args[7]
 
 # Trim off leading and trailing whitespace
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
@@ -59,11 +58,7 @@ gen_link <- function(x) {
     if (run_type == "hiseq"){
        	#file_name <- paste(sample,"_.*_L00",lane[i],"_R", p, ".*fastq.gz$", sep="")
         fastq_path <- paste(unaligned_path,'/',project_id,'/',sep="")
-        if (demultiplex_type == 2){
-                file_name <- paste(sample_id,"_NoIndex","_L00",lane,"_R", p, ".*fastq.gz$", sep="")
-                }
-        else{
-                file_name <- paste(sample_id,"_.*_L00",lane,"_R", p, ".*fastq.gz$", sep="")
+        file_name <- paste(sample_id,"_.*_L00",lane,"_R", p, ".*fastq.gz$", sep="")
         }
         print(paste(fastq_path,file_name))
         files <- list.files(path=fastq_path,pattern=file_name)       	
