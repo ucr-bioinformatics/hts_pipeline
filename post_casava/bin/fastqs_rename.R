@@ -59,7 +59,6 @@ gen_link <- function(x) {
        	#file_name <- paste(sample,"_.*_L00",lane[i],"_R", p, ".*fastq.gz$", sep="")
         fastq_path <- paste(unaligned_path,'/',project_id,'/',sep="")
         file_name <- paste(sample_id,"_.*_L00",lane,"_R", p, ".*fastq.gz$", sep="")
-        }
         print(paste(fastq_path,file_name))
         files <- list.files(path=fastq_path,pattern=file_name)       	
 
@@ -71,7 +70,7 @@ gen_link <- function(x) {
         # Join fastqs and undetermined
         files <- list(files,list(),files_undermine,list())
          
-    } else {
+   } else {
         # Define path
         fastq_path <- unaligned_path
         ufastq_path <- unaligned_path
