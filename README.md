@@ -105,7 +105,7 @@ Post-CASAVA
 2. Rename FASTQ files
     ```
     ~/hts_pipeline/post_casava/bin/fastqs_rename.R
-    USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir> <Demultiplex-type 1- CASAVA 2- user will demultiplex>
+    USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir>
     ```
     * **FlowcellID** - flowcell number, e.g. 322
     * **NumberOfFiles** - If we have to demultiplex: 2 for paired-end, 1 for single-end. If user has to demultiplex: 3 for paired-end, 2 for single-end
@@ -113,7 +113,6 @@ Post-CASAVA
     * **UnalignedPath** - Unaligned/
     * **RunType** - hiseq or miseq
     * **RunDir** - Unaligned/
-    * **Demultiplex-type** - 1 for CASAVA, 2 if user will demultiplex
 
     **Note**: it is a good idea to check any duplicate symlinks inside the directory. So run the following command:
     ```
@@ -183,7 +182,7 @@ USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
 Rename fastqs
 ```
 fastqs_rename.R
-Error: USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir> <Demultiplex-type 1- CASAVA 2- user will demultiplex>
+Error: USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir>
 ```
 * **FlowcellID** - flowcell number, e.g. 351
 * **NumberOfFiles** - 2 (if there are two *.fastq.gz files inside the directory; not considering the Undetermined files)
@@ -191,7 +190,6 @@ Error: USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPat
 * **UnalignedPath** - 150921_M02457_0067_000000000-AJ7YY/
 * **RunType** - miseq
 * **RunDir** - 150921_M02457_0067_000000000-AJ7YY/
-* **Demultiplex-type** - 1
 
 
 Generate QC report (Same as HiSeq)
@@ -266,8 +264,8 @@ Make sure you are in /365 directory. Rename fastqs then:
 
 ```
 fastqs_rename.R
-USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir> <Demultiplex-type 1- CASAVA 2- user will demultiplex>
-Example : fastqs_rename.R 356 2 /bigdata/genomics/shared/356/151005_NB501124_0005_AHHNY7BGXX/SampleSheet.csv 151005_NB501124_0005_AHHNY7BGXX/ nextseq 151005_NB501124_0005_AHHNY7BGXX/ 1
+USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir>
+Example : fastqs_rename.R 356 2 /bigdata/genomics/shared/356/151005_NB501124_0005_AHHNY7BGXX/SampleSheet.csv 151005_NB501124_0005_AHHNY7BGXX/ nextseq 151005_NB501124_0005_AHHNY7BGXX/
 ```
 * **FlowcellID** - flowcell number, e.g. 322
 * **NumberOfFiles** - If we have to demultiplex: 2 for paired-end, 1 for single-end. If user has to demultiplex: 3 for paired-end, 2 for single-end
