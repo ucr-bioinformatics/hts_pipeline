@@ -5,25 +5,14 @@ Pre-CASAVA
     If copying data from external hard drive.
     cd /bigdata/genomics/shared/
     mkdir flowcellnum
-    Next, we need to copy the data from hard drive to the server.
-    rsync -a 151103_SN279_0493_AC84L3ACXX nkatiyar@pigeon.bioinfo.ucr.edu:/bigdata/genomics/shared/flowcellnum
     We can now move the raw data to the RunAnalysis folder.
-    cd /bigdata/genomics/shared/
-    mv flowcellnum /bigdata/genomics/shared/
-    
-    cd /home/researchers/RunAnalysis/
-    mkdir flowcellnum
-    cd flowcellnum
-    mv /home/researchers/Runs/140513_SN279_0413_AH9G1MADXX flowcellnum
+    cd /bigdata/genomics/shared/RunAnalysis
+    mkdir flowcell_num
+    Next, we need to copy the data from hard drive to the server.
+    rsync -a 151103_SN279_0493_AC84L3ACXX nkatiyar@pigeon.bioinfo.ucr.edu:/bigdata/genomics/shared/RunAnalysis/flowcell_num
     ```
 
-2. Create symlink from run directory back to Runs (If John asks to put flowcell on SAV)
-    ```
-    cd /home/researchers/Runs/
-    ln -s /home/researchers/RunAnalysis/flowcellnum .
-    ```
-
-3. Build SampleSheet
+2. Build SampleSheet
     ```
     cd /home/researchers/RunAnalysis/flowcell322
     ```
@@ -75,9 +64,16 @@ CASAVA
 On the HTS system, go to /home/casava_fastqs/flowcellnum/ and run the following:
     ```
     qsub -I
-    module load bcl2fastq
-    cd /bigdata/genomics/shared/RunAnalysis/flowcell350
-    nohup bcl2fastq --runfolder-dir=150918_SN279_0487_AC7M9UACXX/ --processing-threads=64 --demultiplexing-threads=12 --loading-threads=4 --writing-threads=4 --output-dir=/bigdata/genomics/shared/350/150918_SN279_0487_AC7M9UACXX
+    
+    bcl2fastq_run.sh
+    Usage: bcl2fastq_run.sh {FlowcellID} {RunDirectoryName} {BaseMask} {SampleSheet} {Mismatch, default=1}
+    ```
+    * **FlowcellID** - flowcell number, e.g. 322
+    * **RunDirectoryName** - 150921_M02457_0067_000000000-AJ7YY
+    * **BaseMask** - NA if default case of 6 nucleotide barcode
+    
+    
+    
     ```
     Note: inside the output folder there should be a Reports/html directory, check inside this directory for the file "index.html". 
 
