@@ -68,13 +68,13 @@ On the HTS system, go to /home/casava_fastqs/flowcellnum/ and run the following:
     bcl2fastq_run.sh
     Usage: bcl2fastq_run.sh {FlowcellID} {RunDirectoryName} {BaseMask} {SampleSheet} {Mismatch, default=1}
     ```
+    
     * **FlowcellID** - flowcell number, e.g. 322
-    * **RunDirectoryName** - 150921_M02457_0067_000000000-AJ7YY
-    * **BaseMask** - NA if default case of 6 nucleotide barcode
-    
-    
-    
-    ```
+    * **RunDirectoryName** - Run directory (Example: 150903_NB501124_0002_AHHNG7BGXX)
+    * **BaseMask** - NA for default (barcode length = 6) If barcode length = 8, BaseMask value will be Y*,I8 (single-end), Y*,I8, Y*          for paired-end.
+    *  **SampleSheet** - Absolute path for SampleSheet
+    *  **Mismatch** - Barcode mismatch (Default=1, if program shows error, then use mismatch=0 instead).
+
     Note: inside the output folder there should be a Reports/html directory, check inside this directory for the file "index.html". 
 
     Then create a symlink like so:
