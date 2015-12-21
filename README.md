@@ -129,7 +129,7 @@ Note: In case, we need to run CASAVA again for some lanes individually, we need 
     * **NumberOfLanes** - 8 for Hi-seq, and 1 for Mi-seq
     * **FASTQPath** - /bigdata/genomics/shared/322
 
-**MiSeq pipeline**
+**MiSeq**
 ==================
 
 Log-in to pigeon.bioinfo.ucr.edu and create the flowcell directory under /bigdata/genomics/shared/
