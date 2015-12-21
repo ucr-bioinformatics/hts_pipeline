@@ -1,4 +1,4 @@
-Pre-CASAVA
+**Hi-Seq**
 ==========
 1. Move sequencer run directory from Runs to RunAnalysis # (working on the HTS system)
     ```
@@ -58,13 +58,11 @@ In case John's excel file is not tab-delimited, then run
     ```
     The grep regexp should match the run directory name.
 
-CASAVA
-======
-1. Run CASAVA
-On the HTS system, go to /home/casava_fastqs/flowcellnum/ and run the following:
     ```
     qsub -I
     
+5. Demultiplexing using bcl2fastq
+
     bcl2fastq_run.sh
     Usage: bcl2fastq_run.sh {FlowcellID} {RunDirectoryName} {BaseMask} {SampleSheet} {Mismatch, default=1}
     ```
@@ -84,21 +82,7 @@ On the HTS system, go to /home/casava_fastqs/flowcellnum/ and run the following:
     
     This should allow the Illumina web server to server the index.html.
 
-2. Rename/Move previous SampleSheet.csv to SampleSheet_old.csv
-    ```
-    mv SampleSheet.csv SampleSheet_old.csv # [Data] format
-    mv SampleSheet_new.csv SampleSheet.csv # Old CASAVA format, no [Data] section
-    ```
-
-Post-CASAVA
-===========
-1. Rsync data from HTS to Biocluster (currently it is pigeon). To begin, log-in to the pigeon system:
-    ```
-    cd /rhome/rkaundal/hts_pipeline/post_casava/bin
-    rsync_illumina_data.sh 322 # 322 is the flowcell number
-    ```
-        
-2. Rename FASTQ files
+6. Rename FASTQ files
     ```
     ~/hts_pipeline/post_casava/bin/fastqs_rename.R
     USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir>
@@ -119,7 +103,7 @@ Post-CASAVA
     for fastq in $(ls flowcell344_lane*.fastq.gz); do file_barcode=$(echo $fastq | cut -d_ -f4 |cut -d. -f1); barcode=$(zcat $fastq |head -n1 | cut -d: -f10); echo "$barcode $file_barcode"; if [[ "$barcode" != "$file_barcode" ]]; then echo "FAILED"; fi; done
     ```
     
-3. Generate QC report
+7. Generate QC report
     ```
     ~/hts_pipeline/post_casava/bin/qc_report_generate_targets.R
     USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>
@@ -136,7 +120,7 @@ Note: In case, we need to run CASAVA again for some lanes individually, we need 
     ln -s Unaligned_newlane/Basecall_Stats_C64T6ACXX/ qc_lane
     ```
     
-4. Update links on Illumina web server
+8. Update links on Illumina web server
     ```
     ~/hts_pipeline/post_casava/bin/sequence_url_update.R
     USAGE:: script.R <FlowcellID> <NumberOfLanes> <FASTQPath>
