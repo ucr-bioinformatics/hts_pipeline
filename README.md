@@ -5,11 +5,11 @@
     If copying data from external hard drive.
     cd /bigdata/genomics/shared/
     mkdir flowcellnum
+    Next, we need to copy the data from hard drive to the server.
+    rsync -a 151217_SN279_0498_AC88PKACXX/ username@pigeon.bioinfo.ucr.edu:/bigdata/genomics/shared/flowcell384/151217_SN279_0498_AC88PKACXX
     We can now move the raw data to the RunAnalysis folder.
     cd /bigdata/genomics/shared/RunAnalysis
     mkdir flowcell_num
-    Next, we need to copy the data from hard drive to the server.
-    rsync -a 151103_SN279_0493_AC84L3ACXX nkatiyar@pigeon.bioinfo.ucr.edu:/bigdata/genomics/shared/RunAnalysis/flowcell_num
     ```
 
 2. Build SampleSheet
