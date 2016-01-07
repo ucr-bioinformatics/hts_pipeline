@@ -13,7 +13,7 @@ flowcellid <- args[1]
 lanes <- args[2]
 fastq_path <- args[3]
 setwd(fastq_path)
-qcs <- list.files(path='.',pattern='qc[1-9]*')
+qcs <- list.files(path='.',pattern='^qc[1-9]*')
 #pairs=0   
 
 # Connect to Database
