@@ -205,7 +205,7 @@ cd /bigdata/genomics/shared/
 mkdir flowcell_number (eg.350)
 cd /bigdata/genomics/cclark/
 sudo rsync -a flowcell365/ /bigdata/genomics/shared/RunAnalysis/flowcell365
-sudo chown -R root.root /bigdata/genomics/shared/RunAnalysis/flowcell365
+sudo chown -R root.genomics /bigdata/genomics/shared/RunAnalysis/flowcell365
 sudo chmod -R go-w /bigdata/genomics/shared/RunAnalysis/flowcell365
 ```
 
