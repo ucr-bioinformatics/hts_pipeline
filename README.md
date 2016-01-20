@@ -90,9 +90,9 @@ In case John's excel file is not tab-delimited, then run
     * **FlowcellID** - flowcell number, e.g. 322
     * **NumberOfFiles** - If we have to demultiplex: 2 for paired-end, 1 for single-end. If user has to demultiplex: 3 for paired-end, 2 for single-end
     * **SampleSheet** - SampleSheet.csv
-    * **UnalignedPath** - Unaligned/
+    * **UnalignedPath** - 151217_SN279_0498_AC88PKACXX/
     * **RunType** - hiseq or miseq
-    * **RunDir** - Unaligned/
+    * **RunDir** - 151217_SN279_0498_AC88PKACXX/
 
     **Note**: it is a good idea to check any duplicate symlinks inside the directory. So run the following command:
     ```
