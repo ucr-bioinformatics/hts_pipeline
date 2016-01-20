@@ -135,12 +135,11 @@ Note: In case, we need to run CASAVA again for some lanes individually, we need 
 Log-in to pigeon.bioinfo.ucr.edu and create the flowcell directory under /bigdata/genomics/shared/
 ```
 cd /bigdata/genomics/shared/
-mkdir flowcell_num # e.g. 351
 ```
 
 Copy the flowcell directory
 ```
-cp /bigdata/genomics/cclark/flowcell_num /bigdata/genomics/shared/flowcell_ID
+cp -R /bigdata/genomics/cclark/flowcell_num /bigdata/genomics/shared/flowcell_ID #flowcell_ID eg. 351 (This directory will be created and the data will be copied inside the directory, 351.
 ```
 
 Create samplesheet for follow up scripts after demultiplexing
