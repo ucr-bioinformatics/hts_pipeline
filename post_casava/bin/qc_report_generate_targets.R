@@ -21,9 +21,10 @@ samplesheet <- read.csv(args[5])
 demultiplex_type <- args[6]
 #run_type <- args[6]
 shared_genomics <- Sys.getenv("SHARED_GENOMICS")
+hts_pipeline_home <- Sys.getenv("HTS_PIPELINE_HOME")
 
 # Pull Girke Code
-source("http://faculty.ucr.edu/~tgirke/Documents/R_BioCond/My_R_Scripts/fastqQuality.R")
+source(paste(hts_pipeline_home,"/R/library/fastqQuality.R",sep=""))
 
 #Create directory for fastq report.
 system(paste("mkdir ",fastq_path,"/fastq_report",sep=""))
