@@ -89,7 +89,7 @@ In case John's excel file is not tab-delimited, then run
     ```
     * **FlowcellID** - flowcell number, e.g. 322
     * **NumberOfFiles** - If we have to demultiplex: 2 for paired-end, 1 for single-end. If user has to demultiplex: 3 for paired-end, 2 for single-end
-    * **SampleSheet** - SampleSheet.csv
+    * **SampleSheet** - SampleSheet_new.csv (Absolute Path)
     * **UnalignedPath** - 151217_SN279_0498_AC88PKACXX/
     * **RunType** - hiseq or miseq
     * **RunDir** - 151217_SN279_0498_AC88PKACXX/
