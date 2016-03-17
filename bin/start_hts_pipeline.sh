@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 ########################
-# Start MiSeq Pipeline #
+# Start HTS Pipeline #
 ########################
 
 echo "started running"
@@ -10,7 +10,7 @@ echo "started running"
 source $HTS_PIPELINE_HOME/env_profile.sh
 
 # Change directory to source
-SOURCE_DIR='/bigdata/genomics/cclark/'
+SOURCE_DIR='/bigdata/genomics/shared/Runs'
 cd $SOURCE_DIR
 
 # Get list of Run directories
@@ -20,9 +20,9 @@ for dir in $dir_list; do
     # Check if directory is not source directory
     if [ "$dir" != '.' ]; then
         # Find sample sheet
-        sample_sheet=`find $dir -name SampleSheet.csv`
+        complete_file=`find $dir -name RTAComplete.txt`
 
-        if [ ! -z $sample_sheet ]; then
+        if [ ! -z $complete_file ]; then
             # Determine flowcell ID
             FC_ID=`echo $dir | cut -dl -f4`
 

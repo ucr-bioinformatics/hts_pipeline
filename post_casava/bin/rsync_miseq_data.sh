@@ -19,6 +19,8 @@ FC_ID=$1
 SOURCE_FC=$2
 
 echo "Starting $FC_ID..."
-rsync -a --progress --remove-source-files $SOURCE_FC/ $SHARED_GENOMICS/$FC_ID
+# This should be modified to match the incoming file structure
+echo "mv $SOURCE_FC/* $SHARED_GENOMICS/RunAnalysis/flowcell${FC_ID} && rmdir ${SOURCE_FC}"
+mv $SOURCE_FC/* $SHARED_GENOMICS/RunAnalysis/flowcell${FC_ID} && rmdir ${SOURCE_FC}
 echo "...Transfer Complete"
 
