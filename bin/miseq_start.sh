@@ -48,11 +48,9 @@ if [ -f $sample_sheet ]; then
     
     # Transfer miseq data
     if [ $ERROR -eq 0 ]; then
-        echo -e "==== Transfer STEP ====\ntransfer_data.sh $FC_ID $SOURCE_DIR/$dir" >> $ERROR_FILE
-        transfer_miseq_data.sh $FC_ID $SOURCE_DIR/$dir &>> $ERROR_FILE
-        if [ $? -eq 0 ]; then
-            rmdir $SOURCE_DIR/$dir/$run_dir && rmdir $SOURCE_DIR/$dir
-        else
+        echo -e "==== Transfer STEP ====\ntransfer_data.sh $FC_ID $dir" >> $ERROR_FILE
+        transfer_data.sh $FC_ID $dir &>> $ERROR_FILE
+        if [ $? -ne 0 ]; then
             echo "ERROR:: Transfer failed" >> $ERROR_FILE && ERROR=1
         fi
     fi
@@ -88,7 +86,7 @@ if [ -f $sample_sheet ]; then
     #fi
 
     # Remove lock files
-    rm -f $SHARED_GENOMICS/$FC_ID/miseq_start.lock
+    rm -f ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/miseq_start.lock
 fi
 
 # Exit

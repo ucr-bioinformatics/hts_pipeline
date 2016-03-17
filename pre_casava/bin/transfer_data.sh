@@ -22,5 +22,9 @@ echo "Starting $FC_ID..."
 # This should be modified to match the incoming file structure
 echo "mv $SOURCE_FC/* $SHARED_GENOMICS/RunAnalysis/flowcell${FC_ID} && rmdir ${SOURCE_FC}"
 mv $SOURCE_FC/* $SHARED_GENOMICS/RunAnalysis/flowcell${FC_ID} && rmdir ${SOURCE_FC}
-echo "...Transfer Complete"
+if [[ $? -eq 0 ]]; then
+    echo "...Transfer Complete"
+else
+    echo "...Transfer Failed"
+fi
 
