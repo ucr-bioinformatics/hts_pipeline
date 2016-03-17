@@ -37,7 +37,7 @@ Flowcell $FC_ID has come in and needs to be processed.
 Thanks
 EOF
             echo "Processing ${FC_ID} from ${SOURCE_DIR}/$dir" >> $HTS_PIPELINE_HOME/log/miseq_pipeline.log
-            echo \"miseq_start.sh ${SOURCE_DIR}/$dir\" | qsub -l nodes=1:ppn=4,mem=10gb -j oe -o $HTS_PIPELINE_HOME/log/miseq_start.log -m bea -M hts@biocluster.ucr.edu
+            echo miseq_start.sh ${SOURCE_DIR}/$dir | qsub -l nodes=1:ppn=4,mem=10gb -j oe -o $HTS_PIPELINE_HOME/log/miseq_start.log -m bea -M hts@biocluster.ucr.edu
             #echo \"miseq_start.sh ${SOURCE_DIR}/dir \" | qsub -l walltime=00:10:00 -j oe -o $HTS_PIPELINE_HOME/log/miseq_start.$PBS_JOBID.log
         fi
     fi
