@@ -1,15 +1,9 @@
 **Hi-Seq**
 ==========
-1. Move sequencer run directory from Runs to RunAnalysis # (working on the HTS system)
+1. Move sequencer run directory from Runs to RunAnalysis
     ```
-    If copying data from external hard drive.
-    cd /bigdata/genomics/shared/
-    mkdir flowcellnum
-    Next, we need to copy the data from hard drive to the server.
-    rsync -a 151217_SN279_0498_AC88PKACXX/ username@pigeon.bioinfo.ucr.edu:/bigdata/genomics/shared/flowcell384/151217_SN279_0498_AC88PKACXX
-    We can now move the raw data to the RunAnalysis folder.
-    cd /bigdata/genomics/shared/RunAnalysis
-    mkdir flowcell_num
+    Must do this as the genomics user.
+    mv /bigdata/genomics/shared/Runs/flowcellnum /bigdata/genomics/shared/RunAnalysis/
     ```
 
 2. Build SampleSheet
@@ -139,7 +133,7 @@ cd /bigdata/genomics/shared/
 
 Copy the flowcell directory
 ```
-cp -R /bigdata/genomics/cclark/flowcell_num /bigdata/genomics/shared/flowcell_ID #flowcell_ID eg. 351 (This directory will be created and the data will be copied inside the directory, 351.
+cp -R /bigdata/genomics/shared/Runs/flowcell_num /bigdata/genomics/shared/flowcell_ID #flowcell_ID eg. 351 (This directory will be created and the data will be copied inside the directory, 351.
 ```
 
 Create samplesheet for follow up scripts after demultiplexing
@@ -202,7 +196,7 @@ Log onto pigeon and create the flowcell directory
 ```
 cd /bigdata/genomics/shared/
 mkdir flowcell_number (eg.350)
-cd /bigdata/genomics/cclark/
+cd /bigdata/genomics/shared/Runs/
 sudo rsync -a flowcell365/ /bigdata/genomics/shared/RunAnalysis/flowcell365
 sudo chown -R root.genomics /bigdata/genomics/shared/RunAnalysis/flowcell365
 sudo chmod -R go-w /bigdata/genomics/shared/RunAnalysis/flowcell365
