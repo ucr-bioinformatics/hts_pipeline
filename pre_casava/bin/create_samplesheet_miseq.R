@@ -50,6 +50,10 @@ len_a <- length(a$index)
 
 cat(paste("FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SampleProject", sep=","),file="SampleSheet.csv","\n")
 for (j in (1:len_a)){
+    if(a$index[j]=="NA")
+        {
+            a$index[j]=""
+        }
 	line <- cat(paste(label,i,j,"",a$index[j],"","N","","nkatiyar",project_id,sep=","),file="SampleSheet.csv","\n", append=TRUE)
 		}
 
