@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -l
 
 #############################################
 # Check for MiSeq data and execute pipeline #
