@@ -1,15 +1,9 @@
 **Hi-Seq**
 ==========
-1. Move sequencer run directory from Runs to RunAnalysis # (working on the HTS system)
+1. Move sequencer run directory from Runs to RunAnalysis
     ```
-    If copying data from external hard drive.
-    cd /bigdata/genomics/shared/
-    mkdir flowcellnum
-    Next, we need to copy the data from hard drive to the server.
-    rsync -a 151217_SN279_0498_AC88PKACXX/ username@pigeon.bioinfo.ucr.edu:/bigdata/genomics/shared/flowcell384/151217_SN279_0498_AC88PKACXX
-    We can now move the raw data to the RunAnalysis folder.
-    cd /bigdata/genomics/shared/RunAnalysis
-    mkdir flowcell_num
+    Must do this as the genomics user.
+    mv /bigdata/genomics/shared/Runs/flowcellnum /bigdata/genomics/shared/RunAnalysis/
     ```
 
 2. Build SampleSheet
