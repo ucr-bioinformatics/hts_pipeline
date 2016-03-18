@@ -31,7 +31,7 @@ if [ -f $sample_sheet ]; then
     run_dir=`echo $run_dir | cut -d/ -f 3`
     
     # Set lock file
-    lockfile-create -r 0 $dir/miseq_start.lock || ( echo "Could not create $dir/miseq_start.lock" && exit 1 )
+    lockfile-create -r 0 $dir/miseq_start || ( echo "Could not create $dir/miseq_start.lock" && exit 1 )
 
     # Determine flowcell ID
     FC_ID=`echo $dir | cut -dl -f4`
