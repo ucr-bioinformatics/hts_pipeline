@@ -10,3 +10,5 @@ fi
 # Set genomics data path
 export SHARED_GENOMICS=/bigdata/genomics/shared
 
+# Send email notifications to this address
+export NOTIFY_EMAIL=hts@biocluster.ucr.edu
