@@ -15,16 +15,26 @@ then
 fi
 
 # Get args
+ERROR=0
 FC_ID=$1
 SOURCE_FC=$2
 
 echo "Starting $FC_ID..."
+
 # This should be modified to match the incoming file structure
-echo "mv $SOURCE_FC/* $SHARED_GENOMICS/RunAnalysis/flowcell${FC_ID} && rmdir ${SOURCE_FC}"
-mv $SOURCE_FC/* $SHARED_GENOMICS/RunAnalysis/flowcell${FC_ID} && rmdir ${SOURCE_FC}
-if [[ $? -eq 0 ]]; then
-    echo "...Transfer Complete"
+mkdir $SHARED_GENOMICS/RunAnalysis/flowcell${FC_ID}
+ERROR=$?
+
+if [[ $ERROR -eq 0 ]]; then
+    echo "mv $SOURCE_FC/* $SHARED_GENOMICS/RunAnalysis/flowcell${FC_ID} && rmdir ${SOURCE_FC}"
+    mv $SOURCE_FC/* $SHARED_GENOMICS/RunAnalysis/flowcell${FC_ID} && rmdir ${SOURCE_FC}
+    if [[ $? -eq 0 ]]; then
+        echo "...Transfer Complete"
+    else
+        echo "ERROR: Transfer Failed"
+    fi
 else
-    echo "...Transfer Failed"
+    echo "ERROR: Could not create $SHARED_GENOMICS/RunAnalysis/flowcell${FC_ID}"
+    exit $ERROR
 fi
 
