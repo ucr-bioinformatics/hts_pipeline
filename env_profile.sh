@@ -8,7 +8,7 @@ else
 fi
 
 # Set genomics data path
-export SHARED_GENOMICS=/bigdata/genomics/shared
+export SHARED_GENOMICS=/bigdata/bioinfo/jhayes/genomics_shared
 
 # Send email notifications to this address
-export NOTIFY_EMAIL=hts@biocluster.ucr.edu
+export NOTIFY_EMAIL=jhayes@ucr.edu
