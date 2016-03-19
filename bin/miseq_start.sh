@@ -22,13 +22,13 @@ SOURCE_DIR=$1
 cd $SOURCE_DIR
 
 # Check for SampleSheet
-sample_sheet=`find $SOURCE_DIR -name RTAComplete.txt`
+complete_file=`find $SOURCE_DIR -name RTAComplete.txt`
 
-if [ -f $sample_sheet ]; then
+if [ -f $complete_file ]; then
     # Determine sequencer run directory
-    run_dir=`dirname $sample_sheet`
+    run_dir=`dirname $complete_file`
     dir=`dirname $run_dir`
-    run_dir=`echo $run_dir | cut -d/ -f 3`
+    run_dir=`basename $run_dir`
     
     # Set lock file
     lockfile-create -r 0 $dir/miseq_start || ( echo "Could not create $dir/miseq_start.lock" && exit 1 )
@@ -47,43 +47,70 @@ if [ -f $sample_sheet ]; then
     ##################
     
     # Transfer miseq data
+    CMD="transfer_data.sh $FC_ID $dir"
+    echo -e "==== Transfer STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
-        echo -e "==== Transfer STEP ====\ntransfer_data.sh $FC_ID $dir" >> $ERROR_FILE
-        transfer_data.sh $FC_ID $dir &>> $ERROR_FILE
+        ${CMD} &>> $ERROR_FILE
         if [ $? -ne 0 ]; then
             echo "ERROR:: Transfer failed" >> $ERROR_FILE && ERROR=1
         fi
     fi
     
     # Create Sample Sheet
-    #if [ $ERROR -eq 0 ]; then 
-    #    echo -e "==== SAMPLE SHEET STEP ====\ncreate_samplesheet_miseq.R $FC_ID SampleSheet.csv $run_dir" >> $ERROR_FILE
-    #    create_samplesheet_miseq.R $FC_ID SampleSheet.csv $run_dir &>>$ERROR_FILE || 
-    #    (echo "ERROR: SampleSheet creation failed" >> $ERROR_FILE && ERROR=1)
-    #fi
+    # They demux
+    #CMD="bcl2fastq_run.sh ${FC_ID} $run_dir Y*,Y* ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
+    # We demux
+    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir NA ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
+    echo -e "==== DEMUX STEP ====\n${CMD}" >> $ERROR_FILE
+    if [ $ERROR -eq 0 ]; then
+        cd $SHARED_GENOMICS/$FC_ID
+        ${CMD} &>> $ERROR_FILE
+        if [ $? -ne 0 ]; then
+            echo "ERROR:: Demuxing failed" >> $ERROR_FILE && ERROR=1
+        fi
+    fi
+    
+    # Create Sample Sheet
+    CMD="create_samplesheet_miseq.R ${FC_ID} ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $run_dir" 
+    echo -e "==== SAMPLE SHEET STEP ====\n${CMD}" >> $ERROR_FILE
+    if [ $ERROR -eq 0 ]; then
+        ${CMD} &>> $ERROR_FILE
+        if [ $? -ne 0 ]; then
+            echo "ERROR:: SampleSheet creation failed" >> $ERROR_FILE && ERROR=1
+        fi
+    fi
 
     # Rename Files
-    #if [ $ERROR -eq 0 ]; then 
-    #    echo -e "==== RENAME STEP ====\nfastqs_rename.R $FC_ID 3 $run_dir/SampleSheet.csv $run_dir miseq $run_dir" >> $ERROR_FILE
-    #    fastqs_rename.R $FC_ID 2 $run_dir/SampleSheet.csv $run_dir miseq $run_dir &>>$ERROR_FILE ||
-    #    (echo "ERROR: Files rename failed" >> $ERROR_FILE && ERROR=1)
-    #fi
+    CMD="fastqs_rename.R $FC_ID 2 $run_dir/SampleSheet.csv $run_dir miseq $run_dir"
+    echo -e "==== RENAME STEP ====\n${CMD}" >> $ERROR_FILE
+    if [ $ERROR -eq 0 ]; then 
+        ${CMD} &>> $ERROR_FILE
+        if [ $? -ne 0 ]; then 
+            echo "ERROR: Files rename failed" >> $ERROR_FILE && ERROR=1
+        fi
+    fi
 
     # Generate QC report
-    #if [ $ERROR -eq 0 ]; then
-    #    PAIR=1
-    #    MUX=2
-    #    echo -e "==== QC STEP ====\nqc_report_generate_targets.R $FC_ID $PAIR $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv $MUX" >> $ERROR_FILE
-    #    qc_report_generate_targets.R $FC_ID $PAIR $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv $MUX &>>$ERROR_FILE ||
-    #    (echo "ERROR: QC report generation failed" >> $ERROR_FILE && ERROR=1)
-    #fi
+    PAIR=1
+    MUX=1
+    CMD="qc_report_generate_targets.R $FC_ID $PAIR $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/fastq_report/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv $MUX"
+    echo -e "==== QC STEP ====\n${CMD}" >> $ERROR_FILE
+    if [ $ERROR -eq 0 ]; then
+        ${CMD} &>> $ERROR_FILE
+        if [ $? -ne 0 ]; then
+            echo "ERROR: QC report generation failed" >> $ERROR_FILE && ERROR=1
+        fi
+    fi
 
     # Update Illumina web server URLs
-    #if [ $ERROR -eq 0 ]; then 
-    #    echo -e "==== URL STEP ====\nsequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID" >> $ERROR_FILE
-    #    sequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID &>>$ERROR_FILE ||
-    #    (echo "ERROR: Illumina URL update failed" >> $ERROR_FILE && ERROR=1)
-    #fi
+    CMD="sequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID"
+    echo -e "==== URL STEP ====\n${CMD}" >> $ERROR_FILE
+    if [ $ERROR -eq 0 ]; then 
+        ${CMD} &>> $ERROR_FILE
+        if [ $? -ne 0 ]; then
+            echo "ERROR: Illumina URL update failed" >> $ERROR_FILE && ERROR=1
+        fi
+    fi
 
     # Remove lock files
     rm -f ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/miseq_start.lock

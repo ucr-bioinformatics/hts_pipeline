@@ -31,10 +31,10 @@ if [[ $ERROR -eq 0 ]]; then
     if [[ $? -eq 0 ]]; then
         echo "...Transfer Complete"
     else
-        echo "ERROR: Transfer Failed"
+        echo "ERROR:: Transfer Failed"
     fi
 else
-    echo "ERROR: Could not create $SHARED_GENOMICS/RunAnalysis/flowcell${FC_ID}"
+    echo "ERROR:: Could not create $SHARED_GENOMICS/RunAnalysis/flowcell${FC_ID}"
     exit $ERROR
 fi
 
