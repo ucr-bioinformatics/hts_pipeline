@@ -46,8 +46,8 @@ if [ -f $complete_file ]; then
     # Pipeline Steps #
     ##################
     
-    # Transfer sequence data
-    CMD="transfer_data.sh $FC_ID $dir"
+    # Transfer miseq data
+    CMD="transfer_data.sh $FC_ID $SOURCE_DIR"
     echo -e "==== Transfer STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         ${CMD} &>> $ERROR_FILE
