@@ -1,4 +1,4 @@
-#!/bin/bash -l
+u!/bin/bash -l
 
 #############################################
 # Check for MiSeq data and execute pipeline #
@@ -47,7 +47,7 @@ if [ -f $complete_file ]; then
     ##################
     
     # Transfer sequence data
-    CMD="transfer_data.sh $FC_ID $dir"
+    CMD="transfer_data.sh $FC_ID $SOURCE_DIR"
     echo -e "==== Transfer STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         ${CMD} &>> $ERROR_FILE
@@ -56,7 +56,36 @@ if [ -f $complete_file ]; then
         fi
     fi
     
-    # Create Sample Sheet
+    # Create Sample Sheet for demux
+    numpair=$(( $(ls ${SOURCE_DIR}/Basecalling_Netcopy_complete_Read*.txt | wc -l) - 1 ))    
+    date=$(date +"%m/%d/%Y")
+    numcycles=$(( $(ls ${SOURCE_DIR}/Logs | grep -oP "[0-9]+\.log$" | cut -d. -f1 | sort -n | tail -1) - 1 ))
+    cycles_val=$(echo -e "${numcycles}\n${numcycles}\n")
+
+    cat << EOF > SampleSheet.csv 
+[Header]
+IEMFileVersion,4
+Investigator Name,Neerja Katiyar
+Experiment Name,350
+Date,${date}
+Workflow,GenerateFASTQ
+Application,HiSeq FASTQ Only
+Assay,TruSeq Small RNA
+Description,human small rna
+Chemistry,Default
+
+[Reads]
+${cycles_val}
+
+[Settings]
+ReverseComplement,0
+
+[Data]
+Lane,Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Project,Description" 
+EOF
+    
+    
+    grep -P '^C7M' ${FC_ID}/SampleSheet_new.csv | awk -F ',' '{print $2","$3",,,,,"$5","$10","}' >> SampleSheet.csv
     # They demux
     #CMD="bcl2fastq_run.sh ${FC_ID} $run_dir Y*,Y* ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
     # We demux
@@ -70,7 +99,7 @@ if [ -f $complete_file ]; then
         fi
     fi
     
-    # Create Sample Sheet
+    # Create Sample Sheet for renaming files and QC report
     CMD="create_samplesheet_${SEQ}.R ${FC_ID} ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $run_dir" 
     echo -e "==== SAMPLE SHEET STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
