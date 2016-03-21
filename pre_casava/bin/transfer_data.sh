@@ -26,8 +26,9 @@ mkdir $SHARED_GENOMICS/RunAnalysis/flowcell${FC_ID}
 ERROR=$?
 
 if [[ $ERROR -eq 0 ]]; then
-    echo "mv $SOURCE_FC/* $SHARED_GENOMICS/RunAnalysis/flowcell${FC_ID} && rmdir ${SOURCE_FC}"
-    mv $SOURCE_FC/* $SHARED_GENOMICS/RunAnalysis/flowcell${FC_ID} && rmdir ${SOURCE_FC}
+    CMD="mv $SOURCE_FC $SHARED_GENOMICS/RunAnalysis/flowcell${FC_ID}/"
+    echo ${CMD}
+    ${CMD}
     if [[ $? -eq 0 ]]; then
         echo "...Transfer Complete"
     else
