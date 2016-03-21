@@ -45,7 +45,7 @@ if [ -f $complete_file ]; then
     ##################
     
     # Transfer miseq data
-    CMD="transfer_data.sh $FC_ID $dir"
+    CMD="transfer_data.sh $FC_ID $SOURCE_DIR"
     echo -e "==== Transfer STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         ${CMD} &>> $ERROR_FILE
