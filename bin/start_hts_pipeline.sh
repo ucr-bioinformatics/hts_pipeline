@@ -50,7 +50,7 @@ for dir in $dir_list; do
             
             # Determine flowcell ID
             QUERY="SELECT flowcell_id FROM flowcell_list WHERE label=\"$label\";"
-            FC_ID="flowcell$(mysql -hillumina.int.bioinfo.ucr.edu -Dprojects -u***REMOVED*** -p***REMOVED*** -N -s -e "${QUERY}")"
+            FC_ID=$(mysql -hillumina.int.bioinfo.ucr.edu -Dprojects -u***REMOVED*** -p***REMOVED*** -N -s -e "${QUERY}")
 
 
             # Send email notification
@@ -64,7 +64,7 @@ Flowcell ${FC_ID} has come in and needs to be processed.
 Thanks
 EOF
             echo "Processing ${FC_ID} from ${SOURCE_DIR}/$dir" >> ${HTS_PIPELINE_HOME}/log/${SEQ}_pipeline.log
-            echo ${SEQ}_start.sh ${SOURCE_DIR}/$dir | qsub -l nodes=1:ppn=64,mem=50gb -j oe -o ${HTS_PIPELINE_HOME}/log/${SEQ}_start.log -m bea -M ${NOTIFY_EMAIL}
+            echo ${SEQ}_start.sh ${FC_ID} ${SOURCE_DIR}/$dir | qsub -l nodes=1:ppn=64,mem=50gb -j oe -o ${HTS_PIPELINE_HOME}/log/${SEQ}_start.log -m bea -M ${NOTIFY_EMAIL}
         fi
     fi
 done

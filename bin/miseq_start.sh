@@ -8,17 +8,18 @@
 source $HTS_PIPELINE_HOME/env_profile.sh
 
 # Check Arguments
-EXPECTED_ARGS=1
+EXPECTED_ARGS=2
 E_BADARGS=65
 
 if [ $# -ne $EXPECTED_ARGS ]
 then
-  echo "Usage: `basename $0` {/path/to/source}"
+  echo "Usage: `basename $0` FC_ID {/path/to/source}"
   exit $E_BADARGS
 fi
 
 # Change directory to source
-SOURCE_DIR=$1
+FC_ID=$1
+SOURCE_DIR=$2
 cd $SOURCE_DIR
 
 # Check for SampleSheet
@@ -32,9 +33,6 @@ if [ -f $complete_file ]; then
     
     # Set lock file
     lockfile-create -r 0 $dir/miseq_start || ( echo "Could not create $dir/miseq_start.lock" && exit 1 )
-
-    # Determine flowcell ID
-    FC_ID=`echo $dir | cut -dl -f4`
 
     # Set error file
     ERROR=0
