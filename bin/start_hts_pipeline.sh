@@ -23,8 +23,35 @@ for dir in $dir_list; do
         complete_file=`find $dir -name RTAComplete.txt`
 
         if [ ! -z $complete_file ]; then
+            # Determin Sequencer type
+            str=$(echo $dir | cut -d_ -f2)
+            case $str in
+            ["SN279"]*)
+                SEQ="hiseq"
+            ;;
+            ["NB501124"]*)
+                SEQ="nextseq"
+            ;;
+            ["M02457"]*)
+                SEQ="miseq"
+            ;;
+            *)
+                SEQ="default"
+            ;;
+            esac
+
+            # Pull chars from dir name
+            str=$(echo $dir | grep -oP "[A-Z0-9]+$")
+            if [[ ${#str} -eq 10 ]]; then
+                label=${str:1:10}
+            else
+                label=$str
+            fi
+            
             # Determine flowcell ID
-            FC_ID=`echo $dir | cut -dl -f4`
+            QUERY="SELECT flowcell_id FROM flowcell_list WHERE label=\"$label\";"
+            FC_ID="flowcell$(mysql -hillumina.int.bioinfo.ucr.edu -Dprojects -u***REMOVED*** -p***REMOVED*** -N -s -e "${QUERY}")"
+
 
             # Send email notification
             echo "Sending Mail"
@@ -36,9 +63,8 @@ Subject: HTS Pipeline: Flowcell ${FC_ID}: Started
 Flowcell ${FC_ID} has come in and needs to be processed.
 Thanks
 EOF
-            echo "Processing ${FC_ID} from ${SOURCE_DIR}/$dir" >> $HTS_PIPELINE_HOME/log/miseq_pipeline.log
-            echo miseq_start.sh ${SOURCE_DIR}/$dir | qsub -l nodes=1:ppn=64,mem=50gb -j oe -o $HTS_PIPELINE_HOME/log/miseq_start.log -m bea -M ${NOTIFY_EMAIL}
-            #echo \"miseq_start.sh ${SOURCE_DIR}/dir \" | qsub -l walltime=00:10:00 -j oe -o $HTS_PIPELINE_HOME/log/miseq_start.$PBS_JOBID.log
+            echo "Processing ${FC_ID} from ${SOURCE_DIR}/$dir" >> ${HTS_PIPELINE_HOME}/log/${SEQ}_pipeline.log
+            echo ${SEQ}_start.sh ${SOURCE_DIR}/$dir | qsub -l nodes=1:ppn=64,mem=50gb -j oe -o ${HTS_PIPELINE_HOME}/log/${SEQ}_start.log -m bea -M ${NOTIFY_EMAIL}
         fi
     fi
 done
