@@ -7,7 +7,7 @@ else
     echo "Please set your HTS_PIPELINE_HOME environment variable"
 fi
 
-if [[ $USER -eq genomics ]]; then
+if [[ $USER == genomics ]]; then
     # Set genomics data path
     export SHARED_GENOMICS=/bigdata/genomics/shared
 
