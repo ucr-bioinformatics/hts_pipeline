@@ -30,7 +30,12 @@ if [[ $ERROR -eq 0 ]]; then
     echo ${CMD}
     ${CMD}
     if [[ $? -eq 0 ]]; then
-        echo "...Transfer Complete"
+        chmod -R a-w $SHARED_GENOMICS/RunAnalysis/flowcell${FC_ID}
+        if [[ $? -eq 0 ]]; then
+            echo "...Transfer Complete"
+        else
+            echo "ERROR:: Setting Permissions Failed"
+        fi
     else
         echo "ERROR:: Transfer Failed"
     fi
