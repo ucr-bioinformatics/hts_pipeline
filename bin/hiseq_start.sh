@@ -1,4 +1,4 @@
-u!/bin/bash -l
+#!/bin/bash -l
 
 #############################################
 # Check for MiSeq data and execute pipeline #
@@ -8,12 +8,12 @@ u!/bin/bash -l
 source $HTS_PIPELINE_HOME/env_profile.sh
 
 # Check Arguments
-EXPECTED_ARGS=3
+EXPECTED_ARGS=4
 E_BADARGS=65
 
 if [ $# -ne $EXPECTED_ARGS ]
 then
-  echo "Usage: `basename $0` FC_ID {/path/to/source} SEQ"
+  echo "Usage: `basename $0` FC_ID {/path/to/source} SEQ LABEL"
   exit $E_BADARGS
 fi
 
@@ -21,6 +21,7 @@ fi
 FC_ID=$1
 SOURCE_DIR=$2
 SEQ=$3
+LABEL=$4
 cd $SOURCE_DIR
 
 # Check for SampleSheet
@@ -34,7 +35,7 @@ if [ -f $complete_file ]; then
     lockfile="${SEQ}_start.lock"
  
     # Set lock file
-    lockfile-create -r 0 $dir/${SEQ}_start || ( echo "Could not create $dir/$lockfile" && exit 1 )
+    lockfile-create -r 0 $run_dir/${SEQ}_start || ( echo "Could not create $run_dir/$lockfile" && exit 1 )
 
     # Set error file
     ERROR=0
@@ -56,13 +57,36 @@ if [ -f $complete_file ]; then
         fi
     fi
     
+    # Check if SampleSheet from John exists
+    echo -e "==== SAMPLESHEET CHECK STEP ====\n" >> $ERROR_FILE
+    if [[ ! -f ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet_John.csv ]]; then
+        echo "ERROR:: SampleSheet from John ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet_John.csv does not exist" >> $ERROR_FILE && ERROR=1
+    else
+        # Create SampleSheet for rename and QC from John's SampleSheet.
+        CMD="create_samplesheet_${SEQ}.R ${FC_ID} ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet_John.csv $run_dir"
+        echo -e "==== SAMPLE SHEET STEP ====\n${CMD}" >> $ERROR_FILE
+        if [ $ERROR -eq 0 ]; then
+            ${CMD} &>> $ERROR_FILE
+            if [ $? -ne 0 ]; then
+                echo "ERROR:: SampleSheet creation failed" >> $ERROR_FILE && ERROR=1
+            fi
+        fi
+    fi 
+    
+    #Rename SampleSheet for rename and QC to SampleSheet_rename.csv
+    mv ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv
     # Create Sample Sheet for demux
-    numpair=$(( $(ls ${SOURCE_DIR}/Basecalling_Netcopy_complete_Read*.txt | wc -l) - 1 ))    
-    date=$(date +"%m/%d/%Y")
-    numcycles=$(( $(ls ${SOURCE_DIR}/Logs | grep -oP "[0-9]+\.log$" | cut -d. -f1 | sort -n | tail -1) - 1 ))
-    cycles_val=$(echo -e "${numcycles}\n${numcycles}\n")
+    if [ $ERROR -eq 0 ]; then
+        numpair=$(( $(ls ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/Basecalling_Netcopy_complete_Read*.txt | wc -l) - 1 ))
+        date=$(date +"%m/%d/%Y")
+        numcycles=$(( $(ls ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/Logs | grep -oP "[0-9]+\.log$" | cut -d. -f1 | sort -n | tail -1) - 1 ))
+        if [ numpair > 1 ]; then
+            cycles=$(echo -e "${numcycles}\n${numcycles}\n")
+        else
+            cycles=$(echo -e "${numcycles}\n")
+        fi
 
-    cat << EOF > SampleSheet.csv 
+    cat << EOF > ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv 
 [Header]
 IEMFileVersion,4
 Investigator Name,Neerja Katiyar
@@ -75,21 +99,22 @@ Description,human small rna
 Chemistry,Default
 
 [Reads]
-${cycles_val}
+${cycles}
 
 [Settings]
 ReverseComplement,0
 
 [Data]
-Lane,Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Project,Description" 
+Lane,Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Project,Description
 EOF
     
-    
-    grep -P '^C7M' ${FC_ID}/SampleSheet_new.csv | awk -F ',' '{print $2","$3",,,,,"$5","$10","}' >> SampleSheet.csv
+        grep -P "^${LABEL}" ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv | awk -F ',' '{print $2","$3",,,,,"$5","$10","}' >> ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv
+    fi
+
     # They demux
     #CMD="bcl2fastq_run.sh ${FC_ID} $run_dir Y*,Y* ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
     # We demux
-    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir NA ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
+    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir NA ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv 1"
     echo -e "==== DEMUX STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         cd $SHARED_GENOMICS/$FC_ID
@@ -99,18 +124,8 @@ EOF
         fi
     fi
     
-    # Create Sample Sheet for renaming files and QC report
-    CMD="create_samplesheet_${SEQ}.R ${FC_ID} ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $run_dir" 
-    echo -e "==== SAMPLE SHEET STEP ====\n${CMD}" >> $ERROR_FILE
-    if [ $ERROR -eq 0 ]; then
-        ${CMD} &>> $ERROR_FILE
-        if [ $? -ne 0 ]; then
-            echo "ERROR:: SampleSheet creation failed" >> $ERROR_FILE && ERROR=1
-        fi
-    fi
-
     # Rename Files
-    CMD="fastqs_rename.R $FC_ID 2 $run_dir/SampleSheet.csv $run_dir ${SEQ} $run_dir"
+    CMD="fastqs_rename.R $FC_ID ${numpair} ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv $run_dir ${SEQ} $run_dir"
     echo -e "==== RENAME STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then 
         ${CMD} &>> $ERROR_FILE
@@ -120,9 +135,8 @@ EOF
     fi
 
     # Generate QC report
-    PAIR=1
     MUX=1
-    CMD="qc_report_generate_targets.R $FC_ID $PAIR $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/fastq_report/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv $MUX"
+    CMD="qc_report_generate_targets.R $FC_ID ${numpair} $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/fastq_report/ $SHARED_GENOMICS/$FC_ID/SampleSheet_rename.csv $MUX"
     echo -e "==== QC STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         ${CMD} &>> $ERROR_FILE

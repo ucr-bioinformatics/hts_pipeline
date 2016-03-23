@@ -40,6 +40,7 @@ Indices_new <- gsub("and",",", Indices_new)
 cnt = 0
 sample_id=0
 
+setwd(paste(Sys.getenv("SHARED_GENOMICS"),flowcellid,sep="/"))
 cat(paste("FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SampleProject", sep=","),file="SampleSheet.csv")
 
 for (j in lane){

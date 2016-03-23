@@ -8,12 +8,12 @@
 source $HTS_PIPELINE_HOME/env_profile.sh
 
 # Check Arguments
-EXPECTED_ARGS=3
+EXPECTED_ARGS=4
 E_BADARGS=65
 
 if [ $# -ne $EXPECTED_ARGS ]
 then
-  echo "Usage: `basename $0` FC_ID {/path/to/source} SEQ"
+  echo "Usage: `basename $0` FC_ID {/path/to/source} SEQ LABEL"
   exit $E_BADARGS
 fi
 
@@ -21,6 +21,7 @@ fi
 FC_ID=$1
 SOURCE_DIR=$2
 SEQ=$3
+LABEL=$4
 cd $SOURCE_DIR
 
 # Check for SampleSheet
