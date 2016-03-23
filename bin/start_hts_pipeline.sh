@@ -26,13 +26,13 @@ for dir in $dir_list; do
             # Determin Sequencer type
             str=$(echo $dir | cut -d_ -f2)
             case $str in
-            ["SN279"]*)
+            "SN279")
                 SEQ="hiseq"
             ;;
-            ["NB501124"]*)
+            "NB501124")
                 SEQ="nextseq"
             ;;
-            ["M02457"]*)
+            "M02457")
                 SEQ="miseq"
             ;;
             *)
