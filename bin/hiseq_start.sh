@@ -80,10 +80,10 @@ if [ -f $complete_file ]; then
         numpair=$(( $(ls ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/Basecalling_Netcopy_complete_Read*.txt | wc -l) - 1 ))
         date=$(date +"%m/%d/%Y")
         numcycles=$(( $(ls ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/Logs | grep -oP "[0-9]+\.log$" | cut -d. -f1 | sort -n | tail -1) - 1 ))
-        if [ numpair > 1 ]; then
-            cycles=$(echo -e "${numcycles}\n${numcycles}\n")
+        if [ $numpair > 1 ]; then
+            cycles=$(echo -e "${numcycles},\n${numcycles},\n")
         else
-            cycles=$(echo -e "${numcycles}\n")
+            cycles=$(echo -e "${numcycles},\n")
         fi
 
     cat << EOF > ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv 
