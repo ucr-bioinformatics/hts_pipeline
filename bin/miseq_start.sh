@@ -35,7 +35,7 @@ if [ -f $complete_file ]; then
     lockfile="${SEQ}_start.lock"
  
     # Set lock file
-    lockfile-create -r 0 $dir/${SEQ}_start || ( echo "Could not create $dir/$lockfile" && exit 1 )
+    lockfile-create -r 0 $SOURCE_DIR/${SEQ}_start || ( echo "Could not create $SOURCE_DIR/$lockfile" && exit 1 )
 
     # Set error file
     ERROR=0
