@@ -78,6 +78,9 @@ if [ -f $complete_file ]; then
     # Create Sample Sheet for demux
     if [ $ERROR -eq 0 ]; then
         numpair=$(( $(ls ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/Basecalling_Netcopy_complete_Read*.txt | wc -l) - 1 ))
+        NUMFILES=$numpair
+        MUX=1
+        BASEMASK="NA"
         date=$(date +"%m/%d/%Y")
         numcycles=$(( $(ls ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/Logs | grep -oP "[0-9]+\.log$" | cut -d. -f1 | sort -n | tail -1) - 1 ))
         if [ $numpair > 1 ]; then
@@ -109,12 +112,39 @@ Lane,Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Pro
 EOF
     
         grep -P "^${LABEL}" ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv | awk -F ',' '{print $2","$3",,,,,"$5","$10","}' >> ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv
+        barcode=$(grep -P "^${LABEL}" ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv | awk -F ',' '{$5}' | head -1)
     fi
 
-    # They demux
-    #CMD="bcl2fastq_run.sh ${FC_ID} $run_dir Y*,Y* ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
+    
+    # We will demultiplex and barcode is of standard length 6 (single-end,paired-end)
+    if [[ ${#barcode} == 6 ]]; then
+       MUX=1
+       BASEMASK="NA"
+    fi
+    
+    #We will demultiplex and the barcode is of different length and single-end
+    if [ ${#barcode} > 6 ] && [ ${numpair} == 1 ]; then
+        MUX=1
+        BASEMASK="Y*,I${#barcode},Y*"
+        NUMFILES=1
+    fi
+    
+    #User demultiplexes and it is single end
+    if [ ${numpair} == 1 ] && [ ${#barcode} == 0 ]; then
+        MUX=2
+        BASEMASK="Y*,Y*"
+        NUMFILES=2
+    fi
+
+    #User will demultiplex and it is paired-end
+    if [ ${numpair} == 2 ] && [ ${#barcode} == 0 ]; then
+       MUX=2
+       BASEMASK="Y*,Y*,Y*"
+       NUMFILES=3 
+    fi
+    
     # We demux
-    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir NA ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv 1"
+    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir ${BASEMASK} ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv 1"
     echo -e "==== DEMUX STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         cd $SHARED_GENOMICS/$FC_ID
@@ -125,7 +155,7 @@ EOF
     fi
     
     # Rename Files
-    CMD="fastqs_rename.R $FC_ID ${numpair} ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv $run_dir ${SEQ} $run_dir"
+    CMD="fastqs_rename.R $FC_ID ${NUMFILES} ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv $run_dir ${SEQ} $run_dir"
     echo -e "==== RENAME STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then 
         ${CMD} &>> $ERROR_FILE
@@ -135,7 +165,6 @@ EOF
     fi
 
     # Generate QC report
-    MUX=1
     CMD="qc_report_generate_targets.R $FC_ID ${numpair} $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/fastq_report/ $SHARED_GENOMICS/$FC_ID/SampleSheet_rename.csv $MUX"
     echo -e "==== QC STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
