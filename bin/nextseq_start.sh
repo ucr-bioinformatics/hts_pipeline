@@ -35,7 +35,7 @@ if [ -f $complete_file ]; then
     lockfile="${SEQ}_start.lock"
  
     # Set lock file
-    lockfile-create -r 0 $dir/${SEQ}_start || ( echo "Could not create $dir/$lockfile" && exit 1 )
+    lockfile-create -r 0 $SOURCE_DIR/${SEQ}_start || ( echo "Could not create $SOURCE_DIR/$lockfile" && exit 1 )
 
     # Set error file
     ERROR=0
@@ -56,6 +56,42 @@ if [ -f $complete_file ]; then
             echo "ERROR:: Transfer failed" >> $ERROR_FILE && ERROR=1
         fi
     fi
+
+    if [ $ERROR -eq 0 ]; then
+        numpair=$(( $(ls ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/RTARead*Complete.txt | wc -l) - 1))
+        NUMFILES=$numpair
+        MUX=1
+        BASEMASK="NA"
+        grep -P "^${LABEL}" ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv | awk -F ',' '{print $2","$3",,,,,"$5","$10","}' >> ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv
+        barcode=$(grep -P "^${LABEL}" ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv | awk -F ',' '{$5}' | head -1)
+ 
+        # We will demultiplex and barcode is of standard length 6 (single-end,paired-end)
+        if [[ ${#barcode} == 6 ]]; then
+           MUX=1
+           BASEMASK="NA"
+        fi
+
+        #We will demultiplex and the barcode is of different length and single-end
+        if [ ${#barcode} > 6 ] && [ ${numpair} == 1 ]; then
+            MUX=1
+            BASEMASK="Y*,I${#barcode},Y*"
+            NUMFILES=1
+        fi
+
+        #User demultiplexes and it is single end
+        if [ ${numpair} == 1 ] && [ ${#barcode} == 0 ]; then
+            MUX=2
+            BASEMASK="Y*,Y*"
+            NUMFILES=2
+        fi
+
+        #User will demultiplex and it is paired-end
+        if [ ${numpair} == 2 ] && [ ${#barcode} == 0 ]; then
+           MUX=2
+           BASEMASK="Y*,Y*,Y*"
+           NUMFILES=3
+        fi
+    fi 
     
     # Create Sample Sheet
     # They demux
@@ -81,7 +117,6 @@ if [ -f $complete_file ]; then
         fi
     fi
 
-    numpair=$(( $(ls ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/RTARead*Complete.txt | wc -l) - 1))
     
     # Rename Files
     CMD="fastqs_rename.R $FC_ID 1 $run_dir/SampleSheet.csv $run_dir ${SEQ} $run_dir"
@@ -116,7 +151,7 @@ if [ -f $complete_file ]; then
     fi
 
     # Remove lock files
-    rm -f ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$lockfile
+    rm -f ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/$lockfile
 fi
 
 # Exit
