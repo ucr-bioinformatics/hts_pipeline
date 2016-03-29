@@ -112,10 +112,22 @@ Lane,Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Pro
 EOF
     
         grep -P "^${LABEL}" ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv | awk -F ',' '{print $2","$3",,,,,"$5","$10","}' >> ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv
-        barcode=$(grep -P "^${LABEL}" ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv | awk -F ',' '{$5}' | head -1)
+        #barcode=$(grep -P "^${LABEL}" ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv | awk -F ',' '{$5}' | head -1)
     fi
 
-    
+    # Rename Files
+    CMD="fastqs_rename.R $FC_ID ${NUMFILES} ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv $run_dir ${SEQ} $run_dir"
+    echo -e "==== RENAME STEP ====\n${CMD}" >> $ERROR_FILE
+    if [ $ERROR -eq 0 ]; then 
+        ${CMD} &>> $ERROR_FILE
+        if [ $? -ne 0 ]; then 
+            echo "ERROR: Files rename failed" >> $ERROR_FILE && ERROR=1
+        fi
+    fi
+  
+    # Extract a barcode to calculate barcode length
+    barcode=$(tail -1 ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv | awk '{split($0,a,","); print a[6]}')
+     
     # We will demultiplex and barcode is of standard length 6 (single-end,paired-end)
     if [[ ${#barcode} == 6 ]]; then
        MUX=1
@@ -154,15 +166,6 @@ EOF
         fi
     fi
     
-    # Rename Files
-    CMD="fastqs_rename.R $FC_ID ${NUMFILES} ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv $run_dir ${SEQ} $run_dir"
-    echo -e "==== RENAME STEP ====\n${CMD}" >> $ERROR_FILE
-    if [ $ERROR -eq 0 ]; then 
-        ${CMD} &>> $ERROR_FILE
-        if [ $? -ne 0 ]; then 
-            echo "ERROR: Files rename failed" >> $ERROR_FILE && ERROR=1
-        fi
-    fi
 
     # Generate QC report
     CMD="qc_report_generate_targets.R $FC_ID ${numpair} $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/fastq_report/ $SHARED_GENOMICS/$FC_ID/SampleSheet_rename.csv $MUX"
