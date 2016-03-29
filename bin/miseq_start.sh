@@ -81,6 +81,13 @@ if [ -f $complete_file ]; then
         fi
     fi
 
+    # Determine paired and if we are to demux
+    if [ $ERROR -eq 0 ]; then
+        numpair=$(( $(ls ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/Basecalling_Netcopy_complete_Read*.txt | wc -l) - 1 ))
+        #MUX should check if there is a barcode in the sample sheet or not
+        MUX=1
+    fi
+
     # Rename Files
     CMD="fastqs_rename.R $FC_ID 2 $run_dir/SampleSheet.csv $run_dir ${SEQ} $run_dir"
     echo -e "==== RENAME STEP ====\n${CMD}" >> $ERROR_FILE
@@ -92,9 +99,7 @@ if [ -f $complete_file ]; then
     fi
 
     # Generate QC report
-    PAIR=1
-    MUX=1
-    CMD="qc_report_generate_targets.R $FC_ID $PAIR $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/fastq_report/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv $MUX"
+    CMD="qc_report_generate_targets.R $FC_ID $numpair $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/fastq_report/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv $MUX"
     echo -e "==== QC STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         ${CMD} &>> $ERROR_FILE
