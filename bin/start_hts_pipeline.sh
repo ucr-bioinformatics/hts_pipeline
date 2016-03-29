@@ -21,9 +21,11 @@ for dir in $dir_list; do
     if [ "$dir" != '.' ]; then
         # Find sample sheet
         complete_file=`find $dir -name RTAComplete.txt`
-
-        if [ ! -z $complete_file ]; then
-            # Determin Sequencer type
+        samplesheet_file=`find $dir -maxdepth 1 -name *_FC#*.csv`
+        samplesheet_john=`find $dir -maxdepth 1 -name SampleSheet_John.csv`
+        
+        if [ ! -z $complete_file ] && ([ ! -z $samplesheet_file ] || [ ! -z $samplesheet_john ]); then
+            # Determine Sequencer type
             str=$(echo $dir | cut -d_ -f2)
             case $str in
             "SN279")
@@ -64,7 +66,7 @@ Flowcell ${FC_ID} has come in and needs to be processed.
 Thanks
 EOF
             echo "Processing ${FC_ID} from ${SOURCE_DIR}/$dir" >> ${HTS_PIPELINE_HOME}/log/${SEQ}_pipeline.log
-            echo ${SEQ}_start.sh ${FC_ID} ${SOURCE_DIR}/$dir ${SEQ} ${label}| qsub -l nodes=1:ppn=64,mem=50gb -j oe -o ${HTS_PIPELINE_HOME}/log/${SEQ}_start.log -m bea -M ${NOTIFY_EMAIL}
+            echo ${SEQ}_start.sh ${FC_ID} ${SOURCE_DIR}/$dir ${SEQ} ${label}| qsub -l nodes=1:ppn=32,mem=50gb,walltime=20:00:00 -j oe -o ${HTS_PIPELINE_HOME}/log/${SEQ}_start.log -m bea -M ${NOTIFY_EMAIL}
         fi
     fi
 done

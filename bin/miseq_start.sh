@@ -46,6 +46,18 @@ if [ -f $complete_file ]; then
     ##################
     # Pipeline Steps #
     ##################
+
+    # Create copy of the original samplesheet from Clay and name it as SampleSheet.csv
+    samplesheet_origfile=$(ls ${SHARED_GENOMICS}/Runs/$run_dir/*_FC#*.csv)
+    CMD="cp $samplesheet_origfile SampleSheet.csv"
+    echo -e "==== Create copy of the original samplesheet from Clay STEP ====\n${CMD}" >> $ERROR_FILE
+    if [ $ERROR -eq 0 ]; then
+        ${CMD} &>> $ERROR_FILE
+        if [ $? -ne 0 ]; then
+            echo "ERROR:: Transfer failed" >> $ERROR_FILE && ERROR=1
+        fi
+    fi
+    
     
     # Transfer miseq data
     CMD="transfer_data.sh $FC_ID $SOURCE_DIR"
@@ -57,11 +69,50 @@ if [ -f $complete_file ]; then
         fi
     fi
     
-    # Create Sample Sheet
+    # Get barcode length
+    barcode=$(tail -1 ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv | awk '{split($0,a,","); print a[6]}')
+    
+    # Create Sample Sheet for demux
+    if [ $ERROR -eq 0 ]; then
+        numpair=$(( $(ls ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/Basecalling_Netcopy_complete_Read*.txt | wc -l) - 1 ))
+        NUMFILES=$numpair
+        MUX=1
+        BASEMASK="NA"
+    fi
+
+   # We will demultiplex and barcode is of standard length 6 (single-end,paired-end)
+    if [[ ${#barcode} == 6 ]]; then
+       MUX=1
+       BASEMASK="NA"
+    fi
+
+    #We will demultiplex and the barcode is of different length and single-end
+    if [ ${#barcode} > 6 ] && [ ${numpair} == 1 ]; then
+        MUX=1
+        BASEMASK="Y*,I${#barcode},Y*"
+        NUMFILES=1
+    fi
+
+    #User demultiplexes and it is single end
+    if [ ${numpair} == 1 ] && [ ${#barcode} == 0 ]; then
+        MUX=2
+        BASEMASK="Y*,Y*"
+        NUMFILES=2
+    fi
+
+    #User will demultiplex and it is paired-end
+    if [ ${numpair} == 2 ] && [ ${#barcode} == 0 ]; then
+       MUX=2
+       BASEMASK="Y*,Y*,Y*"
+       NUMFILES=3
+    fi 
+ 
+        
+    # Demuxing step
     # They demux
     #CMD="bcl2fastq_run.sh ${FC_ID} $run_dir Y*,Y* ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
     # We demux
-    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir NA ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
+    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $MUX"
     echo -e "==== DEMUX STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         cd $SHARED_GENOMICS/$FC_ID
@@ -70,7 +121,7 @@ if [ -f $complete_file ]; then
             echo "ERROR:: Demuxing failed" >> $ERROR_FILE && ERROR=1
         fi
     fi
-    
+
     # Create Sample Sheet
     CMD="create_samplesheet_${SEQ}.R ${FC_ID} ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $run_dir" 
     echo -e "==== SAMPLE SHEET STEP ====\n${CMD}" >> $ERROR_FILE
@@ -80,9 +131,10 @@ if [ -f $complete_file ]; then
             echo "ERROR:: SampleSheet creation failed" >> $ERROR_FILE && ERROR=1
         fi
     fi
-
+    
+    
     # Rename Files
-    CMD="fastqs_rename.R $FC_ID 2 $run_dir/SampleSheet.csv $run_dir ${SEQ} $run_dir"
+    CMD="fastqs_rename.R $FC_ID ${NUMFILES} $run_dir/SampleSheet.csv $run_dir ${SEQ} $run_dir"
     echo -e "==== RENAME STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then 
         ${CMD} &>> $ERROR_FILE
@@ -92,9 +144,7 @@ if [ -f $complete_file ]; then
     fi
 
     # Generate QC report
-    PAIR=1
-    MUX=1
-    CMD="qc_report_generate_targets.R $FC_ID $PAIR $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/fastq_report/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv $MUX"
+    CMD="qc_report_generate_targets.R $FC_ID ${numpair} $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/fastq_report/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv $MUX"
     echo -e "==== QC STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         ${CMD} &>> $ERROR_FILE
