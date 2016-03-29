@@ -137,16 +137,26 @@ Note: In case, we need to run CASAVA again for some lanes individually, we need 
 **MiSeq**
 ==================
 
-Log-in to pigeon.bioinfo.ucr.edu and create the flowcell directory under /bigdata/genomics/shared/
+Log-in to pigeon.bioinfo.ucr.edu and login to genomics account via ssh genomics@localhost. Then  change directory to /bigdata/genomics/shared/. You type ls and you will see Runs and RunAnalysis directories.
 ```
+ssh genomics@localhost
 cd /bigdata/genomics/shared/
 ```
+Transfer Step
+=============
+Data is automatically tranferred to /bigdata/genomics/shared/Runs directory and stored in this format "160309_M02457_0087_000000000-AL01J"
+
+Demux Step
+=========
+bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $MUX
+Usage: bcl2fastq_run.sh {FlowcellID} {RunDirectoryName} {BaseMask}{SampleSheet} {Mismatch, default=1}
 
 Copy the flowcell directory
 ```
 cp -R /bigdata/genomics/shared/Runs/flowcell_num /bigdata/genomics/shared/flowcell_ID #flowcell_ID eg. 351 (This directory will be created and the data will be copied inside the directory, 351.
 ```
-
+Sample Sheet Step
+=================
 Create samplesheet for follow up scripts after demultiplexing
 ```
 cd /bigdata/genomics/shared/flowcell_ID/
@@ -162,7 +172,8 @@ In the case of dual barcodes (i5 and i7) barcodes, please use the following scri
 create_samplesheet_miseq_i5_i7.R
 USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
 ```
-
+Rename Step
+==========
 Rename fastqs
 ```
 fastqs_rename.R
@@ -175,7 +186,8 @@ Error: USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPat
 * **RunType** - miseq
 * **RunDir** - 150921_M02457_0067_000000000-AJ7YY/
 
-
+QC Step
+=======
 Generate QC report (Same as HiSeq)
 ```
 qc_report_generate_targets.R
@@ -188,7 +200,8 @@ USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleS
 * **SampleSheetPath** - 150921_M02457_0067_000000000-AJ7YY/SampleSheet.csv
 * **Demultiplex type** - 1
 
-
+URL Step
+========
 Create urls and update the database (same as HiSeq)
 ```
 sequence_url_update.R
