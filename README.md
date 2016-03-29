@@ -1,3 +1,14 @@
+**Setup**
+==========
+First time you are starting the process, setup your environment. You add these two lines in your .bashrc file by vim .bashrc
+    ```
+    export HTS_PIPELINE_HOME=~/hts_pipeline
+    source $HTS_PIPELINE_HOME/env_profile.sh
+    ```
+For analysis in your(user's) testing area change directory cd ~/bigdata/genomics_shared/ and you will be see Runs and RunAnalysis directory. In Runs directory you can upload sequencing run data and start analysis for yourself.This is for development and code testing purpose only.
+For production purpose you need to ssh to genomics account ssh genomics@localhost and press return/enter and then enter password key for your account. You then change directory by cd /bigdata/genomics/shared/ and you will see Runs and RunAnalysis directories under this directory. You will run analysis from shared directory.
+
+
 **Hi-Seq**
 ==========
 1. Move sequencer run directory from Runs to RunAnalysis
