@@ -116,7 +116,7 @@ if [ -f $complete_file ]; then
     echo -e "==== DEMUX STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         cd $SHARED_GENOMICS/$FC_ID
-        ${CMD} &>> $ERROR_FILE
+        ${CMD} &> nohup.out
         if [ $? -ne 0 ]; then
             echo "ERROR:: Demuxing failed" >> $ERROR_FILE && ERROR=1
         fi
