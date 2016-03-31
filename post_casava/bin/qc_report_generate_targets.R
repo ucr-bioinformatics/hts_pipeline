@@ -32,25 +32,15 @@ setwd(paste(fastq_path,"/fastq_report/",sep=""))
 
 project_id <- samplesheet$SampleProject
 sample_id <- samplesheet$SampleID
-print("sample_id")
-print(sample_id)
 lane_samplesheet <- samplesheet$Lane
-print("lane_samplesheet")
-print(lane_samplesheet)
 index <- samplesheet$Index
-print("Index")
-print(index)
 chk <- unlist(lane_samplesheet)
 
 #Generate list of lane numbers.
 uniq_lane_list <- unique(unlist(lane_samplesheet))
-print("uniq_lane_list")
-print(uniq_lane_list)
 cnt=1
 
 for(lane in uniq_lane_list) {
-	#print("lane")
-	#print(lane)
 	targets_filename <-c(paste(targets_path,"targets_lane",lane,".txt",sep=""))	
 	file_list <- c()
 	samp_list <- c()
@@ -60,17 +50,8 @@ for(lane in uniq_lane_list) {
 	sample_num=1
 	samp_path <- c(paste(shared_genomics,"/",flowcellid,"/",sep=""))
     pattern_f <- c(paste("flowcell",flowcellid,"_","lane",lane,"_",'*',sep=""))
-	#print(pattern_f)
-    #print("Checking samp_path now... ")
-    #print(samp_path)
-    #print("Checking pattern...")
-    #print(pattern_f)
 	samp_file_list <- list.files(path=samp_path, pattern=pattern_f)
 	targets_filename <-c(paste(targets_path,"targets_lane",lane,".txt",sep=""))
-	#print("Length of sample file list")
-    #print(length(samp_file_list))
-    #print("Printing sample file names")
-    #print(samp_file_list)	
 
 	if(num_pairs==1) # Single-end
 	{
@@ -113,16 +94,16 @@ for(lane in uniq_lane_list) {
 	
 		if(demultiplex_type==2)	
 		{	
-			print(samp_list)
+			#print(samp_list)
         	list_out <- cbind(FileName1=file_list1, FileName2=file_list2, SampleName=samp_list)
-            print("Checking")
-        	print("list_out")
-			print(list_out)
+            #print("Checking")
+        	#print("list_out")
+			#print(list_out)
 			write.table(list_out,targets_filename, quote=FALSE, row.names=FALSE, sep="\t")
 		}	
 		else
 		{
-			print(samp_list)
+			#print(samp_list)
 			list_out <- cbind(FileName1=file_list, SampleName=samp_list)
 			write.table(list_out,targets_filename, quote=FALSE, row.names=FALSE, sep="\t")	
 		}	
@@ -190,7 +171,7 @@ for (lane in uniq_lane_list) {
         warning(msg)
         next
     }
-	print("reached next")
+	#print("reached next")
     # Format files object
     if (num_pairs == 1) {
 	if(demultiplex_type == 1 )
@@ -222,7 +203,7 @@ for (lane in uniq_lane_list) {
      else if (num_pairs == 2) {
 	if(demultiplex_type == 1 )
         {
-                print("Just testing num pairs 2 and demultiplex type 1")
+            #print("Just testing num pairs 2 and demultiplex type 1")
         	myfiles1 <- paste(fastq_path, targets$FileName1, sep="")
         	names(myfiles1) <-paste(targets$SampleName, "_pair1", sep="")
         	myfiles2 <- paste(fastq_path, targets$FileName2, sep="")
@@ -259,7 +240,7 @@ for (lane in uniq_lane_list) {
     print("Printing report names")
     print(file_name)
     pdf(file_name, height=18, width=8*length(myfiles))
-    seeFastqPlot(fqlist)
+    suppressWarnings(seeFastqPlot(fqlist))
     dev.off()
 }
 

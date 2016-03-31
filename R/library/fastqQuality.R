@@ -17,8 +17,8 @@
 
 ## (A) Compute quality stats and store them in list
 seeFastq <- function(fastq, batchsize, klength=8) {
-        require(ShortRead)
-        require(Biostrings)
+        suppressPackageStartupMessages(require(ShortRead))
+        suppressPackageStartupMessages(require(Biostrings))
 	
 	## Processing of single fastq file
 	.seeFastq <- function(fastq, batchsize, klength) { 
