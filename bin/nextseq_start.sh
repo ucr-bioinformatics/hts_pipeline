@@ -70,6 +70,21 @@ if [ -f $complete_file ]; then
 
     # Get barcode length
     barcode=$(tail -1 ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv | awk '{split($0,a,","); print a[6]}')
+    dual_index_flag=0
+    # Create Sample Sheet for demux
+    if [ $ERROR -eq 0 ]; then
+        numpair=$(( $(ls ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/RTARead*Complete.txt | wc -l) - 1 ))
+        if [ ${numpair} == 3 ]; then #Dual indexing
+            dual_index_flag=1
+            NUMFILES=$(( $numpair - 1 ))
+            numpair=$(( $numpair - 1 ))
+        else
+            NUMFILES=$numpair
+        fi
+        MUX=1
+        BASEMASK="NA"
+    fi
+    
     echo -e "====  DETERMINE TYPE of DEMUX STEP ====\n" >> $ERROR_FILE
     # Determine type of demultiplexing
     #if [ $ERROR -eq 0 ]; then
@@ -80,10 +95,10 @@ if [ -f $complete_file ]; then
     #fi
     
     #Default arguments for most common type of demux
-    numpair=$(( $(ls ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/RTARead*Complete.txt | wc -l) - 1 ))
-    NUMFILES=$numpair
-    MUX=1
-    BASEMASK="NA"
+    #numpair=$(( $(ls ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/RTARead*Complete.txt | wc -l) - 1 ))
+    #NUMFILES=$numpair
+    #MUX=1
+    #BASEMASK="NA"
     
     # We will demultiplex and barcode is of standard length 6 (single-end,paired-end)
     if [[ ${#barcode} == 6 ]]; then
@@ -116,7 +131,7 @@ if [ -f $complete_file ]; then
     # They demux
     #CMD="bcl2fastq_run.sh ${FC_ID} $run_dir Y*,Y* ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
     # We demux
-    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir NA ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
+    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
     echo -e "==== DEMUX STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         cd $SHARED_GENOMICS/$FC_ID
@@ -127,7 +142,11 @@ if [ -f $complete_file ]; then
     fi
     
     # Create Sample Sheet
-    CMD="create_samplesheet_${SEQ}.R ${FC_ID} ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $run_dir" 
+    if [ $dual_index_flag == 1 ]; then
+        CMD="create_samplesheet_${SEQ}_i5_i7.R ${FC_ID} ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $run_dir"
+    else
+        CMD="create_samplesheet_${SEQ}.R ${FC_ID} ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $run_dir" 
+    fi
     echo -e "==== SAMPLE SHEET STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         ${CMD} &>> $ERROR_FILE
