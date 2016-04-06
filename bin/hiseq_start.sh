@@ -118,7 +118,6 @@ EOF
   
     # Extract a barcode to calculate barcode length
     barcode=$(tail -1 ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv | awk '{split($0,a,","); print a[7]}')
-     
     # We will demultiplex and barcode is of standard length 6 (single-end,paired-end)
     if [[ ${#barcode} == 6 ]]; then
        MUX=1

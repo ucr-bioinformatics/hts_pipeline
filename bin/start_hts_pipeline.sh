@@ -23,8 +23,9 @@ for dir in $dir_list; do
         complete_file=`find $dir -name RTAComplete.txt`
         samplesheet_file=`find $dir -maxdepth 1 -name *_FC#*.csv`
         samplesheet_john=`find $dir -maxdepth 1 -name SampleSheet_John.csv`
+        samplesheet=`find $dir -maxdepth 1 -name SampleSheet.csv`
         
-        if [ ! -z $complete_file ] && ([ ! -z $samplesheet_file ] || [ ! -z $samplesheet_john ]); then
+        if [ ! -z $complete_file ] && ([ ! -z $samplesheet_file ] || [ ! -z $samplesheet ] || [ ! -z $samplesheet_john ]); then
             # Determine Sequencer type
             str=$(echo $dir | cut -d_ -f2)
             case $str in

@@ -49,7 +49,10 @@ if [ -f $complete_file ]; then
 
     # Create copy of the original samplesheet from Clay and name it as SampleSheet.csv
     samplesheet_origfile=$(ls ${SHARED_GENOMICS}/Runs/$run_dir/*_FC#*.csv)
-    CMD="cp $samplesheet_origfile SampleSheet.csv"
+    samplesheet=$(ls ${SHARED_GENOMICS}/Runs/$run_dir/SampleSheet.csv)
+    if ([ ! -z $samplesheet_origfile ]); then
+        CMD="cp $samplesheet_origfile SampleSheet.csv"
+    fi
     echo -e "==== Create copy of the original samplesheet from Clay STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         ${CMD} &>> $ERROR_FILE
@@ -71,11 +74,17 @@ if [ -f $complete_file ]; then
     
     # Get barcode length
     barcode=$(tail -1 ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv | awk '{split($0,a,","); print a[6]}')
-    
+    dual_index_flag=0 
     # Create Sample Sheet for demux
     if [ $ERROR -eq 0 ]; then
         numpair=$(( $(ls ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/Basecalling_Netcopy_complete_Read*.txt | wc -l) - 1 ))
-        NUMFILES=$numpair
+        if [ ${numpair} == 3 ]; then #Dual indexing
+            dual_index_flag=1
+            NUMFILES=$(( $numpair - 1 ))
+            numpair=$(( $numpair - 1 ))
+        else
+            NUMFILES=$numpair
+        fi
         MUX=1
         BASEMASK="NA"
     fi
@@ -107,7 +116,6 @@ if [ -f $complete_file ]; then
        NUMFILES=3
     fi 
  
-        
     # Demuxing step
     # They demux
     #CMD="bcl2fastq_run.sh ${FC_ID} $run_dir Y*,Y* ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
@@ -122,8 +130,13 @@ if [ -f $complete_file ]; then
         fi
     fi
 
+    
     # Create Sample Sheet
-    CMD="create_samplesheet_${SEQ}.R ${FC_ID} ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $run_dir" 
+    if [ $dual_index_flag == 1 ]; then
+        CMD="create_samplesheet_${SEQ}_i5_i7.R ${FC_ID} ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $run_dir"
+    else
+        CMD="create_samplesheet_${SEQ}.R ${FC_ID} ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $run_dir" 
+    fi
     echo -e "==== SAMPLE SHEET STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         ${CMD} &>> $ERROR_FILE
