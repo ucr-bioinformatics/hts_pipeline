@@ -146,10 +146,22 @@ Transfer Step
 =============
 Data is automatically tranferred to /bigdata/genomics/shared/Runs directory and stored in this format "160309_M02457_0087_000000000-AL01J"
 
+Data is transferred with this script:
+    transfer_data.sh
+    Usage: transfer_data.sh {FlowcellID} {/path/to/source}
+    Example with flowcell#477 here:
+    477 /bigdata/genomics/shared/Runs/./160614_M02457_0105_000000000-AR9JP
+
+
 Demux Step
 =========
-bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $MUX
-Usage: bcl2fastq_run.sh {FlowcellID} {RunDirectoryName} {BaseMask}{SampleSheet} {Mismatch, default=1}
+    bcl2fastq_run.sh 
+    Usage: bcl2fastq_run.sh {FlowcellID} {RunDirectoryName} {BaseMask}{SampleSheet} {Mismatch, default=1}
+    Example with Flowcell#477:
+        bcl2fastq_run.sh 477 160614_M02457_0105_000000000-AR9JP NA /bigdata/genomics/shared/RunAnalysis/flowcell477/160614_M02457_0105_000000000-AR9JP/SampleSheet.csv     1
+    
+    
+
 
 Copy the flowcell directory
 ```
@@ -157,47 +169,70 @@ cp -R /bigdata/genomics/shared/Runs/flowcell_num /bigdata/genomics/shared/flowce
 ```
 Sample Sheet Step
 =================
-Create samplesheet for follow up scripts after demultiplexing
+Create samplesheet for follow up scripts after demultiplexing step
 ```
-cd /bigdata/genomics/shared/flowcell_ID/
-create_samplesheet_miseq.R
-USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
+    You need to be in this directory /bigdata/genomics/shared/flowcell_ID/
+    Example with Flowcell#477 with change directory:
+        cd /bigdata/genomics/shared/477/
+        
+    You need to run this script to create SampleSheet:
+        create_samplesheet_miseq.R
+        USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
+        
+        Example with Flowcell#477 :
+            create_samplesheet_miseq.R 477 /bigdata/genomics/shared/RunAnalysis/flowcell477/160614_M02457_0105_000000000-AR9JP/SampleSheet.csv 160614_M02457_0105_000000000-AR9JP
 ```
-* **FlowcellID** - flowcell number, e.g. 351
-* **Samplesheet** - /bigdata/genomics/shared/351/150921_M02457_0067_000000000-AJ7YY/SampleSheet.csv
-* **Rundir** - 150921_M02457_0067_000000000-AJ7YY/
+* **FlowcellID** - flowcell number, e.g. 477
+* **Samplesheet** - /bigdata/genomics/shared/RunAnalysis/flowcell477/160614_M02457_0105_000000000-AR9JP/SampleSheet.csv
+* **Rundir** - 160614_M02457_0105_000000000-AR9JP
 
 In the case of dual barcodes (i5 and i7) barcodes, please use the following script to create the samplesheet.
 ```
-create_samplesheet_miseq_i5_i7.R
-USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
+    create_samplesheet_miseq_i5_i7.R
+    USAGE:: create_samplesheet_miseq_i5_i7.R <FlowcellID> <Samplesheet> <Rundir>
 ```
 Rename Step
 ==========
 Rename fastqs
 ```
-fastqs_rename.R
-Error: USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir>
+    fastqs_rename.R
+    USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir>
+    
+    Example with Flowcell#477
+        fastqs_rename.R 477 1 160614_M02457_0105_000000000-AR9JP/SampleSheet.csv 160614_M02457_0105_000000000-AR9JP miseq 160614_M02457_0105_000000000-AR9JP
 ```
-* **FlowcellID** - flowcell number, e.g. 351
-* **NumberOfFiles** - 2 (if there are two *.fastq.gz files inside the directory; not considering the Undetermined files)
-* **SampleSheet** - 150921_M02457_0067_000000000-AJ7YY/SampleSheet.csv
-* **UnalignedPath** - 150921_M02457_0067_000000000-AJ7YY/
-* **RunType** - miseq
-* **RunDir** - 150921_M02457_0067_000000000-AJ7YY/
+* **FlowcellID** - flowcell number, e.g. 477
 
+* **NumberOfFiles** -   1 (if there are one *.fastq.gz files inside the directory; not considering the Undetermined files)
+                        2 (if there are two *.fastq.gz files inside the directory; not considering the Undetermined files)
+                        
+* **SampleSheet** - 160614_M02457_0105_000000000-AR9JP/SampleSheet.csv
+
+* **UnalignedPath** - 160614_M02457_0105_000000000-AR9JP
+
+* **RunType** - miseq
+
+* **RunDir** - 160614_M02457_0105_000000000-AR9JP
+
+
+        
 QC Step
 =======
 Generate QC report (Same as HiSeq)
 ```
 qc_report_generate_targets.R
 USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>
+
+    Example with Flowcell#477:
+        qc_report_generate_targets.R 477 1 /bigdata/genomics/shared/477/ /bigdata/genomics/shared/477/fastq_report/ /bigdata/genomics/shared/477/160614_M02457_0105_000000000-AR9JP/SampleSheet.csv 1
+    
+    
 ```
-* **FlowcellID** - flowcell number, e.g. 351
+* **FlowcellID** - flowcell number, e.g. 477
 * **NumberOfPairs** - 1 (for single-end data), 2 (for paired-end data)
-* **FASTQPath** - /bigdata/genomics/shared/351/
-* **TargetsPath** - ./
-* **SampleSheetPath** - 150921_M02457_0067_000000000-AJ7YY/SampleSheet.csv
+* **FASTQPath** - /bigdata/genomics/shared/477/
+* **TargetsPath** - /bigdata/genomics/shared/477/fastq_report/
+* **SampleSheetPath** - /bigdata/genomics/shared/477/160614_M02457_0105_000000000-AR9JP/SampleSheet.csv
 * **Demultiplex type** - 1
 
 URL Step
@@ -205,12 +240,17 @@ URL Step
 Create urls and update the database (same as HiSeq)
 ```
 sequence_url_update.R
-Error: USAGE:: script.R <FlowcellID> <NumberOfLanes> <FASTQPath>
-Execution halted
+    USAGE:: script.R <FlowcellID> <NumberOfLanes> <FASTQPath>
+    
+    Example with Flowcell#477:
+        sequence_url_update.R 477 1 /bigdata/genomics/shared/477
+        
+    
+
 ```
-* **FlowcellID** - flowcell number, e.g. 351
+* **FlowcellID** - flowcell number, e.g. 477
 * **NumberOfLanes** - 1
-* **FASTQPath** - /bigdata/genomics/shared/351/
+* **FASTQPath** - /bigdata/genomics/shared/477
 
 
 **NextSeq**
