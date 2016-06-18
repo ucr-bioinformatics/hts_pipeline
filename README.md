@@ -256,6 +256,42 @@ sequence_url_update.R
 **NextSeq**
 ===========
 
+Log onto pigeon and go to the shred directory:
+    cd /bigdata/genomics/shared/
+    
+Create copy of the original samplesheet from Clay's SampleSheet:
+
+    cp /bigdata/genomics/shared/Runs/160614_NB501124_0065_AHFH7LBGXY/15057934_FC#478.csv SampleSheet.csv
+    
+==== Transfer STEP ====
+    Run the script to transfer data:
+        transfer_data.sh
+        
+        Usage: transfer_data.sh {FlowcellID} {/path/to/source}
+        
+    Example from FlowcellID#478:
+        478 /bigdata/genomics/shared/Runs/./160614_NB501124_0065_AHFH7LBGXY
+        
+    Move data to flowcell sub-directory (flowcell478) of RunAnalysis directory:
+     
+        mv /bigdata/genomics/shared/Runs/./160614_NB501124_0065_AHFH7LBGXY 
+                /bigdata/genomics/shared/RunAnalysis/flowcell478/
+    
+    
+    ==== DEMUX STEP ====
+    This script is used to DEMUX STEP:
+    
+        bcl2fastq_run.sh
+        
+            Usage: bcl2fastq_run.sh {FlowcellID} {RunDirectoryName} {BaseMask} {SampleSheet} {Mismatch, default=1}
+            
+        Example from FlowcellID#478:
+        
+            bcl2fastq_run.sh 478 160614_NB501124_0065_AHFH7LBGXY NA /bigdata/genomics/shared/RunAnalysis/flowcell478/160614_NB501124_0065_AHFH7LBGXY/SampleSheet.csv 1
+            
+            
+    
+
 Log onto pigeon and create the flowcell directory
 ```
 cd /bigdata/genomics/shared/
