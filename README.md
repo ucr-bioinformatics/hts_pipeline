@@ -290,7 +290,60 @@ Create copy of the original samplesheet from Clay's SampleSheet:
             bcl2fastq_run.sh 478 160614_NB501124_0065_AHFH7LBGXY NA /bigdata/genomics/shared/RunAnalysis/flowcell478/160614_NB501124_0065_AHFH7LBGXY/SampleSheet.csv 1
             
             
+    ==== SAMPLE SHEET STEP ====
     
+    This script is used to create SAMPLE SHEET:  
+        create_samplesheet_nextseq.R
+        
+            USAGE:: script.R <FlowcellID> <Samplesheet> <Rundir>
+            
+        Example from FlowcellID#478:
+        
+            create_samplesheet_nextseq.R 478 /bigdata/genomics/shared/RunAnalysis/flowcell478/160614_NB501124_0065_AHFH7LBGXY/SampleSheet.csv  
+                            160614_NB501124_0065_AHFH7LBGXY
+                            
+                            
+    ==== RENAME STEP ====
+    
+    This script is used to rename the fastq files:
+    
+        fastqs_rename.R
+        
+            USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir>
+            
+        Example from FlowcellID#478:
+        
+            fastqs_rename.R 478 1 160614_NB501124_0065_AHFH7LBGXY/SampleSheet.csv 160614_NB501124_0065_AHFH7LBGXY nextseq
+                    160614_NB501124_0065_AHFH7LBGXY
+    
+   
+   
+   ==== QC STEP ====
+   
+   This script is used to check the quality of the data:
+   
+        qc_report_generate_targets.R
+        
+            USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>
+            
+        Example from FlowcellID#478:
+        
+            qc_report_generate_targets.R 478 1 /bigdata/genomics/shared/478/ /bigdata/genomics/shared/478/fastq_report/ /bigdata/genomics/shared/478/160614_NB501124_0065_AHFH7LBGXY/SampleSheet.csv 1
+            
+            
+    ==== URL STEP ====
+    
+    This script is used to post the data on webpage:
+    
+        sequence_url_update_nextseq.R
+        
+            USAGE:: script.R <FlowcellID> <NumberOfLanes> <FASTQPath>
+            
+        Example from FlowcellID#478:
+        
+            sequence_url_update_nextseq.R 478 4 /bigdata/genomics/shared/478
+            
+            
 
 Log onto pigeon and create the flowcell directory
 ```
