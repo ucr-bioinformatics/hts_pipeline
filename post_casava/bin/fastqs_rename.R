@@ -78,6 +78,10 @@ gen_link <- function(x) {
         # Get fastq files
         file_name <- paste("[^0-9]",sample_id,"_L00",lane,"_R", p, ".*fastq.gz$", sep="")
         files <- list.files(path=fastq_path,pattern=file_name)
+        if (length(files) == 0 && run_type == "nextseq") {
+            file_name <- paste(sample_id,"_R", p,"_[0-9]+.fastq.gz$", sep="")
+            files <- list.files(path=fastq_path,pattern=file_name)
+        }
         
         # Get undetermined files
         file_name_undermine <-paste("Undetermined.*_L00",lane,"_R", p, ".*fastq.gz$", sep="")
