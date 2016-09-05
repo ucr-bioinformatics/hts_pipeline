@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 # Check Arguments
-EXPECTED_ARGS=5
+EXPECTED_ARGS=6
 E_BADARGS=65
 
 if [ $# -ne $EXPECTED_ARGS ]
