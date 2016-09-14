@@ -17,7 +17,7 @@ base_mask=$3
 sample_sheet=$4
 barcode_mismatch=$5
 
-if [[ $6 == "nosplit" ]]; then
+if [[ "$6" == "nosplit" ]]; then
     lane_split="--no-lane-splitting"
 else
     lane_split=""
