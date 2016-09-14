@@ -84,7 +84,7 @@ gen_link <- function(x) {
         }
         
         # Get undetermined files
-        file_name_undermine <-paste("Undetermined.*",lane,"_R", p, ".*fastq.gz$", sep="")
+        file_name_undermine <-paste("Undetermined.*_R", p, ".*fastq.gz$", sep="")
         files_undermine <- list.files(path=ufastq_path,pattern=file_name_undermine)
 
         # Get fastq files
