@@ -176,7 +176,7 @@ if [ -f $complete_file ]; then
     fi
 
     # Update Illumina web server URLs
-    CMD="sequence_url_update_nextseq.R $FC_ID 4 $SHARED_GENOMICS/$FC_ID"
+    CMD="sequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID"
     echo -e "==== URL STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then 
         ${CMD} &>> $ERROR_FILE
