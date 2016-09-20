@@ -18,7 +18,7 @@ targets_path <- args[4]
 # Pull Girke Code
 source("http://faculty.ucr.edu/~tgirke/Documents/R_BioCond/My_R_Scripts/fastqQuality.R")
 
-file_pattern <- paste('^targets_lane', lane, '.txt$', sep="")
+file_pattern <- paste('^targets_lane*.txt$', sep="")
 target_lane <- list.files(path=targets_path, pattern=file_pattern)
 
 # For each lane target file, process PDF report
