@@ -18,11 +18,11 @@ targets_path <- args[4]
 # Pull Girke Code
 source("http://faculty.ucr.edu/~tgirke/Documents/R_BioCond/My_R_Scripts/fastqQuality.R")
 
-# For each lane target file, process PDF report
-for (lane in 2) {
-    file_pattern <- paste('^targets_lane', lane, '.txt$', sep="")
-    target_lane <- list.files(path=targets_path, pattern=file_pattern)
+file_pattern <- paste('^targets_lane', lane, '.txt$', sep="")
+target_lane <- list.files(path=targets_path, pattern=file_pattern)
 
+# For each lane target file, process PDF report
+for (lane in 1:length(target_lane)) {
     # Get targets (FASTQ files) for specific lane
     if (length(target_lane) == 1) {
         targets <- read.delim(paste(targets_path, target_lane[1], sep=""))
