@@ -60,8 +60,18 @@ if [ -f $complete_file ]; then
             echo "ERROR:: Transfer failed" >> $ERROR_FILE && ERROR=1
         fi
     fi
-    
-    
+
+    # Looks to change any + and . in the labeling 
+    cat $samplesheet | sed '1,/Data/!d' > SampleSheet_new.csv
+    cat $samplesheet | sed '1,/Data/d' |
+    while IFS='' read -r line || [[ -n "$line" ]]
+    do
+        FIRSTHALF=$(echo $line | cut -d, -f1 | sed -e 's/\./_/g' -e 's/+/_/g')
+        SECONDHALF=${line:${#HELLO}}
+        echo $FIRSTHALF$SECONDHALF >> SampleSheet_new.csv
+    done
+    mv SampleSheet_new.csv $samplesheet
+
     # Transfer miseq data
     CMD="transfer_data.sh $FC_ID $SOURCE_DIR"
     echo -e "==== Transfer STEP ====\n${CMD}" >> $ERROR_FILE
@@ -72,6 +82,9 @@ if [ -f $complete_file ]; then
         fi
     fi
     
+    # Checks to see if the index exists
+    INDEX_EXIST=0
+    cat ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv | sed '1,/Data/d' | grep -wo "index*" && INDEX_EXIST=1
     # Get barcode length
     barcode=$(tail -1 ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv | awk '{split($0,a,","); print a[6]}')
     dual_index_flag=0 
@@ -87,6 +100,10 @@ if [ -f $complete_file ]; then
         fi
         MUX=1
         BASEMASK="NA"
+    fi
+    
+    if [ $INDEX_EXIST -eq 0 ]; then
+        barcode=""
     fi
 
    # We will demultiplex and barcode is of standard length 6 (single-end,paired-end)
@@ -104,6 +121,7 @@ if [ -f $complete_file ]; then
 
     #User demultiplexes and it is single end
     if [ ${numpair} == 1 ] && [ ${#barcode} == 0 ]; then
+        echo HELLO >> $ERROR_FILE
         MUX=2
         BASEMASK="Y*,Y*"
         NUMFILES=2
