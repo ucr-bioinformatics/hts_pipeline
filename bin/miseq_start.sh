@@ -67,7 +67,7 @@ if [ -f $complete_file ]; then
     while IFS='' read -r line || [[ -n "$line" ]]
     do
         FIRSTHALF=$(echo $line | cut -d, -f1 | sed -e 's/\./_/g' -e 's/+/_/g')
-        SECONDHALF=${line:${#HELLO}}
+        SECONDHALF=${line:${#FIRSTHALF}}
         echo $FIRSTHALF$SECONDHALF >> SampleSheet_new.csv
     done
     mv SampleSheet_new.csv $samplesheet
@@ -183,6 +183,16 @@ if [ -f $complete_file ]; then
             echo "ERROR: QC report generation failed" >> $ERROR_FILE && ERROR=1
         fi
     fi
+
+    # Generate second QC report
+    ls $SHARED_GENOMICS/$FC_ID/*.fastq.gz > $SHARED_GENOMICS/$FC_ID/file_list_new.txt
+
+    while IFS= read -r file
+    do
+        [ -f "$file" ]
+        echo "module load fastqc; fastqc -o $SHARED_GENOMICS/$FC_ID/fastq_report/ $SHARED_GENOMICS/$FC_ID/$file" | qsub -lnodes=1:ppn=4,mem=16g,walltime=4:00:00;
+        #echo "module load fastqc; fastqc -o /bigdata/genomics/shared/535/fastq_report/ /bigdata/genomics/shared/535/$file" | qsub -lnodes=1:ppn=4,mem=16g,walltime=4:00:00;
+    done < "file_list_new.txt"
 
     # Update Illumina web server URLs
     CMD="sequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID"
