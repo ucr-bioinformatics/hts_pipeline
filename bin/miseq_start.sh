@@ -121,7 +121,6 @@ if [ -f $complete_file ]; then
 
     #User demultiplexes and it is single end
     if [ ${numpair} == 1 ] && [ ${#barcode} == 0 ]; then
-        echo HELLO >> $ERROR_FILE
         MUX=2
         BASEMASK="Y*,Y*"
         NUMFILES=2
@@ -190,7 +189,7 @@ if [ -f $complete_file ]; then
     while IFS= read -r file
     do
         [ -f "$file" ]
-        echo "module load fastqc; fastqc -o $SHARED_GENOMICS/$FC_ID/fastq_report/ $SHARED_GENOMICS/$FC_ID/$file" | qsub -lnodes=1:ppn=4,mem=16g,walltime=4:00:00;
+        echo "module load fastqc; fastqc -o $SHARED_GENOMICS/$FC_ID/fastq_report/ $file" | qsub -lnodes=1:ppn=4,mem=16g,walltime=4:00:00;
         #echo "module load fastqc; fastqc -o /bigdata/genomics/shared/535/fastq_report/ /bigdata/genomics/shared/535/$file" | qsub -lnodes=1:ppn=4,mem=16g,walltime=4:00:00;
     done < "file_list_new.txt"
 
