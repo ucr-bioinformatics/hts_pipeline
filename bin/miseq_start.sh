@@ -60,8 +60,18 @@ if [ -f $complete_file ]; then
             echo "ERROR:: Transfer failed" >> $ERROR_FILE && ERROR=1
         fi
     fi
-    
-    
+
+    # Looks to change any + and . in the labeling 
+    cat $samplesheet | sed '1,/Data/!d' > SampleSheet_new.csv
+    cat $samplesheet | sed '1,/Data/d' |
+    while IFS='' read -r line || [[ -n "$line" ]]
+    do
+        FIRSTHALF=$(echo $line | cut -d, -f1 | sed -e 's/\./_/g' -e 's/+/_/g')
+        SECONDHALF=${line:${#FIRSTHALF}}
+        echo $FIRSTHALF$SECONDHALF >> SampleSheet_new.csv
+    done
+    mv SampleSheet_new.csv $samplesheet
+
     # Transfer miseq data
     CMD="transfer_data.sh $FC_ID $SOURCE_DIR"
     echo -e "==== Transfer STEP ====\n${CMD}" >> $ERROR_FILE
@@ -72,6 +82,9 @@ if [ -f $complete_file ]; then
         fi
     fi
     
+    # Checks to see if the index exists
+    INDEX_EXIST=0
+    cat ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv | sed '1,/Data/d' | grep -wo "index*" && INDEX_EXIST=1
     # Get barcode length
     barcode=$(tail -1 ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv | awk '{split($0,a,","); print a[6]}')
     dual_index_flag=0 
@@ -87,6 +100,10 @@ if [ -f $complete_file ]; then
         fi
         MUX=1
         BASEMASK="NA"
+    fi
+    
+    if [ $INDEX_EXIST -eq 0 ]; then
+        barcode=""
     fi
 
    # We will demultiplex and barcode is of standard length 6 (single-end,paired-end)
@@ -120,7 +137,7 @@ if [ -f $complete_file ]; then
     # They demux
     #CMD="bcl2fastq_run.sh ${FC_ID} $run_dir Y*,Y* ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
     # We demux
-    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $MUX"
+    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $MUX \"\" "
     echo -e "==== DEMUX STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         cd $SHARED_GENOMICS/$FC_ID
@@ -165,6 +182,16 @@ if [ -f $complete_file ]; then
             echo "ERROR: QC report generation failed" >> $ERROR_FILE && ERROR=1
         fi
     fi
+
+    # Generate second QC report
+    ls $SHARED_GENOMICS/$FC_ID/*.fastq.gz > $SHARED_GENOMICS/$FC_ID/file_list_new.txt
+
+    while IFS= read -r file
+    do
+        [ -f "$file" ]
+        echo "module load fastqc; fastqc -o $SHARED_GENOMICS/$FC_ID/fastq_report/ $file" | qsub -lnodes=1:ppn=4,mem=16g,walltime=4:00:00;
+        #echo "module load fastqc; fastqc -o /bigdata/genomics/shared/535/fastq_report/ /bigdata/genomics/shared/535/$file" | qsub -lnodes=1:ppn=4,mem=16g,walltime=4:00:00;
+    done < "file_list_new.txt"
 
     # Update Illumina web server URLs
     CMD="sequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID"

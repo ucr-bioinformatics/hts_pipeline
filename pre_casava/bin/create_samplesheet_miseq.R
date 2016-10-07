@@ -44,19 +44,25 @@ close(conn)
 library(data.table)
 a = fread(samplesheet, skip=(line_num),header=TRUE)
 #print(a)
-len_a <- length(a$index)
+len_a <- nrow(a)
+if("index" %in% colnames(a)){ has_index <- TRUE }else{ has_index <-FALSE }
+#len_a <- length(a$index)
 #print("Length of a")
 #print(len_a)
 
 cat(paste("FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SampleProject", sep=","),file="SampleSheet.csv","\n")
 for (j in (1:len_a)){
-    if(a$index[j]=="NA")
+    if (!has_index){
+        index <- ""
+    } else {
+        if (a$index[j]=="NA")
         {
-            a$index[j]=""
+	    a$index[j]=""
         }
-	line <- cat(paste(label,i,j,"",a$index[j],"","N","","nkatiyar",project_id,sep=","),file="SampleSheet.csv","\n", append=TRUE)
-		}
-
+        index <- a$index[j]
+    }
+    line <- cat(paste(label,i,j,"",index,"","N","","nkatiyar",project_id,sep=","),file="SampleSheet.csv","\n", append=TRUE)
+}
 print("Samplesheet created")
 #read.table(header=FALSE, text=s)
 

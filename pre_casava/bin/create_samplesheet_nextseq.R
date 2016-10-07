@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-#Miseq samplesheet conversion
+#Nextseq samplesheet conversion
 
 ## Author Neerja Katiyar
 
@@ -49,9 +49,9 @@ len_a <- length(a$index)
 
 cat(paste("FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SampleProject", sep=","),file="SampleSheet.csv","\n")
 
-for(lane in 1:4){
+for(lane in 1:1){
     for (j in (1:len_a)){
-	    line <- cat(paste(label,lane,j,"",a$index[j],"","N","","nkatiyar",project_id,sep=","),file="SampleSheet.csv","\n", append=TRUE)
+	    line <- cat(paste(label,lane,a$Sample_ID[j],"",a$index[j],"","N","","nkatiyar",project_id,sep=","),file="SampleSheet.csv","\n", append=TRUE)
 	}
 }
 
