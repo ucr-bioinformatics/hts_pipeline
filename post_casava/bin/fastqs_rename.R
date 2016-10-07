@@ -58,7 +58,7 @@ gen_link <- function(x) {
     if (run_type == "hiseq"){
        	#file_name <- paste(sample,"_.*_L00",lane[i],"_R", p, ".*fastq.gz$", sep="")
         fastq_path <- paste(unaligned_path,'/',project_id,'/',sep="")
-        file_name <- paste("^",sample_id,"_.*_L00",lane,"_R", p, ".*fastq.gz$", sep="")
+        file_name <- paste(sample_id,"_.*_L00",lane,"_R", p, ".*fastq.gz$", sep="")
         print(paste(fastq_path,file_name))
         files <- list.files(path=fastq_path,pattern=file_name)       	
 
@@ -79,12 +79,15 @@ gen_link <- function(x) {
         file_name <- paste("[^0-9]",sample_id,"_L00",lane,"_R", p, ".*fastq.gz$", sep="")
         files <- list.files(path=fastq_path,pattern=file_name)
         if (length(files) == 0 && run_type == "nextseq") {
-            file_name <- paste(sample_id,"_R", p,"_[0-9]+.fastq.gz$", sep="")
+	    # Regex accounts for NextSeq lane-splitting and no-lane-splitting
+            file_name <- paste(sample_id,"_S[0-9]+(_L[0-9]+){0,1}_R", p,"_[0-9]+\.fastq\.gz$", sep="")
+            print(file_name)
             files <- list.files(path=fastq_path,pattern=file_name)
+            print(files)
         }
         
         # Get undetermined files
-        file_name_undermine <-paste("Undetermined.*_L00",lane,"_R", p, ".*fastq.gz$", sep="")
+        file_name_undermine <-paste("Undetermined.*_R", p, ".*fastq.gz$", sep="")
         files_undermine <- list.files(path=ufastq_path,pattern=file_name_undermine)
 
         # Get fastq files

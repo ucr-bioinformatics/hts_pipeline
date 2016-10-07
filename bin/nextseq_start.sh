@@ -131,7 +131,7 @@ if [ -f $complete_file ]; then
     # They demux
     #CMD="bcl2fastq_run.sh ${FC_ID} $run_dir Y*,Y* ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
     # We demux
-    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
+    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1 nosplit"
     echo -e "==== DEMUX STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         cd $SHARED_GENOMICS/$FC_ID
@@ -176,7 +176,7 @@ if [ -f $complete_file ]; then
     fi
 
     # Update Illumina web server URLs
-    CMD="sequence_url_update_nextseq.R $FC_ID 4 $SHARED_GENOMICS/$FC_ID"
+    CMD="sequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID"
     echo -e "==== URL STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then 
         ${CMD} &>> $ERROR_FILE
