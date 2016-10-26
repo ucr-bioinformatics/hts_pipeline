@@ -67,8 +67,9 @@ for (i in c(1:lanes)) {
         if(file.exists(fq_pdf_report)){
             qual_url <- paste(sequence_url, fq_pdf_report, sep="")
             qual_url <- cbind(qual_url, quality_url)
-            dir_url <- paste( "http://illumina.bioinfo.ucr.edu/illumina_runs/",flowcellid, "/fastq_report/", sep="")
-            qual_url <- cbind(qual_url, dir_url)
+            #ask about this
+            #dir_url <- paste( "http://illumina.bioinfo.ucr.edu/illumina_runs/",flowcellid, "/fastq_report/", sep="")
+            #qual_url <- cbind(qual_url, dir_url)
            
             # Flatten URLs to a string
             qual_url <- paste(qual_url, collapse="\n")
