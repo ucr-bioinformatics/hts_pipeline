@@ -43,40 +43,42 @@ writeLines(paste("QC_URL:: \n",qc_url))
 for (i in c(1:lanes)) {
     project_id <- flowcell_table[paste("lane_",i,"_project",sep="")][[1]]
     sample_id <- flowcell_table[paste("lane_",i,"_sample",sep="")][[1]]
+    flowcellid <- dbGetQuery(con,paste("SELECT flowcell_id from flowcell_list WHERE ",project_id," IN (lane_1_project,lane_2_project,lane_3_project,lane_4_project,lane_5_project,lane_6_project,lane_7_project,lane_8_project)"))
     control <-  flowcell_table[paste("lane_",i,"_control",sep="")][[1]]
 
     if (control==0) {
-         # if (pairs==0) { 
-	 fastqfiles <- list.files(paste(fastq_path,"/",sep=""), paste("lane",i,sep=""))
-     print(fastqfiles)
+        fastqfiles <- list.files(paste(fastq_path,"/",sep=""), paste("lane",i,sep=""))
+        print(fastqfiles)
 
         # Build fastq URLs
-	fastqurl <- paste(sequence_url, fastqfiles,sep="")
-	fastqurl <- paste(fastqurl, collapse="\n")
+        fastqurl <- paste(sequence_url, fastqfiles,sep="")
+        fastqurl <- paste(fastqurl, collapse="\n")
 
-    # Build CASAVA Demultiplex URLs for each 'qc' directory
-    quality_url <- c()
-    for (qc in qcs){
-        quality_url <- cbind(quality_url, paste(sequence_url,qc,"/",sep=""))
-        qc_url <- cbind(quality_url, paste(sequence_url,qc,"/",sep="")) 
-    }
+        # Build CASAVA Demultiplex URLs for each 'qc' directory
+        quality_url <- c()
+        for (qc in qcs){
+            quality_url <- cbind(quality_url, paste(sequence_url,qc,"/",sep=""))
+            qc_url <- cbind(quality_url, paste(sequence_url,qc,"/",sep="")) 
+        }
 
-    # Define FASTQ Qualtiy Report PDF path
-	fq_pdf_report <- paste("fastq_report/flowcell",flowcellid,"_lane",i,"_fastqReport.pdf",sep="")
-	# Check if FASTQ Quality Report PDF exists
-	if(file.exists(fq_pdf_report)){
+        # Define FASTQ Qualtiy Report PDF path
+        fq_pdf_report <- paste("fastq_report/flowcell",flowcellid,"_lane",i,"_fastqReport.pdf",sep="")
+        # Check if FASTQ Quality Report PDF exists
+        if(file.exists(fq_pdf_report)){
             qual_url <- paste(sequence_url, fq_pdf_report, sep="")
             qual_url <- cbind(qual_url, quality_url)
+            #dir_url <- paste( "http://illumina.bioinfo.ucr.edu/illumina_runs/",flowcellid, "/fastq_report/", sep="")
+            #qual_url <- cbind(qual_url, dir_url)
            
             # Flatten URLs to a string
             qual_url <- paste(qual_url, collapse="\n")
         } else {
             qual_url <- ""
         }
-	qual_url <-c(qual_url,qc_url)
+        qual_url <-c(qual_url,qc_url)
 
-    command <- paste("UPDATE `sample_list` SET `sequence_url` = '", fastqurl,"',`quality_url` = '", qual_url, "' WHERE `sample_list`.`sample_id` =", sample_id, " AND `sample_list`.`project_id` =", project_id, " LIMIT 1",sep="")
-	dbGetQuery(con,command)
+        command <- paste("UPDATE `sample_list` SET `sequence_url` = '", fastqurl,"',`quality_url` = '", qual_url, "' WHERE `sample_list`.`sample_id` =", sample_id, " AND `sample_list`.`project_id` =", project_id, " LIMIT 1",sep="")
+        dbGetQuery(con,command)
         writeLines(paste("Updated FASTQs:: \n",fastqurl))
         writeLines(paste("QUAL_URL:: \n",qual_url))
     }
