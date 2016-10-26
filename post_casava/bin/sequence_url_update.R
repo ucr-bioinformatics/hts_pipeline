@@ -43,7 +43,7 @@ writeLines(paste("QC_URL:: \n",qc_url))
 for (i in c(1:lanes)) {
     project_id <- flowcell_table[paste("lane_",i,"_project",sep="")][[1]]
     sample_id <- flowcell_table[paste("lane_",i,"_sample",sep="")][[1]]
-    #flowcellid <- dbGetQuery(con,paste("SELECT flowcell_id from flowcell_list WHERE ",project_id," IN (lane_1_project,lane_2_project,lane_3_project,lane_4_project,lane_5_project,lane_6_project,lane_7_project,lane_8_project)"))[[1]]
+    flowcellid <- dbGetQuery(con,paste("SELECT flowcell_id from flowcell_list WHERE ",project_id," IN (lane_1_project,lane_2_project,lane_3_project,lane_4_project,lane_5_project,lane_6_project,lane_7_project,lane_8_project)"))[[1]]
     control <-  flowcell_table[paste("lane_",i,"_control",sep="")][[1]]
 
     if (control==0) {
