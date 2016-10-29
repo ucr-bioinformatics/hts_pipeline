@@ -59,15 +59,15 @@ if [ -f $complete_file ]; then
     fi
     
     # Looks to change any + and . in the labeling 
-    cat $samplesheet | sed '1,/Data/!d' > SampleSheet_new.csv
-    cat $samplesheet | sed '1,/Data/d' |
+    cat SampleSheet.csv | sed '1,/Data/!d' > SampleSheet_new.csv
+    cat SampleSheet.csv | sed '1,/Data/d' |
     while IFS='' read -r line || [[ -n "$line" ]]
     do
         FIRSTHALF=$(echo $line | cut -d, -f1 | sed -e 's/\./_/g' -e 's/+/_/g')
         SECONDHALF=${line:${#FIRSTHALF}}
         echo $FIRSTHALF$SECONDHALF >> SampleSheet_new.csv
     done
-    mv SampleSheet_new.csv $samplesheet
+    mv SampleSheet_new.csv SampleSheet.csv
  
     # Transfer nextseq data
     CMD="transfer_data.sh $FC_ID $SOURCE_DIR"
