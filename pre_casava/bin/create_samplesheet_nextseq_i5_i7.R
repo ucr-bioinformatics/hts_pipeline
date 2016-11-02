@@ -53,7 +53,7 @@ for(lane in 1:1){
     for (j in (1:len_a)){
         index_final=paste(a$index[j], "_", a$index2[j], sep="")
         print(index_final)
-    	    line <- cat(paste(label,lane,j,"",a$index[j],"","N","","skanrar",project_id,sep=","),file="SampleSheet.csv","\n", append=TRUE)
+    	    line <- cat(paste(label,lane,j,"",index_final,"","N","","skanrar",project_id,sep=","),file="SampleSheet.csv","\n", append=TRUE)
 	}
 }
 
