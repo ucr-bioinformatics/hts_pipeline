@@ -49,9 +49,10 @@ len_a <- length(a$index)
 
 cat(paste("FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SampleProject", sep=","),file="SampleSheet.csv","\n")
 
-for(lane in 1:4){
+for(lane in 1:1){
     for (j in (1:len_a)){
         index_final=paste(a$index[j], "_", a$index2[j], sep="")
+        print(index_final)
     	    line <- cat(paste(label,lane,j,"",a$index[j],"","N","","skanrar",project_id,sep=","),file="SampleSheet.csv","\n", append=TRUE)
 	}
 }
