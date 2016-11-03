@@ -81,7 +81,7 @@ gen_link <- function(x) {
         if (length(files) == 0 && run_type == "nextseq") {
 	    # Regex accounts for NextSeq lane-splitting and no-lane-splitting
             #file_name <- paste(sample_id,"_S[0-9]+(_L[0-9]+){0,1}_R", p,"_[0-9]+.fastq.gz$", sep="")
-            file_name <- paste("_S", sample_id, "+(_L[0-9]+){0,1}_R", p, "_[0-9]+.fastq.gz$", sep="")
+            file_name <- paste("_S", sample_id, "(_L[0-9]+){0,1}_R", p, "_[0-9]+.fastq.gz$", sep="")
             print(file_name)
             files <- list.files(path=fastq_path,pattern=file_name)
             print(files)
