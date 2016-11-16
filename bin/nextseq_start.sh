@@ -68,7 +68,7 @@ if [ -f $complete_file ]; then
         SECONDHALF=${line:${#FIRSTHALF}}
         echo $FIRSTHALF$SECONDHALF >> SampleSheet_new.csv
     done
-    mv SampleSheet_new.csv SampleSheet.csv
+    cp SampleSheet_new.csv SampleSheet.csv
  
     # Transfer nextseq data
     CMD="transfer_data.sh $FC_ID $SOURCE_DIR"
