@@ -63,7 +63,8 @@ if [ -f $complete_file ]; then
     cat SampleSheet.csv | sed '1,/Data/d' |
     while IFS='' read -r line || [[ -n "$line" ]]
     do
-        FIRSTHALF=$(echo $line | cut -d, -f1 | sed -e 's/\./_/g' -e 's/+/_/g' -e 's/\ /_/g')
+        #FIRSTHALF=$(echo $line | cut -d, -f1 | sed -e 's/\./_/g' -e 's/+/_/g' -e 's/\ /_/g')
+        FIRSTHALF=$(echo $line | sed -e 's/\./_/g' -e 's/+/_/g' -e 's/\ /_/g')
         SECONDHALF=${line:${#FIRSTHALF}}
         echo $FIRSTHALF$SECONDHALF >> SampleSheet_new.csv
     done
