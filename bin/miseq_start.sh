@@ -66,11 +66,11 @@ if [ -f $complete_file ]; then
     cat $samplesheet | sed '1,/Data/d' |
     while IFS='' read -r line || [[ -n "$line" ]]
     do
-        FIRSTHALF=$(echo $line | cut -d, -f1 | sed -e 's/\./_/g' -e 's/+/_/g')
+        FIRSTHALF=$(echo $line | cut -d, -f1 | sed -e 's/\./_/g' -e 's/+/_/g' -e 's/ /_/g')
         SECONDHALF=${line:${#FIRSTHALF}}
         echo $FIRSTHALF$SECONDHALF >> SampleSheet_new.csv
     done
-    mv SampleSheet_new.csv $samplesheet
+    mv SampleSheet_new.csv $samplesheet 
 
     # Transfer miseq data
     CMD="transfer_data.sh $FC_ID $SOURCE_DIR"
@@ -172,6 +172,24 @@ if [ -f $complete_file ]; then
             echo "ERROR: Files rename failed" >> $ERROR_FILE && ERROR=1
         fi
     fi
+
+    # Check barcodes of symbolic links with an allowed mismatch of 1
+    flowcell_lane="$SHARED_GENOMICS/$FC_ID/flowcell$FC_ID""_lane*.fastq.gz"
+    for fastq in $(ls $flowcell_lane); do 
+        file_barcode=$(echo $fastq | cut -d_ -f4 |cut -d. -f1)
+        barcode=$(zcat $fastq |head -n1 | cut -d: -f10)
+        echo "$barcode $file_barcode" &>> $ERROR_FILE
+        index=0
+        mismatch=0
+        for i in $file_barcode; do
+            if [ $i != ${barcode[$index]} ]; then
+                mismatch=$(($mismatch+1))
+            fi
+        done
+        if [ "$barcode" != "$file_barcode" ] && [ $mismatch -gt 1 ]; then 
+            echo "FAILED" &>> $ERROR_FILE
+        fi
+    done
 
     # Generate QC report
     CMD="qc_report_generate_targets.R $FC_ID ${numpair} $SHARED_GENOMICS/$FC_ID/ $SHARED_GENOMICS/$FC_ID/fastq_report/ $SHARED_GENOMICS/$FC_ID/$run_dir/SampleSheet.csv $MUX"
