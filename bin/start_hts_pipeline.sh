@@ -67,7 +67,10 @@ Flowcell ${FC_ID} has come in and needs to be processed.
 Thanks
 EOF
             echo "Processing ${FC_ID} from ${SOURCE_DIR}/$dir" >> ${HTS_PIPELINE_HOME}/log/${SEQ}_pipeline.log
-            echo ${SEQ}_start.sh ${FC_ID} ${SOURCE_DIR}/$dir ${SEQ} ${label}| qsub -l nodes=1:ppn=32,mem=50gb,walltime=20:00:00 -j oe -o ${HTS_PIPELINE_HOME}/log/${SEQ}_start.log -m bea -M ${NOTIFY_EMAIL}
+            #echo ${SEQ}_start.sh ${FC_ID} ${SOURCE_DIR}/$dir ${SEQ} ${label}| qsub -l nodes=1:ppn=32,mem=50gb,walltime=20:00:00 -j oe -o ${HTS_PIPELINE_HOME}/log/${SEQ}_start.log -m bea -M ${NOTIFY_EMAIL}
+            module load slurm
+            sbatch sequence_start_job_wrapper.sh ${SEQ} ${FC_ID} ${SOURCE_DIR} $dir ${label} ${HTS_PIPELINE_HOME} ${NOTIFY_EMAIL}
+
         fi
     fi
 done
