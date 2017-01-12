@@ -1,0 +1,1 @@
+../templates/generate_qc_report_wrapper.sh
