@@ -8,4 +8,5 @@
 #SBATCH --mail-type=ALL
 #SBATCH -p intel
 
+module load fastqc
 fastqc -o ${1}/${2}/fastq_report/ ${3}
