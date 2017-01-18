@@ -65,7 +65,7 @@ for (i in c(1:lanes)) {
                 sequence_url <-paste( "/illumina_runs/",flowcellid, "/", sep="")
                 SHARED_GENOMICS <- Sys.getenv("SHARED_GENOMICS")
                 fastq_path <- paste(SHARED_GENOMICS, "/", flowcellid, sep="")
-                setwd(fastq_path)
+                #setwd(fastq_path)
                 found = TRUE
                 break
             }
@@ -111,9 +111,12 @@ for (i in c(1:lanes)) {
         if(file.exists(fq_pdf_report)){
             qual_url <- paste(sequence_url, fq_pdf_report, sep="")
             qual_url <- cbind(qual_url, quality_url)
-            #ask about this
-            #dir_url <- paste( "http://illumina.bioinfo.ucr.edu/illumina_runs/",flowcellid, "/fastq_report/", sep="")
-            #qual_url <- cbind(qual_url, dir_url)
+            # Does not include folder for HiSeq
+            if(lanes == 1){
+                dir_url <- paste(sequence_url, "fastq_report/", sep="")
+                dir_url <- paste(sequence_url, dir_url, sep="")
+                qual_url <- cbind(qual_url, dir_url)
+            }
            
             # Flatten URLs to a string
             qual_url <- paste(qual_url, collapse="\n")
