@@ -65,7 +65,7 @@ for (i in c(1:lanes)) {
                 sequence_url <-paste( "/illumina_runs/",flowcellid, "/", sep="")
                 SHARED_GENOMICS <- Sys.getenv("SHARED_GENOMICS")
                 fastq_path <- paste(SHARED_GENOMICS, "/", flowcellid, sep="")
-                #setwd(fastq_path)
+                setwd(fastq_path)
                 found = TRUE
                 break
             }
