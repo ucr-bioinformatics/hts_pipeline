@@ -114,7 +114,6 @@ for (i in c(1:lanes)) {
             # Does not include folder for HiSeq
             if(lanes == 1){
                 dir_url <- paste(sequence_url, "fastq_report/", sep="")
-                dir_url <- paste(sequence_url, dir_url, sep="")
                 qual_url <- cbind(qual_url, dir_url)
             }
            
