@@ -4,7 +4,6 @@
 #SBATCH --ntasks=10
 #SBATCH --mem-per-cpu=50G
 #SBATCH --time=20:00:00
-##SBATCH --output=batch/
 #SBATCH --mail-user=${7}
 #SBATCH --mail-type=ALL
 #SBATCH -p intel
