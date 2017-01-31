@@ -111,17 +111,17 @@ for (i in c(1:lanes)) {
         if(file.exists(fq_pdf_report)){
             qual_url <- paste(sequence_url, fq_pdf_report, sep="")
             qual_url <- cbind(qual_url, quality_url)
-            # Does not include folder for HiSeq
-            if(lanes == 1){
-                dir_url <- paste(sequence_url, "fastq_report/", sep="")
-                qual_url <- cbind(qual_url, dir_url)
-            }
            
-            # Flatten URLs to a string
-            qual_url <- paste(qual_url, collapse="\n")
         } else {
             qual_url <- ""
         }
+        # Does not include folder for HiSeq
+        if(lanes == 1){
+            dir_url <- paste(sequence_url, "fastq_report/", sep="")
+            qual_url <- cbind(qual_url, dir_url)
+        }
+        # Flatten URLs to a string
+        qual_url <- paste(qual_url, collapse="\n")
         qual_url <-c(qual_url,qc_url)
 
         command <- paste("UPDATE `sample_list` SET `sequence_url` = '", fastqurl,"',`quality_url` = '", qual_url, "' WHERE `sample_list`.`sample_id` =", sample_id, " AND `sample_list`.`project_id` =", project_id, " LIMIT 1",sep="")
