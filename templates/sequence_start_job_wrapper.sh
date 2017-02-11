@@ -6,6 +6,6 @@
 #SBATCH --time=20:00:00
 #SBATCH --mail-user=${7}
 #SBATCH --mail-type=ALL
-#SBATCH -p intel
+#SBATCH -p batch
 
 ${1}_start.sh ${2} ${3}/${4} ${1} ${5}
