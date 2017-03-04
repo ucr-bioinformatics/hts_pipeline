@@ -35,6 +35,9 @@ for dir in $dir_list; do
             "NB501124")
                 SEQ="nextseq"
             ;;
+            "NB501891")
+                SEQ="nextseq"
+            ;;
             "M02457")
                 SEQ="miseq"
             ;;
