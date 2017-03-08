@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 #############################################
-# Check for MiSeq data and execute pipeline #
+# Check for HiSeq data and execute pipeline #
 #############################################
 
 # Set global vars
@@ -117,40 +117,82 @@ EOF
 
   
     # Extract a barcode to calculate barcode length
-    barcode=$(tail -1 ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv | awk '{split($0,a,","); print a[7]}')
+    #barcode=$(tail -1 ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv | awk '{split($0,a,","); print a[7]}')
+
+    # Extract a barcode from every lane to calculate barcode length per lane
+    LANE_NUM=(0 0 0 0 0 0 0 0 0)
+    DATA=$(cat ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv | sed '1,/Lane/d')
+    while IFS='' read -r line || [[ -n "$line" ]]
+    do
+        lane=$(echo $line | cut -d, -f1) 
+        barcode=$(echo $line | awk '{split($0,a,","); print a[7]}')
+        if [ ${LANE_NUM[$lane]} == 0 ] ; then
+            LANE_NUM[$lane]=${#barcode}
+        fi
+    done <<< "$(echo -e "$DATA")"
+
+    # Create the basemask per lane
+    INDEX=1
+    BASEMASK=""
+    for i in ${LANE_NUM[@]:1}; do
+        if [ ${numpair} == 1 ]; then
+            BASEMASK="$BASEMASK $INDEX:Y*,I${i}n"
+        elif [ ${numpair} == 2 ]; then
+            BASEMASK="$BASEMASK $INDEX:Y*,I${i}n,Y*"
+        fi
+        if [ $INDEX != 8 ]; then
+            BASEMASK="$BASEMASK --use-bases-mask"
+        fi
+        INDEX=$(($INDEX+1))
+    done
+
     # We will demultiplex and barcode is of standard length 6 (single-end,paired-end)
-    if [[ ${#barcode} == 6 ]]; then
-       MUX=1
-       BASEMASK="NA"
+    #if [[ ${#barcode} == 6 ]]; then
+    if [ ${LANE_NUM[1]} != 0 ]; then
+        MUX=1
+        #We will demultiplex and the barcode is of different length and single-end
+        if [ ${LANE_NUM[1]} > 6 ] && [ ${numpair} == 1 ]; then
+            NUMFILES=1
+        fi
+    elif [ ${LANE_NUM[1]} == 0 ]; then
+        MUX=2
+        #User demultiplexes and it is single end
+        if [ ${numpair} == 1 ]; then
+            NUMFILES=2
+        #User will demultiplex and it is paired-end
+        elif [ ${numpair} == 2 ]; then
+            NUMFILES=3
+        fi
+        
     fi
     
     #We will demultiplex and the barcode is of different length and single-end
-    if [ ${#barcode} > 6 ] && [ ${numpair} == 1 ]; then
-        MUX=1
-        BASEMASK="Y*,I${#barcode},Y*"
-        NUMFILES=1
-    fi
+    #if [ ${#barcode} > 6 ] && [ ${numpair} == 1 ]; then
+        #MUX=1
+        #BASEMASK="Y*,I${#barcode},Y*"
+        #NUMFILES=1
+    #fi
     
     #User demultiplexes and it is single end
-    if [ ${numpair} == 1 ] && [ ${#barcode} == 0 ]; then
-        MUX=2
-        BASEMASK="Y*,Y*"
-        NUMFILES=2
-    fi
+    #if [ ${numpair} == 1 ] && [ ${#barcode} == 0 ]; then
+        #MUX=2
+        #BASEMASK="Y*,Y*"
+        #NUMFILES=2
+    #fi
 
     #User will demultiplex and it is paired-end
-    if [ ${numpair} == 2 ] && [ ${#barcode} == 0 ]; then
-       MUX=2
-       BASEMASK="Y*,Y*,Y*"
-       NUMFILES=3 
-    fi
+    #if [ ${numpair} == 2 ] && [ ${#barcode} == 0 ]; then
+       #MUX=2
+       #BASEMASK="Y*,Y*,Y*"
+       #NUMFILES=3 
+    #fi
     
     # We demux
-    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir ${BASEMASK} ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv 1 \"\" "
+    CMD='bcl2fastq_run.sh ${FC_ID} $run_dir "${BASEMASK}" ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv 1 ""'
     echo -e "==== DEMUX STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         cd $SHARED_GENOMICS/$FC_ID
-        ${CMD} &> nohup.out
+        eval ${CMD} &> nohup.out
         if [ $? -ne 0 ]; then
             echo "ERROR:: Demuxing failed" >> $ERROR_FILE && ERROR=1
         fi
@@ -173,9 +215,23 @@ EOF
     if [ $ERROR -eq 0 ]; then
         ${CMD} &>> $ERROR_FILE
         if [ $? -ne 0 ]; then
-            echo "ERROR: QC report generation failed" >> $ERROR_FILE && ERROR=1
+            #echo "ERROR: QC report generation failed" >> $ERROR_FILE && ERROR=1
         fi
     fi
+
+    # Generate 2nd QC report for individual lanes
+    for (( i=1; i<=8; i++ ))
+    do
+        mkdir -p fastq_report/fastq_report_lane${i}/
+        ls $SHARED_GENOMICS/$FC_ID/*lane${i}*.fastq.gz > $SHARED_GENOMICS/$FC_ID/file_list_new${i}.txt
+
+        while IFS= read -r file
+        do
+            [ -f "$file" ]
+            module load slurm
+            sbatch generate_qc_report_wrapper.sh ${SHARED_GENOMICS} ${FC_ID} ${file} ${i}
+        done < "file_list_new${i}.txt"
+    done
 
     # Update Illumina web server URLs
     CMD="sequence_url_update.R $FC_ID 8 $SHARED_GENOMICS/$FC_ID"
