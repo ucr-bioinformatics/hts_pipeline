@@ -107,17 +107,23 @@ for (i in c(1:lanes)) {
 
         # Define FASTQ Qualtiy Report PDF path
         fq_pdf_report <- paste("fastq_report/flowcell",flowcellid,"_lane",lanenum,"_fastqReport.pdf",sep="")
+        qual_url <- c()
         # Check if FASTQ Quality Report PDF exists
         if(file.exists(fq_pdf_report)){
             qual_url <- paste(sequence_url, fq_pdf_report, sep="")
             qual_url <- cbind(qual_url, quality_url)
            
-        } else {
-            qual_url <- ""
-        }
+        } #else {
+            #qual_url <- ""
+        #}
+        qual_url <- cbind(qual_url, quality_url)
         # Does not include folder for HiSeq
         if(lanes == 1){
             dir_url <- paste(sequence_url, "fastq_report/", sep="")
+            qual_url <- cbind(qual_url, dir_url)
+        }
+        else if(lanes > 1){
+            dir_url <- paste(sequence_url, "fastq_report/fastq_report_lane",lanenum,"/", sep="")
             qual_url <- cbind(qual_url, dir_url)
         }
         # Flatten URLs to a string

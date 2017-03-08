@@ -9,4 +9,8 @@
 #SBATCH -p intel
 
 module load fastqc
-fastqc -o ${1}/${2}/fastq_report/ ${3}
+if [ "${4}" == "0" ]; then
+    fastqc -o ${1}/${2}/fastq_report/ ${3}
+else
+    fastqc -o ${1}/${2}/fastq_report/fastq_report_lane${4}/ ${3}
+fi
