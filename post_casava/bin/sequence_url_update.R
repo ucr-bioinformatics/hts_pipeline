@@ -111,7 +111,7 @@ for (i in c(1:lanes)) {
         # Check if FASTQ Quality Report PDF exists
         if(file.exists(fq_pdf_report)){
             qual_url <- paste(sequence_url, fq_pdf_report, sep="")
-            qual_url <- cbind(qual_url, quality_url)
+            #qual_url <- cbind(qual_url, quality_url)
            
         } #else {
             #qual_url <- ""
