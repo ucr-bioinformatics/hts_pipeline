@@ -8,4 +8,5 @@
 #SBATCH --mail-type=ALL
 #SBATCH -p batch
 
+sleep $(($RANDOM % 10))
 ${1}_start.sh ${2} ${3}/${4} ${1} ${5}
