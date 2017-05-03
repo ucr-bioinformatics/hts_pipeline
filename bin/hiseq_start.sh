@@ -46,7 +46,17 @@ if [ -f $complete_file ]; then
     ##################
     # Pipeline Steps #
     ##################
-    
+
+    # Create SampleSheet_DB.csv
+    CMD="create_original_samplesheet_hiseq.R $FC_ID"
+    echo -e "==== Create Samplesheet ====\n${CMD}" >> $ERROR_FILE
+    if [ $ERROR -eq 0 ]; then
+        ${CMD} &>> $ERROR_FILE
+        if [ $? -ne 0 ]; then
+            echo "ERROR:: Samplesheet creation failed" >> $ERROR_FILE && ERROR=1
+        fi
+    fi
+
     # Transfer sequence data
     CMD="transfer_data.sh $FC_ID $SOURCE_DIR"
     echo -e "==== Transfer STEP ====\n${CMD}" >> $ERROR_FILE
@@ -57,13 +67,13 @@ if [ -f $complete_file ]; then
         fi
     fi
     
-    # Check if SampleSheet from John exists
+    # Check if SampleSheet_DB.csv exists
     echo -e "==== SAMPLESHEET CHECK STEP ====\n" >> $ERROR_FILE
-    if [[ ! -f ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet_John.csv ]]; then
-        echo "ERROR:: SampleSheet from John ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet_John.csv does not exist" >> $ERROR_FILE && ERROR=1
+    if [[ ! -f ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet_DB.csv ]]; then
+        echo "ERROR:: SampleSheet from ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet_DB.csv does not exist" >> $ERROR_FILE && ERROR=1
     else
-        # Create SampleSheet for rename and QC from John's SampleSheet.
-        CMD="create_samplesheet_${SEQ}.R ${FC_ID} ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet_John.csv $run_dir"
+        # Create SampleSheet for rename and QC from SampleSheet.
+        CMD="create_samplesheet_${SEQ}.R ${FC_ID} ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet_DB.csv $run_dir"
         echo -e "==== SAMPLE SHEET STEP ====\n${CMD}" >> $ERROR_FILE
         if [ $ERROR -eq 0 ]; then
             ${CMD} &>> $ERROR_FILE
@@ -215,7 +225,7 @@ EOF
     if [ $ERROR -eq 0 ]; then
         ${CMD} &>> $ERROR_FILE
         if [ $? -ne 0 ]; then
-            #echo "ERROR: QC report generation failed" >> $ERROR_FILE && ERROR=1
+            echo "ERROR: QC report generation failed" >> $ERROR_FILE && ERROR=1
         fi
     fi
 
