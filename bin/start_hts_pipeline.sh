@@ -22,10 +22,10 @@ for dir in $dir_list; do
         # Find sample sheet
         complete_file=`find $dir -name RTAComplete.txt`
         samplesheet_file=`find $dir -maxdepth 1 -name *_FC#*.csv`
-        samplesheet_clay="SampleSheet_Clay.csv"
+        samplesheet_db="SampleSheet_DB.csv"
         samplesheet=`find $dir -maxdepth 1 -name SampleSheet.csv`
         
-        if [ ! -z $complete_file ] && ([ ! -z $samplesheet_file ] || [ ! -z $samplesheet ] || [ ! -z $samplesheet_clay ]); then
+        if [ ! -z $complete_file ] && ([ ! -z $samplesheet_file ] || [ ! -z $samplesheet ] || [ ! -z $samplesheet_db ]); then
             # Determine Sequencer type
             str=$(echo $dir | cut -d_ -f2)
             case $str in
