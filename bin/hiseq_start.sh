@@ -145,6 +145,9 @@ EOF
     INDEX=1
     BASEMASK=""
     for i in ${LANE_NUM[@]:1}; do
+        if [ "${i}" == "0" ]; then
+            continue;
+        fi
         if [ ${numpair} == 1 ]; then
             BASEMASK="$BASEMASK $INDEX:Y*,I${i}n"
         elif [ ${numpair} == 2 ]; then

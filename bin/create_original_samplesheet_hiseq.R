@@ -20,6 +20,8 @@ samplesheet <- paste("Lane\tArray\tPI\tProj_num\tIndices", sep="")
 
 for(index in c(1:8)){
     sample_desc <- dbGetQuery(con,paste("SELECT label, project_id, index_type, other_variables from sample_list where project_id = ", projects[[index]], " AND sample_id = ", projects[[index+8]], " LIMIT 1", sep=""))
+    if(length(sample_desc[[1]])== 0)
+        next;
     project_desc <- dbGetQuery(con,paste("SELECT name, pi from project_list where project_id = ", projects[[index]], " LIMIT 1", sep=""))
     a <- strsplit(sample_desc[[4]], '\r\n\r\nIndex type. Designate index sequences (GATTCA, for example): ', fixed=TRUE)[[1]]
     if(! is.na(gsub(" ", "", strsplit(a[2], "\r\n\r\n")[[1]][1])))
