@@ -146,6 +146,7 @@ EOF
     BASEMASK=""
     for i in ${LANE_NUM[@]:1}; do
         if [ "${i}" == "0" ]; then
+            INDEX=$(($INDEX+1))
             continue;
         fi
         if [ ${numpair} == 1 ]; then
@@ -202,7 +203,6 @@ EOF
     
     # We demux
     CMD='bcl2fastq_run.sh ${FC_ID} $run_dir "${BASEMASK}" ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv 1 ""'
-    echo ${BASEMASK} &> nohup.out
     echo -e "==== DEMUX STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         cd $SHARED_GENOMICS/$FC_ID
