@@ -46,6 +46,9 @@ flowcellid_current <- flowcellid
 for (i in c(1:lanes)) {
     flowcell_table <- flowcell_table_copy
     project_id <- flowcell_table[paste("lane_",i,"_project",sep="")][[1]]
+    if(project_id == 0){
+        next
+    }
     sample_id <- flowcell_table[paste("lane_",i,"_sample",sep="")][[1]]
     all_flowcell_ids <- dbGetQuery(con,paste("SELECT flowcell_id from flowcell_list WHERE ",project_id," IN (lane_1_project,lane_2_project,lane_3_project,lane_4_project,lane_5_project,lane_6_project,lane_7_project,lane_8_project)"))[[1]]
     all_flowcell_ids <- sort(all_flowcell_ids, decreasing=TRUE)
@@ -78,7 +81,7 @@ for (i in c(1:lanes)) {
     
     # Switch if statements to allow the current flowcellid
     # to update the highest flowcellid
-    if (control==0 & flowcellid_current == flowcellid){
+    if (control==0 & flowcellid_current == flowcellid & !nolane){
     #if (control==0) {
         fastqfiles <- list.files(paste(fastq_path,"/",sep=""), paste("lane",lanenum,sep=""))
         print(fastqfiles)
