@@ -81,7 +81,7 @@ for (i in c(1:lanes)) {
     
     # Switch if statements to allow the current flowcellid
     # to update the highest flowcellid
-    if (control==0 & flowcellid_current == flowcellid & !nolane){
+    if (control==0 & flowcellid_current == flowcellid ){
     #if (control==0) {
         fastqfiles <- list.files(paste(fastq_path,"/",sep=""), paste("lane",lanenum,sep=""))
         print(fastqfiles)
