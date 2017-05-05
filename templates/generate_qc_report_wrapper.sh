@@ -6,7 +6,7 @@
 #SBATCH --time=4:00:00
 #SBATCH --mail-user=${7}
 #SBATCH --mail-type=ALL
-#SBATCH -p intel
+#SBATCH -p short 
 
 module load fastqc
 if [ "${4}" == "0" ]; then
