@@ -41,6 +41,8 @@ writeLines(paste("QC_URL:: \n",qc_url))
 
 flowcell_table_copy <- flowcell_table
 flowcellid_current <- flowcellid
+check_dups = data.frame(matrix(nrow=lanes,ncol=3))
+colnames(check_dups) <- c("flowcell_id", "project_id", "sample_id")
 
 # Update sequence_url and quality_url in sample_list table
 for (i in c(1:lanes)) {
@@ -60,11 +62,18 @@ for (i in c(1:lanes)) {
         for(j in c(1:lanes)){
             new_project <- projects_and_samples[[j]]
             new_sample <- projects_and_samples[[j+8]]
+            ########################################
+            # Fix case of duplicates in same flowcell
+            ########################################
             if (new_project == project_id & new_sample == sample_id){
                 project_id <- new_project
                 sample_id <- new_sample
+                if(0 < length(subset(check_dups, check_dups[,1] == k & check_dups[,2] == new_project & check_dups[,3] == new_sample)))
+                    lanenum <- i
+                else
+                    lanenum <- j
+                check_dups[i,] = c(k,new_project,new_sample)
                 flowcellid <- k
-                lanenum <- j
                 sequence_url <-paste( "/illumina_runs/",flowcellid, "/", sep="")
                 SHARED_GENOMICS <- Sys.getenv("SHARED_GENOMICS")
                 fastq_path <- paste(SHARED_GENOMICS, "/", flowcellid, sep="")
