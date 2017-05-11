@@ -68,6 +68,7 @@ for (i in c(1:lanes)) {
             if (new_project == project_id & new_sample == sample_id){
                 project_id <- new_project
                 sample_id <- new_sample
+                # If there is a duplicate, assign the lane number to be the current lane, i
                 if(0 < length(subset(check_dups, check_dups[,1] == k & check_dups[,2] == new_project & check_dups[,3] == new_sample)))
                     lanenum <- i
                 else
