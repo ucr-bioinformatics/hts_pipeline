@@ -41,7 +41,7 @@ writeLines(paste("QC_URL:: \n",qc_url))
 
 flowcell_table_copy <- flowcell_table
 flowcellid_current <- flowcellid
-check_dups = data.frame(matrix(nrow=lanes,ncol=3))
+check_dups = data.frame(matrix(nrow=as.numeric(lanes),ncol=3))
 colnames(check_dups) <- c("flowcell_id", "project_id", "sample_id")
 
 # Update sequence_url and quality_url in sample_list table
