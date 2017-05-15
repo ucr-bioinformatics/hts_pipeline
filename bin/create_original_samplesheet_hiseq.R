@@ -24,6 +24,7 @@ for(index in c(1:8)){
         next;
     project_desc <- dbGetQuery(con,paste("SELECT name, pi from project_list where project_id = ", projects[[index]], " LIMIT 1", sep=""))
     a <- strsplit(sample_desc[[4]], '\r\n\r\nIndex type. Designate index sequences (GATTCA, for example): ', fixed=TRUE)[[1]]
+    barcodes <- ""
     if(! is.na(gsub(" ", "", strsplit(a[2], "\r\n\r\n")[[1]][1])))
         barcodes <- gsub(" ", "", strsplit(a[2], "\r\n\r\n")[[1]][1])
     else if(nchar(sample_desc[[3]]) > 1)
