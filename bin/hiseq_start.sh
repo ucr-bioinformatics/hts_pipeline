@@ -176,7 +176,7 @@ if [ -f $complete_file ]; then
     done
 
     #Remove --use-bases-mask if the last lane does not have a basemask
-    if [ $NO_LANES -eq 1 ]
+    if [ $NO_LANES -eq 1 ]; then
         BASEMASK=${BASEMASK::-16}
     fi
 
