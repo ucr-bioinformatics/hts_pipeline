@@ -147,7 +147,7 @@ if [ -f $complete_file ]; then
     while IFS='' read -r line || [[ -n "$line" ]]
     do
         lane=$(echo $line | cut -d, -f1) 
-        barcode=$(echo $line | awk '{split($0,a,","); print a[7]}')
+        barcode=$(echo $line | awk '{split($0,a,","); print a[7]}' | sed 's/[^a-zA-Z0-9]//g')
         if [ ${LANE_NUM[$lane]} == 0 ] ; then
             LANE_NUM[$lane]=${#barcode}
         fi
