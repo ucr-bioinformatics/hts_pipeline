@@ -155,10 +155,12 @@ if [ -f $complete_file ]; then
 
     # Create the basemask per lane
     INDEX=1
+    NO_LANES=0
     BASEMASK=""
     for i in ${LANE_NUM[@]:1}; do
         if [ "${i}" == "0" ]; then
             INDEX=$(($INDEX+1))
+            NO_LANES=1
             continue;
         fi
         if [ ${numpair} == 1 ]; then
@@ -169,8 +171,14 @@ if [ -f $complete_file ]; then
         if [ $INDEX != 8 ]; then
             BASEMASK="$BASEMASK --use-bases-mask"
         fi
+        NO_LANES=0
         INDEX=$(($INDEX+1))
     done
+
+    #Remove --use-bases-mask if the last lane does not have a basemask
+    if [ $NO_LANES -eq 1 ]
+        BASEMASK=${BASEMASK::-16}
+    fi
 
     # We will demultiplex and barcode is of standard length 6 (single-end,paired-end)
     #if [[ ${#barcode} == 6 ]]; then
