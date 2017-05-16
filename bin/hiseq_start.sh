@@ -57,6 +57,17 @@ if [ -f $complete_file ]; then
         fi
     fi
 
+    # Create copy of the original samplesheet from Clay and name it as SampleSheet.csv
+    samplesheet_origfile=$(ls ${SHARED_GENOMICS}/Runs/$run_dir/*_FC#*.csv)
+    CMD="cp $samplesheet_origfile SampleSheet.csv"
+    echo -e "==== Create copy of the original samplesheet from Clay STEP ====\n${CMD}" >> $ERROR_FILE
+    if [ $ERROR -eq 0 ]; then
+        ${CMD} &>> $ERROR_FILE
+        if [ $? -ne 0 ]; then
+            echo "ERROR:: Create copy of original samplesheet failed" >> $ERROR_FILE && ERROR=1
+        fi
+    fi
+
     # Transfer sequence data
     CMD="transfer_data.sh $FC_ID $SOURCE_DIR"
     echo -e "==== Transfer STEP ====\n${CMD}" >> $ERROR_FILE
@@ -66,24 +77,25 @@ if [ -f $complete_file ]; then
             echo "ERROR:: Transfer failed" >> $ERROR_FILE && ERROR=1
         fi
     fi
-    
+        
     # Check if SampleSheet_DB.csv exists
-    echo -e "==== SAMPLESHEET CHECK STEP ====\n" >> $ERROR_FILE
-    if [[ ! -f ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet_DB.csv ]]; then
-        echo "ERROR:: SampleSheet from ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet_DB.csv does not exist" >> $ERROR_FILE && ERROR=1
-    else
+    #echo -e "==== SAMPLESHEET CHECK STEP ====\n" >> $ERROR_FILE
+    #if [[ ! -f ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet_DB.csv ]]; then
+        #echo "ERROR:: SampleSheet from ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet_DB.csv does not exist" >> $ERROR_FILE && ERROR=1
+    #else
         # Create SampleSheet for rename and QC from SampleSheet.
-        CMD="create_samplesheet_${SEQ}.R ${FC_ID} ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet_DB.csv $run_dir"
-        echo -e "==== SAMPLE SHEET STEP ====\n${CMD}" >> $ERROR_FILE
-        if [ $ERROR -eq 0 ]; then
-            ${CMD} &>> $ERROR_FILE
-            if [ $? -ne 0 ]; then
-                echo "ERROR:: SampleSheet creation failed" >> $ERROR_FILE && ERROR=1
-            fi
-        fi
-    fi 
-    
+        #CMD="create_samplesheet_${SEQ}.R ${FC_ID} ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet_DB.csv $run_dir"
+        #echo -e "==== SAMPLE SHEET STEP ====\n${CMD}" >> $ERROR_FILE
+        #if [ $ERROR -eq 0 ]; then
+            #${CMD} &>> $ERROR_FILE
+            #if [ $? -ne 0 ]; then
+                #echo "ERROR:: SampleSheet creation failed" >> $ERROR_FILE && ERROR=1
+            #fi
+        #fi
+    #fi 
+
     #Rename SampleSheet for rename and QC to SampleSheet_rename.csv
+    cp ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv 
     mv ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv
     # Create Sample Sheet for demux
     if [ $ERROR -eq 0 ]; then
@@ -99,29 +111,29 @@ if [ -f $complete_file ]; then
             cycles=$(echo -e "${numcycles},\n")
         fi
 
-    cat << EOF > ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv 
-[Header]
-IEMFileVersion,4
-Investigator Name,Neerja Katiyar
-Experiment Name,350
-Date,${date}
-Workflow,GenerateFASTQ
-Application,HiSeq FASTQ Only
-Assay,TruSeq Small RNA
-Description,human small rna
-Chemistry,Default
+    #cat << EOF > ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv 
+#[Header]
+#IEMFileVersion,4
+#Investigator Name,Neerja Katiyar
+#Experiment Name,350
+#Date,${date}
+#Workflow,GenerateFASTQ
+#Application,HiSeq FASTQ Only
+#Assay,TruSeq Small RNA
+#Description,human small rna
+#Chemistry,Default
 
-[Reads]
-${cycles}
+#[Reads]
+#${cycles}
 
-[Settings]
-ReverseComplement,0
+#[Settings]
+#ReverseComplement,0
 
-[Data]
-Lane,Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Project,Description
-EOF
+#[Data]
+#Lane,Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Project,Description
+#EOF
     
-        grep -P "^${LABEL}" ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv | awk -F ',' '{print $2","$3",,,,,"$5","$10","}' >> ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv
+        #grep -P "^${LABEL}" ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv | awk -F ',' '{print $2","$3",,,,,"$5","$10","}' >> ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv
         #barcode=$(grep -P "^${LABEL}" ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv | awk -F ',' '{$5}' | head -1)
     fi
 
