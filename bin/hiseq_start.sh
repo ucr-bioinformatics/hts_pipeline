@@ -158,11 +158,11 @@ if [ -f $complete_file ]; then
     NO_LANES=0
     BASEMASK=""
     for i in ${LANE_NUM[@]:1}; do
-        if [ "${i}" == "0" ]; then
-            INDEX=$(($INDEX+1))
-            NO_LANES=1
-            continue;
-        fi
+        #if [ "${i}" == "0" ]; then
+            #INDEX=$(($INDEX+1))
+            #NO_LANES=1
+            #continue;
+        #fi
         if [ ${numpair} == 1 ]; then
             BASEMASK="$BASEMASK $INDEX:Y*,I${i}n"
         elif [ ${numpair} == 2 ]; then
