@@ -96,7 +96,7 @@ if [ -f $complete_file ]; then
 
     #Rename SampleSheet for rename and QC to SampleSheet_rename.csv
     cp ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv 
-    mv ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv
+    cp ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv
     # Create Sample Sheet for demux
     if [ $ERROR -eq 0 ]; then
         numpair=$(( $(ls ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/Basecalling_Netcopy_complete_Read*.txt | wc -l) - 1 ))
