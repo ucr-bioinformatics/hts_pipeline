@@ -78,25 +78,26 @@ if [ -f $complete_file ]; then
         fi
     fi
         
-    # Check if SampleSheet_DB.csv exists
-    #echo -e "==== SAMPLESHEET CHECK STEP ====\n" >> $ERROR_FILE
-    #if [[ ! -f ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet_DB.csv ]]; then
-        #echo "ERROR:: SampleSheet from ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet_DB.csv does not exist" >> $ERROR_FILE && ERROR=1
-    #else
+    # Check if SampleSheet.csv exists
+    echo -e "==== SAMPLESHEET CHECK STEP ====\n" >> $ERROR_FILE
+    if [[ ! -f ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv ]]; then
+        echo "ERROR:: SampleSheet from ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv does not exist" >> $ERROR_FILE && ERROR=1
+    else
         # Create SampleSheet for rename and QC from SampleSheet.
-        #CMD="create_samplesheet_${SEQ}.R ${FC_ID} ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet_DB.csv $run_dir"
-        #echo -e "==== SAMPLE SHEET STEP ====\n${CMD}" >> $ERROR_FILE
-        #if [ $ERROR -eq 0 ]; then
-            #${CMD} &>> $ERROR_FILE
-            #if [ $? -ne 0 ]; then
-                #echo "ERROR:: SampleSheet creation failed" >> $ERROR_FILE && ERROR=1
-            #fi
-        #fi
-    #fi 
+        CMD="create_samplesheet_${SEQ}.R ${FC_ID} ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $run_dir"
+        echo -e "==== SAMPLE SHEET STEP ====\n${CMD}" >> $ERROR_FILE
+        if [ $ERROR -eq 0 ]; then
+            ${CMD} &>> $ERROR_FILE
+            if [ $? -ne 0 ]; then
+                echo "ERROR:: SampleSheet creation failed" >> $ERROR_FILE && ERROR=1
+            fi
+        fi
+    fi 
 
-    #Rename SampleSheet for rename and QC to SampleSheet_rename.csv
+    #Copy SampleSheet from RunAnalysis
     cp ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv 
-    cp ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv
+    #cp ${SHARED_GENOMICS}/${FC_ID}/SampleSheet.csv ${SHARED_GENOMICS}/${FC_ID}/SampleSheet_rename.csv
+
     # Create Sample Sheet for demux
     if [ $ERROR -eq 0 ]; then
         numpair=$(( $(ls ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/Basecalling_Netcopy_complete_Read*.txt | wc -l) - 1 ))
