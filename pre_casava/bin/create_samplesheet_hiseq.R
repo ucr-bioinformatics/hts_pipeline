@@ -41,7 +41,7 @@ cnt = 0
 sample_id=0
 
 setwd(paste(Sys.getenv("SHARED_GENOMICS"),flowcellid,sep="/"))
-cat(paste("FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SampleProject", sep=","),file="SampleSheet.csv")
+cat(paste("FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SampleProject", sep=","),file="SampleSheet_rename.csv")
 
 for (j in lane){
 	#print(j)
@@ -58,6 +58,6 @@ for (j in lane){
 		#print(k)
         sample_id = sample_id +1
 		index_val <- gsub(" ", "", index_list[[1]][k])
-		line <- cat(paste("\n",label,",",j,",",sample_id,",,",index_val,",,","N,",",","nkatiyar,",project_id_new,sep=""),file="SampleSheet.csv", append=TRUE)
+		line <- cat(paste("\n",label,",",j,",",sample_id,",,",index_val,",,","N,",",","nkatiyar,",project_id_new,sep=""),file="SampleSheet_rename.csv", append=TRUE)
 	}
 }
