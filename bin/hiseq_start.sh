@@ -158,11 +158,11 @@ if [ -f $complete_file ]; then
     NO_LANES=0
     BASEMASK=""
     for i in ${LANE_NUM[@]:1}; do
-        #if [ "${i}" == "0" ]; then
-            #INDEX=$(($INDEX+1))
-            #NO_LANES=1
-            #continue;
-        #fi
+        if [ "${i}" == "0" ]; then
+            INDEX=$(($INDEX+1))
+            NO_LANES=1
+            continue;
+        fi
         if [ ${numpair} == 1 ]; then
             BASEMASK="$BASEMASK $INDEX:Y*,I${i}n"
         elif [ ${numpair} == 2 ]; then
@@ -174,12 +174,7 @@ if [ -f $complete_file ]; then
         NO_LANES=0
         INDEX=$(($INDEX+1))
     done
-
-    #Remove --use-bases-mask if the last lane does not have a basemask
-    if [ $NO_LANES -eq 1 ]; then
-        BASEMASK=${BASEMASK::-16}
-    fi
-
+    
     # We will demultiplex and barcode is of standard length 6 (single-end,paired-end)
     #if [[ ${#barcode} == 6 ]]; then
     if [ ${LANE_NUM[1]} != 0 ]; then
@@ -200,6 +195,19 @@ if [ -f $complete_file ]; then
         
     fi
     
+    #Remove --use-bases-mask if the last lane does not have a basemask
+    if [ $NO_LANES -eq 1 ]; then
+        if [ $BASEMASK -ne "" ]; then
+            BASEMASK=${BASEMASK::-16}
+        else
+            if [ ${numpair} == 2]; then
+                BASEMASK="Y*,Y*"
+            elif [ ${numpair} == 3]; then
+                BASEMASK="Y*,Y*,Y*"
+            fi
+        fi
+    fi
+
     #We will demultiplex and the barcode is of different length and single-end
     #if [ ${#barcode} > 6 ] && [ ${numpair} == 1 ]; then
         #MUX=1
