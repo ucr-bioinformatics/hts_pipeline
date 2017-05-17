@@ -197,7 +197,7 @@ if [ -f $complete_file ]; then
     
     #Remove --use-bases-mask if the last lane does not have a basemask
     if [ $NO_LANES -eq 1 ]; then
-        if [ $BASEMASK -ne "" ]; then
+        if [ "$BASEMASK" !=  "" ]; then
             BASEMASK=${BASEMASK::-16}
         else
             if [ ${numpair} == 2]; then
