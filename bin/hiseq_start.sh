@@ -200,9 +200,9 @@ if [ -f $complete_file ]; then
         if [ "$BASEMASK" !=  "" ]; then
             BASEMASK=${BASEMASK::-16}
         else
-            if [ ${numpair} == 2]; then
+            if [ ${numpair} == 2 ]; then
                 BASEMASK="Y*,Y*"
-            elif [ ${numpair} == 3]; then
+            elif [ ${numpair} == 3 ]; then
                 BASEMASK="Y*,Y*,Y*"
             fi
         fi
