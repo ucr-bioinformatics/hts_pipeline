@@ -434,6 +434,19 @@ find Reports/ -type d | xargs chmod a+rx # change permission for all sub-directo
 ```
 /opt/bcl2fastq/1.8.4/bin/configureBclToFastq.pl --input-dir /home/researchers/RunAnalysis/flowcell344/150814_SN279_0481_AC7KC5ACXX/Data/Intensities/BaseCalls --sample-sheet /home/researchers/RunAnalysis/flowcell344/150814_SN279_0481_AC7KC5ACXX/Data/Intensities/BaseCalls/SampleSheet.csv --fastq-cluster-count 600000000 --use-bases-mask Y*,I7,Y* --output-dir /home/casava_fastqs/344/Unaligned_Lane7-8
 ```
+References
+==========
+
+BCL2Fastq
+https://support.illumina.com/help/SequencingAnalysisWorkflow/Content/Vault/Informatics/Sequencing_Analysis/CASAVA/swSEQ_mCA_OptionsBCLConv.htm
+
+Illumina adapters
+https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/experiment-design/illumina-adapter-sequences_1000000002694-01.pdf
+
+QC report
+=========
+https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
+
 
 Analysis
 ========
