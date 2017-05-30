@@ -436,7 +436,7 @@ find Reports/ -type d | xargs chmod a+rx # change permission for all sub-directo
 ```
 References
 ==========
-
+Illumina
 BCL2Fastq
 https://support.illumina.com/help/SequencingAnalysisWorkflow/Content/Vault/Informatics/Sequencing_Analysis/CASAVA/swSEQ_mCA_OptionsBCLConv.htm
 
@@ -446,6 +446,24 @@ https://support.illumina.com/content/dam/illumina-support/documents/documentatio
 QC report
 =========
 https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
+
+Pacbio
+
+SMRT-Analysis documentation
+https://github.com/PacificBiosciences/SMRT-Analysis/wiki/Documentation
+
+Demultiplexing
+https://github.com/PacificBiosciences/pbbarcode/blob/master/doc/PbbarcodeFunctionalSpecification.rst
+
+Barcoding with SMRT Analysis
+https://github.com/PacificBiosciences/Bioinformatics-Training/wiki/Barcoding
+https://github.com/PacificBiosciences/Bioinformatics-Training/wiki/Barcoding-with-SMRT-Analysis-2.3
+
+QC report
+https://wiki.uio.no/mn/ibv/bioinfwiki/index.php/SMRT_Analysis:_Read_filtering#PacBio_quality_values
+
+
+
 
 
 Analysis
