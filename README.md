@@ -462,8 +462,8 @@ https://github.com/PacificBiosciences/Bioinformatics-Training/wiki/Barcoding-wit
 QC report
 https://wiki.uio.no/mn/ibv/bioinfwiki/index.php/SMRT_Analysis:_Read_filtering#PacBio_quality_values
 
-
-
+SMRT portal tutorial
+http://www.pacb.com/training/IntroductiontoSMRTPortal/story.html
 
 
 Analysis
