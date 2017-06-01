@@ -74,7 +74,9 @@ In case John's excel file is not tab-delimited, then run
     
     * **FlowcellID** - flowcell number, e.g. 322
     * **RunDirectoryName** - Run directory (Example: 150903_NB501124_0002_AHHNG7BGXX)
-    * **BaseMask** - NA for default (barcode length = 6) If barcode length = 8, BaseMask value will be Y*,I8 (single-end), Y*,I8, Y*          for paired-end.
+    * **BaseMask** - NA for default (barcode length = 6) 
+    If barcode length = 8, for single-end library, BaseMask value will be Y*,I8
+    If barcode length = 8, for paired-end library, Basemask value will be Y*,I8,Y*
     *  **SampleSheet** - Absolute path for SampleSheet
     *  **Mismatch** - Barcode mismatch (Default=1, if program shows error, then use mismatch=0 instead).
 
