@@ -77,6 +77,13 @@ In case John's excel file is not tab-delimited, then run
     * **BaseMask** - NA for default (barcode length = 6) 
     If barcode length = 8, for single-end library, BaseMask value will be Y*,I8
     If barcode length = 8, for paired-end library, Basemask value will be Y*,I8,Y*
+    To run CASAVA for lane without demultiplexing
+    Single-end, Base-mask will be Y*,Y*
+    This will result into 2 files. File1 will have sequences and File2 will have barcodes.
+    Paired-end, Base-mask will be Y*,Y*,Y*
+    This will result is 3 files. 
+    File1 will have pair1 sequence, File2 will have the barcode sequence, File3 will have pair 2 sequence.
+   
     *  **SampleSheet** - Absolute path for SampleSheet
     *  **Mismatch** - Barcode mismatch (Default=1, if program shows error, then use mismatch=0 instead).
 
