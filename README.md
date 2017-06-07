@@ -467,6 +467,8 @@ https://github.com/PacificBiosciences/pbbarcode/blob/master/doc/PbbarcodeFunctio
 Barcoding with SMRT Analysis
 https://github.com/PacificBiosciences/Bioinformatics-Training/wiki/Barcoding
 https://github.com/PacificBiosciences/Bioinformatics-Training/wiki/Barcoding-with-SMRT-Analysis-2.3
+https://github.com/PacificBiosciences/pbbarcode/blob/master/doc/PbbarcodeFunctionalSpecification.rst
+
 
 QC report
 https://wiki.uio.no/mn/ibv/bioinfwiki/index.php/SMRT_Analysis:_Read_filtering#PacBio_quality_values
