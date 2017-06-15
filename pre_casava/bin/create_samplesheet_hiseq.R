@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-#Miseq samplesheet conversion
+#Hiseq samplesheet conversion
 
 ## Author Neerja Katiyar
 
@@ -14,50 +14,48 @@ rundir <- args[3]
 
 print("Starting generation of SampleSheet")
 
+shared_genomics <- Sys.getenv("SHARED_GENOMICS")
+setwd(paste(shared_genomics,"/",flowcellid,"/",sep=""))
+
 # Connect to Database
 require(RMySQL, quietly = TRUE)
 con <- dbConnect(MySQL(), user="webuser", password="5any77z1",dbname="projects", host="illumina.int.bioinfo.ucr.edu")
 
 # Get sample and project ids
 flowcell_table <- dbGetQuery(con,paste("SELECT * FROM flowcell_list where flowcell_id = ", flowcellid," LIMIT 1",sep=""))
-#lane=1
-#i=1
+lane=1
 label <- flowcell_table$label
+project_id <- flowcell_table[paste("lane_",lane,"_project",sep="")][[1]]
 
-#samplesheet_file <- scan("SampleSheet.csv")
+conn=file(samplesheet,open="r")
+line_num <-grep('Data',readLines(samplesheet))
+#print("Line numbers Data")
+#print(line_num)
+close(conn)
 
-samplesheet_file <- read.table(samplesheet, header=TRUE, sep="\t",stringsAsFactors = !default.stringsAsFactors(),strip.white = TRUE)
-num_lanes <- length(samplesheet_file$Indices)
-lane <- samplesheet_file$Lane
-lane <- gsub("Lane","", lane)
-#print(lane)
-lane <- lapply(lane, as.numeric)
+#a <- read.delim(samplesheet, sep=",")
+#line_data <- rownames(a[ grep("Data",a[,1]), ])
+#line_num <- as.numeric(as.character(line_data))
 
-Indices_new <- samplesheet_file$Indices
-Indices_new <- gsub(" ","", Indices_new)
-Indices_new <- gsub("and",",", Indices_new)
-#print(Indices_new)
-cnt = 0
-sample_id=0
+library(data.table)
+a = fread(samplesheet, skip=(line_num),header=TRUE)
+print(a)
+len_a <- length(a$Sample_ID)
+#print("Length of a")
+#print(len_a)
 
-setwd(paste(Sys.getenv("SHARED_GENOMICS"),flowcellid,sep="/"))
-cat(paste("FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SampleProject", sep=","),file="SampleSheet_rename.csv")
+cat(paste("FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SampleProject", sep=","),file="SampleSheet_rename2.csv","\n")
 
-for (j in lane){
-	#print(j)
-	cnt=cnt+1
-	index_list <- strsplit(Indices_new[cnt],",")
-	#print(index_list[[1]][1])
-	index_len <- (lapply(index_list, function(x) length(x)))
-	#print(index_len[[1]])
-	#print(length(index_len))
-	project_id <- flowcell_table[paste("lane_",j,"_project",sep="")][[1]]
-	#print(project_id)
-	project_id_new <- gsub(" ","",project_id)
-	for (k in (1:index_len[[1]])){
-		#print(k)
-        sample_id = sample_id +1
-		index_val <- gsub(" ", "", index_list[[1]][k])
-		line <- cat(paste("\n",label,",",j,",",sample_id,",,",index_val,",,","N,",",","nkatiyar,",project_id_new,sep=""),file="SampleSheet_rename.csv", append=TRUE)
+it = 0
+for(lane in 1:8){
+    if(!sum(a$Lane == lane))
+        next
+    for (j in (1:sum(a$Lane == lane))){
+        it = it + 1
+	    line <- cat(paste(label,lane,it,"",a$index[it],"","N","","nkatiyar",project_id,sep=","),file="SampleSheet_rename2.csv","\n", append=TRUE)
 	}
 }
+
+print("Samplesheet created")
+#read.table(header=FALSE, text=s)
+
