@@ -52,7 +52,7 @@ for(lane in 1:8){
         next
     for (j in (1:sum(a$Lane == lane))){
         it = it + 1
-	    line <- cat(paste(label,lane,it,"",a$index[it],"","N","","nkatiyar",project_id,sep=","),file="SampleSheet_rename.csv","\n", append=TRUE)
+	    line <- cat(paste(label,lane,a$Sample_ID[it],"",a$index[it],"","N","","nkatiyar",project_id,sep=","),file="SampleSheet_rename.csv","\n", append=TRUE)
 	}
 }
 
