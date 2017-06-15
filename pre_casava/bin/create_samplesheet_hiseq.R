@@ -39,12 +39,12 @@ close(conn)
 
 library(data.table)
 a = fread(samplesheet, skip=(line_num),header=TRUE)
-print(a)
+#print(a)
 len_a <- length(a$Sample_ID)
 #print("Length of a")
 #print(len_a)
 
-cat(paste("FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SampleProject", sep=","),file="SampleSheet_rename2.csv","\n")
+cat(paste("FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SampleProject", sep=","),file="SampleSheet_rename.csv","\n")
 
 it = 0
 for(lane in 1:8){
@@ -52,7 +52,7 @@ for(lane in 1:8){
         next
     for (j in (1:sum(a$Lane == lane))){
         it = it + 1
-	    line <- cat(paste(label,lane,it,"",a$index[it],"","N","","nkatiyar",project_id,sep=","),file="SampleSheet_rename2.csv","\n", append=TRUE)
+	    line <- cat(paste(label,lane,it,"",a$index[it],"","N","","nkatiyar",project_id,sep=","),file="SampleSheet_rename.csv","\n", append=TRUE)
 	}
 }
 
