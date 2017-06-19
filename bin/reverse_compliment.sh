@@ -12,12 +12,11 @@ TMP_SAMPLESHEET="$1.tmp"
 
 awk -F',' '
 BEGIN {
-  OFS = FS; found=0
+  OFS = FS;
 }
 
 /Sample_ID/ {
   print $0;
-  found=1;
   next
 }
 {
