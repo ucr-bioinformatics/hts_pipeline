@@ -83,16 +83,19 @@ if [ -f $complete_file ]; then
     # Get barcode length
     barcode=$(tail -1 ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv | awk '{split($0,a,","); print a[6]}')
     dual_index_flag=0
+    
+    # Set dual_index_flag by checking SampleSheet
+    if grep -qE 'I7_Index_ID.*I5_Index_ID|I5_Index_ID.*I7_Index_ID' ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv; then
+    	dual_index_flag=1
+    fi
+
     # Create Sample Sheet for demux
     if [ $ERROR -eq 0 ]; then
         numpair=$(( $(ls ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/RTARead*Complete.txt | wc -l) - 1 ))
-        if [ ${numpair} >= 3 ]; then #Dual indexing
-            dual_index_flag=1
-            NUMFILES=$(( $numpair - 1 ))
+        if [ ${numpair} >= 3 ] || [ $dual_index_flag -eq 1 ]; then
             numpair=$(( $numpair - 1 ))
-        else
-            NUMFILES=$numpair
         fi
+        NUMFILES=$numpair
         MUX=1
         BASEMASK="NA"
     fi
