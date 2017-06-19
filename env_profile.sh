@@ -23,6 +23,6 @@ else
     fi
 
     # Send email notifications to this address
-    USER_NAME=$(getent passwd|grep $USER|cut -d: -f5 |tr ' ' '.'|awk '{print tolower($0)}')
+    USER_NAME=wshia002
     export NOTIFY_EMAIL=$USER_NAME@ucr.edu
 fi
