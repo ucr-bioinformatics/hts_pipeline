@@ -263,19 +263,15 @@ if [ -f $complete_file ]; then
     fi
 
     # Generate 2nd QC report for individual lanes
-    for (( i=1; i<=8; i++ ))
-    do
-        mkdir -p fastq_report/fastq_report_lane${i}/
-        ls $SHARED_GENOMICS/$FC_ID/*lane${i}*.fastq.gz > $SHARED_GENOMICS/$FC_ID/file_list_new${i}.txt
-
-        while IFS= read -r file
-        do
-            [ -f "$file" ]
-            module load slurm
-            sbatch generate_qc_report_wrapper.sh ${SHARED_GENOMICS} ${FC_ID} ${file} ${i}
-        done < "file_list_new${i}.txt"
-    done
-
+    CMD="generate_fastqc_report.sh $FC_ID 8"
+    echo -e "==== SECOND QC STEP ====\n${CMD}" >> $ERROR_FILE
+    if [ $ERROR -eq 0 ]; then
+    	${CMD} &>> $ERROR_FILE
+        if [ $? -ne 0 ]; then
+            echo "ERROR: FastQC report generation failed" >> $ERROR_FILE && ERROR=1
+        fi
+    fi
+   
     # Update Illumina web server URLs
     CMD="sequence_url_update.R $FC_ID 8 $SHARED_GENOMICS/$FC_ID"
     echo -e "==== URL STEP ====\n${CMD}" >> $ERROR_FILE
