@@ -4,5 +4,5 @@
 *~
 log/*.log
 
-*.unencrypted.cfg
-*.unencrypted.txt
+passwords.tsv
+passwords-decrypted.tsv
