@@ -202,15 +202,14 @@ if [ -f $complete_file ]; then
     fi
 
     # Generate second QC report
-    ls $SHARED_GENOMICS/$FC_ID/*.fastq.gz > $SHARED_GENOMICS/$FC_ID/file_list_new.txt
-
-    while IFS= read -r file
-    do
-        [ -f "$file" ]
-        module load slurm
-        sbatch generate_qc_report_wrapper.sh ${SHARED_GENOMICS} ${FC_ID} ${file} 0
-        #echo "module load fastqc; fastqc -o $SHARED_GENOMICS/$FC_ID/fastq_report/ $file" | qsub -lnodes=1:ppn=4,mem=16g,walltime=4:00:00;
-    done < "file_list_new.txt"
+    CMD="generate_fastqc_report.sh $FC_ID"
+    echo -e "==== SECOND QC STEP ====\n${CMD}" >> $ERROR_FILE
+    if [ $ERROR -eq 0 ]; then
+    	${CMD} &>> $ERROR_FILE
+	if [ $? -ne 0 ]; then
+	    echo "ERROR: FastQC report generation failed" >> $ERROR_FILE && ERROR=1
+	fi
+    fi
 
     # Update Illumina web server URLs
     CMD="sequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID"
