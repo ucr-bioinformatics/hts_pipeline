@@ -209,27 +209,16 @@ if [ -f $complete_file ]; then
     fi
 
     # Generate second QC report
-    CMD="ls $SHARED_GENOMICS/$FC_ID/*.fastq.gz > $SHARED_GENOMICS/$FC_ID/file_list_new.txt"
+    CMD="generate_fastqc_report.sh $FC_ID"
     echo -e "==== SECOND QC STEP ====\n${CMD}" >> $ERROR_FILE
-    ${CMD} 
-    if [ $? -ne 0 ]; then
-        echo "ERROR: Failed to generate file list" >> $ERROR_FILE && ERROR=1
+    if [ $ERROR -eq 0 ]; then
+    	${CMD} &>> $ERROR_FILE
+	if [ $? -ne 0 ]; then
+	    echo "ERROR: FastQC report generation failed" >> $ERROR_FILE && ERROR=1
+	fi
     fi
- 
-    while IFS= read -r file
-    do
-        [ -f "$file" ]
-        module load slurm
-        # echo "module load fastqc; fastqc -o $SHARED_GENOMICS/$FC_ID/fastq_report/ $file" | qsub -lnodes=1:ppn=4,mem=16g,walltime=4:00:00;
-        CMD="sbatch generate_qc_report_wrapper.sh ${SHARED_GENOMICS} ${FC_ID} ${file} 0"
-        echo "${CMD}" >> $ERROR_FILE
-        ${CMD} &>> $ERROR_FILE
-        if [ $? -ne 0 ]; then
-            echo "ERROR: Failed to add QC report generation #2 to slurm queue" && ERROR=1
-        fi
-    done < "file_list_new.txt"
 
-    # Update Illumina web server URLs
+
     CMD="sequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID"
     echo -e "==== URL STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then 
