@@ -206,9 +206,9 @@ if [ -f $complete_file ]; then
     echo -e "==== SECOND QC STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
     	${CMD} &>> $ERROR_FILE
-	if [ $? -ne 0 ]; then
-	    echo "ERROR: FastQC report generation failed" >> $ERROR_FILE && ERROR=1
-	fi
+        if [ $? -ne 0 ]; then
+            echo "ERROR: FastQC report generation failed" >> $ERROR_FILE && ERROR=1
+        fi
     fi
 
     # Update Illumina web server URLs

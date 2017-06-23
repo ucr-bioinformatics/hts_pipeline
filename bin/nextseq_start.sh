@@ -212,10 +212,10 @@ if [ -f $complete_file ]; then
     CMD="generate_fastqc_report.sh $FC_ID"
     echo -e "==== SECOND QC STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
-    	${CMD} &>> $ERROR_FILE
-	if [ $? -ne 0 ]; then
-	    echo "ERROR: FastQC report generation failed" >> $ERROR_FILE && ERROR=1
-	fi
+        ${CMD} &>> $ERROR_FILE
+        if [ $? -ne 0 ]; then
+            echo "ERROR: FastQC report generation failed" >> $ERROR_FILE && ERROR=1
+        fi
     fi
 
 
