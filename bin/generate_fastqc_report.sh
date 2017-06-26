@@ -1,13 +1,13 @@
 #!/bin/bash -l
 
 # Check number of arguments
-if (( $# < 2 )); then
+if (( $# < 1 )); then
     echo "Usage: $(basename $0) FC_ID [NUM_LANES]"
     exit 1
 fi
 
 FC_ID=$1
-if (( $# == 2 )); then
+if (( $# == 1 )); then
     NUM_LANES=0
 else
     NUM_LANES=$2
