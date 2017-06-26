@@ -8,6 +8,7 @@ echo "started running"
 
 # Set global vars
 source $HTS_PIPELINE_HOME/env_profile.sh
+source $HTS_PIPELINE_HOME/bin/load_hts_passwords.sh
 
 # Change directory to source
 SOURCE_DIR="${SHARED_GENOMICS}/Runs"
@@ -56,7 +57,7 @@ for dir in $dir_list; do
             
             # Determine flowcell ID
             QUERY="SELECT flowcell_id FROM flowcell_list WHERE label=\"$label\";"
-            FC_ID=$(mysql -hillumina.int.bioinfo.ucr.edu -Dprojects -u***REMOVED*** -p***REMOVED*** -N -s -e "${QUERY}")
+            FC_ID=$(mysql -hillumina.int.bioinfo.ucr.edu -Dprojects -u$DB_USERNAME -p$DB_PASSWORD -N -s -e "${QUERY}")
 
 
             # Send email notification
