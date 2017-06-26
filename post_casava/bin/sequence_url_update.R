@@ -16,9 +16,13 @@ setwd(fastq_path)
 qcs <- list.files(path='.',pattern='^qc[1-9]*')
 #pairs=0   
 
+# Load password info
+hts_pipeline_home <- Sys.getenv("HTS_PIPELINE_HOME")
+source(paste(hts_pipeline_home, "/bin/load_hts_passwords.R"))
+
 # Connect to Database
 require(RMySQL, quietly = TRUE)
-con <- dbConnect(MySQL(), user="webuser", password="5any77z1",dbname="projects", host="illumina.int.bioinfo.ucr.edu")
+con <- dbConnect(MySQL(), user=hts_pass$db['user'], password=hts_pass$db['pass'],dbname="projects", host="illumina.int.bioinfo.ucr.edu")
 
 # Get sample and project ids
 flowcell_table <- dbGetQuery(con,paste("SELECT * FROM flowcell_list where flowcell_id = ", flowcellid," LIMIT 1",sep=""))
