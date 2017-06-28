@@ -7,27 +7,28 @@
 echo "started running"
 
 # Set global vars
-source $HTS_PIPELINE_HOME/env_profile.sh
+source "$HTS_PIPELINE_HOME/env_profile.sh"
 
 # Change directory to source
 SOURCE_DIR="${SHARED_GENOMICS}/Runs"
-cd $SOURCE_DIR
+cd "$SOURCE_DIR" || echo "Unable to change directory"
 
 # Get list of Run directories
-dir_list=`find . -maxdepth 1 -type d`
+dir_list=$(find . -maxdepth 1 -type d)
+
 # Iterate over each Run directory
 for dir in $dir_list; do
     # Check if directory is not source directory
     if [ "$dir" != '.' ]; then
         # Find sample sheet
-        complete_file=`find $dir -name RTAComplete.txt`
-        samplesheet_file=`find $dir -maxdepth 1 -name *_FC#*.csv`
+        complete_file=$(find "$dir" -name RTAComplete.txt)
+        samplesheet_file=$(find "$dir" -maxdepth 1 -name '*_FC#*.csv')
         samplesheet_db="SampleSheet_DB.csv"
-        samplesheet=`find $dir -maxdepth 1 -name SampleSheet.csv`
+        samplesheet=$(find "$dir" -maxdepth 1 -name SampleSheet.csv)
         
-        if [ ! -z $complete_file ] && ([ ! -z $samplesheet_file ] || [ ! -z $samplesheet ] || [ ! -z $samplesheet_db ]); then
+        if [ ! -z "$complete_file" ] && ([ ! -z "$samplesheet_file" ] || [ ! -z "$samplesheet" ] || [ ! -z "$samplesheet_db" ]); then
             # Determine Sequencer type
-            str=$(echo $dir | cut -d_ -f2)
+            str=$(echo "$dir" | cut -d_ -f2)
             case $str in
             "SN279")
                 SEQ="hiseq"
@@ -47,7 +48,7 @@ for dir in $dir_list; do
             esac
 
             # Pull chars from dir name
-            str=$(echo $dir | grep -oP "[A-Z0-9]+$")
+            str=$(echo "$dir" | grep -oP "[A-Z0-9]+$")
             if [[ ${#str} -eq 10 ]]; then
                 label=${str:1:10}
             else
@@ -69,10 +70,10 @@ Subject: HTS Pipeline: Flowcell ${FC_ID}: Started
 Flowcell ${FC_ID} has come in and is being processed.
 Thanks
 EOF
-            echo "Processing ${FC_ID} from ${SOURCE_DIR}/$dir" >> ${HTS_PIPELINE_HOME}/log/${SEQ}_pipeline.log
+            echo "Processing ${FC_ID} from ${SOURCE_DIR}/$dir" >> "${HTS_PIPELINE_HOME}/log/${SEQ}_pipeline.log"
             #echo ${SEQ}_start.sh ${FC_ID} ${SOURCE_DIR}/$dir ${SEQ} ${label}| qsub -l nodes=1:ppn=32,mem=50gb,walltime=20:00:00 -j oe -o ${HTS_PIPELINE_HOME}/log/${SEQ}_start.log -m bea -M ${NOTIFY_EMAIL}
             module load slurm
-            sbatch sequence_start_job_wrapper.sh ${SEQ} ${FC_ID} ${SOURCE_DIR} $dir ${label} ${HTS_PIPELINE_HOME} ${NOTIFY_EMAIL}
+            sbatch sequence_start_job_wrapper.sh "${SEQ}" "${FC_ID}" "${SOURCE_DIR}" "$dir" "${label}" "${HTS_PIPELINE_HOME}" "${NOTIFY_EMAIL}"
 
         fi
     fi
