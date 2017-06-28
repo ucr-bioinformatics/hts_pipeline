@@ -66,7 +66,7 @@ To: ${NOTIFY_EMAIL}
 From: no-reply@biocluster.ucr.edu
 Subject: HTS Pipeline: Flowcell ${FC_ID}: Started
 
-Flowcell ${FC_ID} has come in and needs to be processed.
+Flowcell ${FC_ID} has come in and is being processed.
 Thanks
 EOF
             echo "Processing ${FC_ID} from ${SOURCE_DIR}/$dir" >> ${HTS_PIPELINE_HOME}/log/${SEQ}_pipeline.log
