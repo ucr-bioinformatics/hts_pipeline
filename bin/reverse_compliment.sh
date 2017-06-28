@@ -2,15 +2,21 @@
 
 source $HTS_PIPELINE_HOME/env_profile.sh
 
-if (($# != 1)); then
-    echo "Usage: reverse_compliment.sh <SampleSheet>"
+if (($# < 1)); then
+    echo "Usage: reverse_compliment.sh <SampleSheet> [barcodeColumn]"
     exit 1
+fi
+
+if (($# == 1)); then
+    COLUMN_NUM=6
+else
+    COLUMN_NUM=$2
 fi
 
 SAMPLESHEET="$1"
 TMP_SAMPLESHEET="$1.tmp"
 
-awk -F',' '
+awk -F',' -v colNum="$COLUMN_NUM" '
 BEGIN {
   OFS = FS;
 }
@@ -20,8 +26,8 @@ BEGIN {
   next
 }
 {
-  "echo "$6" | rev | tr ATCG TAGC" | getline newcode;
-  $6=newcode
+  "echo "$colNum" | rev | tr ATCG TAGC" | getline newcode;
+  $colNum=newcode
   print $0
 }' $SAMPLESHEET > $TMP_SAMPLESHEET
 
