@@ -3,6 +3,10 @@
 pipeline_home <- Sys.getenv('HTS_PIPELINE_HOME')
 setwd(pipeline_home)
 
+if(!file.exists('passwords-decrypted.tsv')) {
+    system('bin/load_hts_passwords.sh')
+}
+
 parsed_passwords <- read.table(file = 'passwords-decrypted.tsv', sep = '\t', header = TRUE)
 
 # Set 
