@@ -22,7 +22,7 @@ system(command)
 
 # Load password info
 hts_pipeline_home <- Sys.getenv("HTS_PIPELINE_HOME")
-source(paste(hts_pipeline_home, "/bin/load_hts_passwords.R"))
+source(paste(hts_pipeline_home, "/bin/load_hts_passwords.R", sep = ""))
 
 # Connect to Database
 require(RMySQL, quietly = TRUE)
