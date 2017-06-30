@@ -47,7 +47,7 @@ if [[ -f $complete_file ]]; then
     ##################
    
     # Create copy of the original samplesheet from Clay and name it as SampleSheet.csv
-    samplesheet_origfile=$(ls "${SHARED_GENOMICS}/Runs/$run_dir/*_FC#*.csv")
+    samplesheet_origfile=$(ls "${SHARED_GENOMICS}/Runs/$run_dir"/*_FC#*.csv)
     CMD="cp $samplesheet_origfile SampleSheet.csv"
     echo -e "==== Create copy of the original samplesheet from Clay STEP ====\n${CMD}" >> "$ERROR_FILE"
     if [ $ERROR -eq 0 ]; then
