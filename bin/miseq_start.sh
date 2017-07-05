@@ -107,16 +107,9 @@ if [ -f $complete_file ]; then
     fi
 
    # We will demultiplex and barcode is of standard length 6 (single-end,paired-end)
-    if [[ ${#barcode} == 6 ]]; then
+    if [[ ${#barcode} -ge 6 ]]; then
        MUX=1
        BASEMASK="NA"
-    fi
-
-    #We will demultiplex and the barcode is of different length and single-end
-    if [ ${#barcode} > 6 ] && [ ${numpair} == 1 ]; then
-        MUX=1
-        BASEMASK="Y*,I${#barcode},Y*"
-        NUMFILES=1
     fi
 
     #User demultiplexes and it is single end
