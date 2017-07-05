@@ -11,9 +11,9 @@ source "$HTS_PIPELINE_HOME/env_profile.sh"
 EXPECTED_ARGS=4
 E_BADARGS=65
 
-if [ $# -ne $EXPECTED_ARGS ]
+if [ $# -lt $EXPECTED_ARGS ]
 then
-  echo "Usage: $(basename "$0") FC_ID {/path/to/source} SEQ LABEL"
+  echo "Usage: $(basename "$0") FC_ID {/path/to/source} SEQ LABEL [MISMATCH = 1]"
   exit $E_BADARGS
 fi
 
@@ -22,6 +22,7 @@ FC_ID=$1
 SOURCE_DIR=$2
 SEQ=$3
 LABEL=$4
+MISMATCH="${5:-1}"
 cd "$SOURCE_DIR"
 
 # Check for SampleSheet
@@ -145,7 +146,7 @@ if [[ -f $complete_file ]]; then
     # They demux
     #CMD="bcl2fastq_run.sh ${FC_ID} $run_dir Y*,Y* ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
     # We demux
-    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1 nosplit"
+    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $MISMATCH nosplit"
     echo -e "==== DEMUX STEP ====\n${CMD}" >> "$ERROR_FILE"
     if [ $ERROR -eq 0 ]; then
         cd "$SHARED_GENOMICS/$FC_ID"
@@ -192,7 +193,7 @@ if [[ -f $complete_file ]]; then
                 mismatch=$((mismatch+1))
             fi
         done
-        if [ "$barcode" != "$file_barcode" ] && [ $mismatch -gt 1 ]; then 
+        if [ "$barcode" != "$file_barcode" ] && [ $mismatch -gt $MISMATCH ]; then 
             echo "FAILED" &>> "$ERROR_FILE"
         fi
     done
