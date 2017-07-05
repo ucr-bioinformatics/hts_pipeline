@@ -42,7 +42,8 @@ if [[ -f $complete_file ]]; then
     export ERROR_FILE="$SHARED_GENOMICS/$FC_ID/error.log"
     mkdir -p "$SHARED_GENOMICS/$FC_ID"
     echo "Starting Pipeline" > "$ERROR_FILE"
-    
+    echo "Using mismatch of $MISMATCH" > "$ERROR_FILE"
+
     ##################
     # Pipeline Steps #
     ##################
