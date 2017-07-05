@@ -153,7 +153,7 @@ and you will see Runs and RunAnalysis directories under this directory. You will
     
     * **FlowcellID** - flowcell number, e.g. 634
     * **RunDirectoryName** - e.g. 170530_M02457_0157_000000000-B8CV5
-    * **BaseMask** - Defaults to `NA` regardless of barcode length, `Y*,Y*`` if user demultiplexes and it is single end, `Y*,Y*,Y*`` if user demultiplexes and it is paired end.
+    * **BaseMask** - Defaults to `NA` regardless of barcode length, `Y*,Y*` if user demultiplexes and it is single end, `Y*,Y*,Y*` if user demultiplexes and it is paired end.
     * **SampleSheet** - Absolute path for SampleSheet, e.g. `/bigdata/genomics/shared/634/SampleSheet.csv`
     * **Mismatch** - Barcode mismatch (Default=1, if program shows error, then use mismatch=0 instead).
     * **NoSplit** - "" to indicate not to join lanes
@@ -254,7 +254,7 @@ and you will see Runs and RunAnalysis directories under this directory. You will
     
     * **FlowcellID** - flowcell number, e.g. 636
     * **RunDirectoryName** - e.g. 170530_NB501891_0018_AHTLLYBGX2
-    * **BaseMask** - Defaults to `NA` regardless of barcode length, `Y*,Y*`` if user demultiplexes and it is single end, `Y*,Y*,Y*`` if user demultiplexes and it is paired end.
+    * **BaseMask** - Defaults to `NA` regardless of barcode length, `Y*,Y*` if user demultiplexes and it is single end, `Y*,Y*,Y*` if user demultiplexes and it is paired end.
     * **SampleSheet** - Absolute path for SampleSheet, e.g. `/bigdata/genomics/shared/RunAnalysis/flowcell636/170530_NB501891_0018_AHTLLYBGX2/SampleSheet.csv`
     * **Mismatch** - Barcode mismatch (Default=1, if program shows error, then use mismatch=0 instead).
     * **NoSplit** - "nosplit" to indicate to join lanes into 1 lane
