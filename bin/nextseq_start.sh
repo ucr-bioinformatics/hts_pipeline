@@ -92,7 +92,8 @@ if [[ -f $complete_file ]]; then
 
     # Create Sample Sheet for demux
     if [ $ERROR -eq 0 ]; then
-        numpair=$(( $(ls "${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/RTARead*Complete.txt" | wc -l) - 1 ))
+        numpair=$(( $(ls ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/RTARead*Complete.txt | wc -l) - 1 ))
+        echo "Got ${numpair} pairs" >> "$ERROR_FILE"
         if [[ ${numpair} -ge 3 ]] || [ $dual_index_flag -eq 1 ]; then
             numpair=$(( numpair - 1 ))
         fi
