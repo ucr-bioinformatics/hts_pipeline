@@ -153,8 +153,8 @@ and you will see Runs and RunAnalysis directories under this directory. You will
     
     * **FlowcellID** - flowcell number, e.g. 634
     * **RunDirectoryName** - e.g. 170530_M02457_0157_000000000-B8CV5
-    * **BaseMask** - Defaults to NA when barcode length is 6, "Y*,I{barcode_length},Y*" if greater than 6, "Y*,Y*" if user demultiplexes and it is single end, "Y*,Y*,Y*" if user demultiplixes and it is paired end
-    * **SampleSheet** - Absolute path for SampleSheet, e.g. /bigdata/genomics/shared/634/SampleSheet.csv
+    * **BaseMask** - Defaults to `NA` regardless of barcode length, `Y*,Y*` if user demultiplexes and it is single end, `Y*,Y*,Y*` if user demultiplexes and it is paired end.
+    * **SampleSheet** - Absolute path for SampleSheet, e.g. `/bigdata/genomics/shared/634/SampleSheet.csv`
     * **Mismatch** - Barcode mismatch (Default=1, if program shows error, then use mismatch=0 instead).
     * **NoSplit** - "" to indicate not to join lanes
 
@@ -254,8 +254,8 @@ and you will see Runs and RunAnalysis directories under this directory. You will
     
     * **FlowcellID** - flowcell number, e.g. 636
     * **RunDirectoryName** - e.g. 170530_NB501891_0018_AHTLLYBGX2
-    * **BaseMask** - Defaults to NA when barcode length is 6, "Y*,I{barcode_length},Y*" if greater than 6, "Y*,Y*" if user demultiplexes and it is single end, "Y*,Y*,Y*" if user demultiplixes and it is paired end
-    * **SampleSheet** - Absolute path for SampleSheet, e.g. /bigdata/genomics/shared/RunAnalysis/flowcell636/170530_NB501891_0018_AHTLLYBGX2/SampleSheet.csv
+    * **BaseMask** - Defaults to `NA` regardless of barcode length, `Y*,Y*` if user demultiplexes and it is single end, `Y*,Y*,Y*` if user demultiplexes and it is paired end.
+    * **SampleSheet** - Absolute path for SampleSheet, e.g. `/bigdata/genomics/shared/RunAnalysis/flowcell636/170530_NB501891_0018_AHTLLYBGX2/SampleSheet.csv`
     * **Mismatch** - Barcode mismatch (Default=1, if program shows error, then use mismatch=0 instead).
     * **NoSplit** - "nosplit" to indicate to join lanes into 1 lane
 
@@ -346,7 +346,7 @@ and you will see Runs and RunAnalysis directories under this directory. You will
 	find Reports/ -type d | xargs chmod a+rx # change permission for all sub-directories
 	```
 	
-2. In case the barcode length is not 6, one can use the --use-bases-mask option such as below for barcode length of 7:
+2. ~~In case the barcode length is not 6, one can use the --use-bases-mask option such as below for barcode length of 7:~~ No longer required.
 	```
 	/opt/bcl2fastq/1.8.4/bin/configureBclToFastq.pl --input-dir /home/researchers/RunAnalysis/flowcell344/150814_SN279_0481_AC7KC5ACXX/Data/Intensities/BaseCalls --sample-sheet /home/researchers/RunAnalysis/flowcell344/150814_SN279_0481_AC7KC5ACXX/Data/Intensities/BaseCalls/SampleSheet.csv --fastq-cluster-count 600000000 --use-bases-mask Y*,I7,Y* --output-dir /home/casava_fastqs/344/Unaligned_Lane7-8
 	```
