@@ -20,3 +20,5 @@ do
     fi
 done < "$DECRYPTED_PASS_FILE"
 
+rm -f "$DECRYPTED_PASS_FILE"
+
