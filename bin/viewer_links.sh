@@ -14,6 +14,9 @@ then
   exit $E_BADARGS
 fi
 
+# Load DB passwords
+source $HTS_PIPELINE_HOME/bin/load_hts_passwords.sh
+
 SOURCE_DIR=$1
 TARGET_DIR=$2
 
@@ -35,7 +38,7 @@ for dir in $dir_list; do
 
         # Pull chars from dir name then query mysql...
         QUERY="SELECT flowcell_id FROM flowcell_list WHERE label=\"$str\";"
-        flowcellID=flowcell`mysql -hillumina.bioinfo.ucr.edu -Dprojects -uwebuser -p5any77z1 -N -s -e "SELECT flowcell_id FROM flowcell_list WHERE label=\"$str\";"`
+        flowcellID=flowcell`mysql -hillumina.bioinfo.ucr.edu -Dprojects -u$DB_USERNAME -p$DB_PASSWORD -N -s -e "SELECT flowcell_id FROM flowcell_list WHERE label=\"$str\";"`
 
         # Check if symlink already exists in target directory
         if [ ! -h "$TARGET_DIR/$flowcellID" ]; then

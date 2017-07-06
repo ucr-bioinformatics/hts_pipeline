@@ -91,7 +91,7 @@ if [ -f $complete_file ]; then
     # Create Sample Sheet for demux
     if [ $ERROR -eq 0 ]; then
         numpair=$(( $(ls ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/Basecalling_Netcopy_complete_Read*.txt | wc -l) - 1 ))
-        if [ ${numpair} == 3 ]; then #Dual indexing
+        if [ ${numpair} == 3 ]; then # Dual indexing
             dual_index_flag=1
             NUMFILES=$(( $numpair - 1 ))
             numpair=$(( $numpair - 1 ))
