@@ -7,8 +7,8 @@
 # Set global vars
 source "$HTS_PIPELINE_HOME/env_profile.sh"
 
-SHORT=f:d:s:l:m:
-LONG=flowcell:,dir:,sequencer:,label:,mismatch:
+SHORT=f:d:m:
+LONG=flowcell:,dir:,mismatch:
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 
@@ -27,14 +27,6 @@ while true; do
             SOURCE_DIR="$2"
             shift 2
             ;;
-        -s|--sequencer)
-            SEQ="$2"
-            shift 2
-            ;;
-        -l|--label)
-            LABEL="$2"
-            shift 2
-            ;;
         -m|--mismatch)
             MISMATCH="$2"
             shift 2
@@ -50,6 +42,7 @@ while true; do
     esac
 done
 
+SEQ="nextseq"
 if [[ -z "$MISMATCH" ]]; then
     MISMATCH=1
 fi
