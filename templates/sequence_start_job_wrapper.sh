@@ -8,7 +8,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH -p short
 
-SHORT=s:f:S:T:l:p:m
+SHORT=s:f:S:T:l:p:m:
 LONG=sequencer:,flowcell:,source-dir:,target-dir:,label:,pipeline-home:,mismatch:
 
 PARSED="$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")"
@@ -61,5 +61,5 @@ while true; do
 done
 
 sleep $(($RANDOM % 10))
-${sequencer}_start.sh -f "${flowcell}" -sd "${sourceDir}/${targetDir}" -s "${sequencer}" -l "${label}" -m "${mismatch}"
+${sequencer}_start.sh --flowcell "${flowcell}" --dir "${sourceDir}/${targetDir}" -s "${sequencer}" -l "${label}" -m "${mismatch}"
 
