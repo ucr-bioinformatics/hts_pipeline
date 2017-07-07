@@ -60,5 +60,5 @@ while true; do
 done
 
 sleep $(($RANDOM % 10))
-${sequencer}_start.sh ${flowcell} ${sourceDir}/${targetDir} ${sequencer} ${label} ${mismatch}
+${sequencer}_start.sh -f ${flowcell} -sd ${sourceDir}/${targetDir} -s ${sequencer} -l ${label} -m ${mismatch}
 
