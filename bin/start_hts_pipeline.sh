@@ -19,8 +19,8 @@ eval set -- "$PARSED"
 while true; do
     case "$1" in
         -m|--mismatch)
-            mismatch=y
-            shift
+            mismatch="$2"
+            shift 2
             ;;
         --)
             shift

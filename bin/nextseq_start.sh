@@ -20,24 +20,24 @@ eval set -- "$PARSED"
 while true; do
     case "$1" in
         -f|--flowcell)
-            FC_ID=y
-            shift
+            FC_ID="$2"
+            shift 2
             ;;
         -sd|--source-dir)
-            SOURCE_DIR=y
-            shift
+            SOURCE_DIR="$2"
+            shift 2
             ;;
         -s|--sequencer)
-            SEQ=y
-            shift
+            SEQ="$2"
+            shift 2
             ;;
         -l|--label)
-            LABEL=y
-            shift
+            LABEL="$2"
+            shift 2
             ;;
         -m|--mismatch)
-            MISMATCH=y
-            shift
+            MISMATCH="$2"
+            shift 2
             ;;
         --)
             shift
