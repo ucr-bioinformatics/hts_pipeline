@@ -8,12 +8,13 @@
 #SBATCH --mail-type=ALL
 #SBATCH -p short
 
-SHORT=dfo:v
-LONG=debug,force,output:,verbose
+SHORT=s:f:S:T:l:p:m
+LONG=sequencer:,flowcell:,source-dir:,target-dir:,label:,pipeline-home:,mismatch:
 
-PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
+PARSED="$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")"
 
 if [[ $? -ne 0 ]]; then
+    echo "Usage: "
     exit 2
 fi
 eval set -- "$PARSED"
@@ -21,32 +22,32 @@ eval set -- "$PARSED"
 while true; do
     case "$1" in
         -s|--seq)
-            sequencer=y
-            shift
+            sequencer="$2"
+            shift 2
             ;;
         -f|--flowcell)
-            flowcell=y
-            shift
+            flowcell="$2"
+            shift 2
             ;;
-        -sd|--source-dir)
-            sourceDir=y
-            shift
+        -S|--source-dir)
+            sourceDir="$2"
+            shift 2
             ;;
-        -td|--target-dir)
-            targetDir=y
-            shift
+        -T|--target-dir)
+            targetDir="$2"
+            shift 2
             ;;
         -l|--label)
-            label=y
-            shift
+            label="$2"
+            shift 2
             ;;
         -p|--pipeline-home)
-            pipelineHome=y
-            shift
+            pipelineHome="$2"
+            shift 2
             ;;
         -m|--mismatch)
-            mismatch=y
-            shift
+            mismatch="$2"
+            shift 2
             ;;
         --)
             shift
@@ -60,5 +61,5 @@ while true; do
 done
 
 sleep $(($RANDOM % 10))
-${sequencer}_start.sh -f ${flowcell} -sd ${sourceDir}/${targetDir} -s ${sequencer} -l ${label} -m ${mismatch}
+${sequencer}_start.sh -f "${flowcell}" -sd "${sourceDir}/${targetDir}" -s "${sequencer}" -l "${label}" -m "${mismatch}"
 
