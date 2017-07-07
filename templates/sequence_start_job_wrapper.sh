@@ -56,6 +56,7 @@ while true; do
     esac
 done
 
+echo "${sequencer} detected"
 sleep $(($RANDOM % 10))
 ${sequencer}_start.sh --flowcell "${flowcell}" --dir "${sourceDir}/${targetDir}" -m "${mismatch}"
 
