@@ -6,7 +6,32 @@
 
 echo "started running"
 
-EXTRA_FLAGS="$1"
+SHORT=dfo:v
+LONG=debug,force,output:,verbose
+
+PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
+if [[ $? -ne 0 ]]; then
+    exit 2
+fi
+# use eval with "$PARSED" to properly handle the quoting
+eval set -- "$PARSED"
+
+while true; do
+    case "$1" in
+        -m|--mismatch)
+            mismatch=y
+            shift
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            echo "Programming error"
+            exit 3
+            ;;
+    esac
+done
 
 # Set global vars
 source "$HTS_PIPELINE_HOME/env_profile.sh"
@@ -76,7 +101,7 @@ EOF
             echo "Processing ${FC_ID} from ${SOURCE_DIR}/$dir" >> "${HTS_PIPELINE_HOME}/log/${SEQ}_pipeline.log"
             #echo ${SEQ}_start.sh ${FC_ID} ${SOURCE_DIR}/$dir ${SEQ} ${label}| qsub -l nodes=1:ppn=32,mem=50gb,walltime=20:00:00 -j oe -o ${HTS_PIPELINE_HOME}/log/${SEQ}_start.log -m bea -M ${NOTIFY_EMAIL}
             module load slurm
-            sbatch sequence_start_job_wrapper.sh "${SEQ}" "${FC_ID}" "${SOURCE_DIR}" "$dir" "${label}" "${HTS_PIPELINE_HOME}" "${NOTIFY_EMAIL}" "${EXTRA_FLAGS}"
+            sbatch sequence_start_job_wrapper.sh "${SEQ}" "${FC_ID}" "${SOURCE_DIR}" "$dir" "${label}" "${HTS_PIPELINE_HOME}" "${NOTIFY_EMAIL}" "${mismatch}"
 
         fi
     fi
