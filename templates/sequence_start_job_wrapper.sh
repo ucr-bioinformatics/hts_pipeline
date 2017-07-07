@@ -8,5 +8,57 @@
 #SBATCH --mail-type=ALL
 #SBATCH -p short
 
+SHORT=dfo:v
+LONG=debug,force,output:,verbose
+
+PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
+
+if [[ $? -ne 0 ]]; then
+    exit 2
+fi
+eval set -- "$PARSED"
+
+while true; do
+    case "$1" in
+        -s|--seq)
+            sequencer=y
+            shift
+            ;;
+        -f|--flowcell)
+            flowcell=y
+            shift
+            ;;
+        -sd|--source-dir)
+            sourceDir=y
+            shift
+            ;;
+        -td|--target-dir)
+            targetDir=y
+            shift
+            ;;
+        -l|--label)
+            label=y
+            shift
+            ;;
+        -p|--pipeline-home)
+            pipelineHome=y
+            shift
+            ;;
+        -m|--mismatch)
+            mismatch=y
+            shift
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            echo "Programming error"
+            exit 3
+            ;;
+    esac
+done
+
 sleep $(($RANDOM % 10))
-${1}_start.sh ${2} ${3}/${4} ${1} ${5} ${8}
+${sequencer}_start.sh ${flowcell} ${sourceDir}/${targetDir} ${sequencer} ${label} ${mismatch}
+
