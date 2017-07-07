@@ -1,28 +1,60 @@
 #!/bin/bash -l
 
-#############################################
+###############################################
 # Check for NextSeq data and execute pipeline #
-#############################################
+###############################################
 
 # Set global vars
 source "$HTS_PIPELINE_HOME/env_profile.sh"
 
-# Check Arguments
-EXPECTED_ARGS=4
-E_BADARGS=65
+SHORT=dfo:v
+LONG=debug,force,output:,verbose
 
-if [ $# -lt $EXPECTED_ARGS ]
-then
-  echo "Usage: $(basename "$0") FC_ID {/path/to/source} SEQ LABEL [MISMATCH = 1]"
-  exit $E_BADARGS
+PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
+
+if [[ $? -ne 0 ]]; then
+    exit 2
+fi
+eval set -- "$PARSED"
+
+while true; do
+    case "$1" in
+        -f|--flowcell)
+            FC_ID=y
+            shift
+            ;;
+        -sd|--source-dir)
+            SOURCE_DIR=y
+            shift
+            ;;
+        -s|--sequencer)
+            SEQ=y
+            shift
+            ;;
+        -l|--label)
+            LABEL=y
+            shift
+            ;;
+        -m|--mismatch)
+            MISMATCH=y
+            shift
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            echo "Programming error"
+            exit 3
+            ;;
+    esac
+done
+
+if [[ -z "$MISMATCH" ]]; then
+    MISMATCH=1
 fi
 
 # Change directory to source
-FC_ID=$1
-SOURCE_DIR=$2
-SEQ=$3
-LABEL=$4
-MISMATCH="${5:-1}"
 cd "$SOURCE_DIR"
 
 # Check for SampleSheet
