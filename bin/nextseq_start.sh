@@ -7,8 +7,8 @@
 # Set global vars
 source "$HTS_PIPELINE_HOME/env_profile.sh"
 
-SHORT=dfo:v
-LONG=debug,force,output:,verbose
+SHORT=f:d:s:l:m:
+LONG=flowcell:,dir:,sequencer:,label:,mismatch:
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 
@@ -23,7 +23,7 @@ while true; do
             FC_ID="$2"
             shift 2
             ;;
-        -sd|--source-dir)
+        -d|--dir)
             SOURCE_DIR="$2"
             shift 2
             ;;
