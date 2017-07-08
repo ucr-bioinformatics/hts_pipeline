@@ -7,8 +7,8 @@
 # Set global vars
 source "$HTS_PIPELINE_HOME/env_profile.sh"
 
-SHORT=f:d:m:
-LONG=flowcell:,dir:,mismatch:
+SHORT=f:d:m:D
+LONG=flowcell:,dir:,mismatch:,dev
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 
@@ -19,6 +19,10 @@ eval set -- "$PARSED"
 
 while true; do
     case "$1" in
+        -D|--dev)
+            DEV=y
+            shift
+            ;;
         -f|--flowcell)
             FC_ID="$2"
             shift 2
@@ -245,14 +249,17 @@ if [[ -f $complete_file ]]; then
         fi
     fi
 
-
-    CMD="sequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID"
-    echo -e "==== URL STEP ====\n${CMD}" >> "$ERROR_FILE"
-    if [ $ERROR -eq 0 ]; then 
-        ${CMD} &>> "$ERROR_FILE"
-        if [ $? -ne 0 ]; then
-            echo "ERROR: Illumina URL update failed" >> "$ERROR_FILE" && ERROR=1
-        fi  
+    if [[ "$DEV" != "y" ]]; then
+        CMD="sequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID"
+        echo -e "==== URL STEP ====\n${CMD}" >> "$ERROR_FILE"
+        if [ $ERROR -eq 0 ]; then 
+            ${CMD} &>> "$ERROR_FILE"
+            if [ $? -ne 0 ]; then
+                echo "ERROR: Illumina URL update failed" >> "$ERROR_FILE" && ERROR=1
+            fi  
+        fi
+    else
+        echo "URL Step skipped (in dev mode)" >> "$ERROR_FILE"
     fi
 
     # Remove lock files
