@@ -8,8 +8,8 @@
 #SBATCH --mail-type=ALL
 #SBATCH -p short
 
-SHORT=s:f:S:T:p:m:
-LONG=sequencer:,flowcell:,source-dir:,target-dir:,pipeline-home:,mismatch:
+SHORT=s:f:S:T:p:m:D
+LONG=sequencer:,flowcell:,source-dir:,target-dir:,pipeline-home:,mismatch:,dev
 
 PARSED="$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")"
 
@@ -21,6 +21,10 @@ eval set -- "$PARSED"
 
 while true; do
     case "$1" in
+        -D|--dev)
+            DEV=y
+            shift
+            ;;
         -s|--seq)
             sequencer="$2"
             shift 2
@@ -57,6 +61,11 @@ while true; do
 done
 
 echo "${sequencer} detected"
+
+if [[ "$DEV" == "y" ]]; then
+    APPEND="--dev"
+fi
+
 sleep $(($RANDOM % 10))
-${sequencer}_start.sh --flowcell "${flowcell}" --dir "${sourceDir}/${targetDir}" -m "${mismatch}"
+${sequencer}_start.sh --flowcell "${flowcell}" --dir "${sourceDir}/${targetDir}" -m "${mismatch}" "${APPEND}"
 
