@@ -6,8 +6,8 @@
 
 echo "started running"
 
-SHORT=dfo:vD
-LONG=debug,force,output:,dev
+SHORT=m:D
+LONG=mismatch:,dev
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 if [[ $? -ne 0 ]]; then
