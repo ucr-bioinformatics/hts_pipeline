@@ -11,17 +11,51 @@ source $HTS_PIPELINE_HOME/env_profile.sh
 EXPECTED_ARGS=4
 E_BADARGS=65
 
-if [ $# -ne $EXPECTED_ARGS ]
-then
-  echo "Usage: `basename $0` FC_ID {/path/to/source} SEQ LABEL"
-  exit $E_BADARGS
+SHORT=f:d:m:D
+LONG=flowcell:,dir:,mismatch:,dev
+
+PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
+
+if [[ $? -ne 0 ]]; then
+    exit 2
+fi
+eval set -- "$PARSED"
+
+while true; do
+    case "$1" in
+        -D|--dev)
+            DEV=y
+            shift
+            ;;
+        -f|--flowcell)
+            FC_ID="$2"
+            shift 2
+            ;;
+        -d|--dir)
+            SOURCE_DIR="$2"
+            shift 2
+            ;;
+        -m|--mismatch)
+            MISMATCH="$2"
+            shift 2
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            echo "Programming error"
+            exit 3
+            ;;
+    esac
+done
+
+SEQ="hiseq"
+if [[ -z "$MISMATCH" ]]; then
+    MISMATCH=1
 fi
 
 # Change directory to source
-FC_ID=$1
-SOURCE_DIR=$2
-SEQ=$3
-LABEL=$4
 cd $SOURCE_DIR
 
 # Check for SampleSheet
@@ -273,16 +307,21 @@ if [ -f $complete_file ]; then
     fi
    
     # Update Illumina web server URLs
-    CMD="sequence_url_update.R $FC_ID 8 $SHARED_GENOMICS/$FC_ID"
-    echo -e "==== URL STEP ====\n${CMD}" >> $ERROR_FILE
-    if [ $ERROR -eq 0 ]; then 
-        ${CMD} &>> $ERROR_FILE
-        if [ $? -ne 0 ]; then
-            echo "ERROR: Illumina URL update failed" >> $ERROR_FILE && ERROR=1
-        fi
-    fi
-
-    # Remove lock files
+	if [[ "$DEV" != "y" ]]; then
+		CMD="sequence_url_update.R $FC_ID 1 $SHARED_GENOMICS/$FC_ID"
+		echo -e "==== URL STEP ====\n${CMD}" >> "$ERROR_FILE"
+		if [ $ERROR -eq 0 ]; then
+			${CMD} &>> "$ERROR_FILE"
+			if [ $? -ne 0 ]; then
+				echo "ERROR: Illumina URL update failed" >> "$ERROR_FILE" && ERROR=1
+			fi
+		fi
+	else
+    	echo "URL Step skipped (in dev mode)" >> "$ERROR_FILE"
+	fi
+   
+	 
+	# Remove lock files
     rm -f ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$lockfile
 fi
 
