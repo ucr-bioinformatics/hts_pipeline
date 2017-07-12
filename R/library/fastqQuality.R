@@ -180,7 +180,12 @@ seeFastqPlot <- function(fqlist, arrange=c(1,2,3,4,5,8,6,7), ...) {
 		
 		## (F) Distribution of mean quality of reads
 		fstats <- x[[1]][["fstats"]]
-		f <- ggplot(fstats, aes(Quality, Percent)) +
+        if("Percent.Freq" %in% colnames(fstats)) {
+            tmp = ggplot(fstats, aes(Quality, Percent.Freq))
+        } else {
+            tmp = ggplot(fstats, aes(Quality, Percent))
+        }
+		f <-            tmp +
                         geom_bar(fill="#0072B2", stat="identity") +
                         theme(legend.position = "none", plot.title = element_text(size = 9)) +
                         ggtitle(paste(formatC(x[[1]][["fqstats"]][["batchsize"]], big.mark = ",", format="f", digits=0), "of", formatC(x[[1]][["fqstats"]][["nReads"]], big.mark = ",", format="f", digits=0), "Reads")) + 

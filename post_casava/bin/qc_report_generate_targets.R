@@ -7,6 +7,8 @@
 # Get script arguments
 args <- commandArgs(trailingOnly = TRUE)
 #args <- c(221,2,'/shared/genomics/221/','/bigdata/nkatiyar/QC_flowcells/221/')
+#args <- c(637,2,'/bigdata/genomics/wshiao/genomics_shared/637/','/bigdata/genomics/wshiao/genomics_shared/637/fastq_report/','/bigdata/genomics/wshiao/genomics_shared/637/170531_M02457_0158_000000000-B46KP/SampleSheet.csv',1)
+
 if (length(args) < 6) {
     stop("USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>")
 }
@@ -246,4 +248,3 @@ for (lane in uniq_lane_list) {
 
 print("QC report completed")
 warnings()
-
