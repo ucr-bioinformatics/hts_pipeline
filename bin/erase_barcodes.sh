@@ -9,6 +9,7 @@ fi
 
 SAMPLESHEET="$1"
 TMP_SAMPLESHEET="$1.tmp"
+COLUMN_NUM="$2"
 
 # Handle the case of $SAMPLESHEET.tmp already existing by appending another .tmp
 while [ -f "$TMP_SAMPLESHEET" ]; do
