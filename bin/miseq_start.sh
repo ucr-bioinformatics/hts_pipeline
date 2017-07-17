@@ -156,11 +156,19 @@ if [ -f $complete_file ]; then
        NUMFILES=3
     fi 
  
+    # Special case where there are dual barcodes and the user will demultiplex
+    if [ $dual_index_flag -eq 1 ] && [ ${#barcode} -eq 0 ];
+        BASEMASK="Y*,I*,I*,Y*"
+        EXTRA_FLAG="--create-fastq-for-index-reads"
+    fi
+
+
+
     # Demuxing step
     # They demux
     #CMD="bcl2fastq_run.sh ${FC_ID} $run_dir Y*,Y* ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
     # We demux
-    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $MUX \"\" "
+    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $MUX \"\" ${EXTRA_FLAG}"
     echo -e "==== DEMUX STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         cd $SHARED_GENOMICS/$FC_ID
