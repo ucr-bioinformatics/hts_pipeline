@@ -157,7 +157,7 @@ if [ -f $complete_file ]; then
     fi 
  
     # Special case where there are dual barcodes and the user will demultiplex
-    if [ $dual_index_flag -eq 1 ] && [ ${#barcode} -eq 0 ];
+    if [ $dual_index_flag -eq 1 ] && [ ${#barcode} -eq 0 ]; then
         BASEMASK="Y*,I*,I*,Y*"
         EXTRA_FLAG="--create-fastq-for-index-reads"
     fi
