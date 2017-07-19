@@ -15,7 +15,15 @@ while [ -f "$TMP_SAMPLESHEET" ]; do
     TMP_SAMPLESHEET="${TMP_SAMPLESHEET}.tmp"
 done
 
-awk -F',' '
+if [ $DUAL_BARCODES -eq 1 ]; then
+    START_COL=5
+    END_COL=8
+else
+    START_COL=6
+    END_COL=6
+fi
+
+awk -F',' -v startCol="$START_COL" -v endCol="$END_COL" '
 BEGIN {
     OFS = FS;
 }
@@ -30,10 +38,11 @@ BEGIN {
 }
 
 {if(process == 1) {
-    $6="";
+    for(i = startCol; i <= endCol; i++)
+        $i = ""
     print $0;
     exit
-}}'
+}}' "$SAMPLESHEET" > "$TMP_SAMPLESHEET"
 
 if [ "$PRINT_ONLY" == "1" ]; then
     cat "$TMP_SAMPLESHEET"
