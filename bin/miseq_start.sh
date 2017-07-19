@@ -7,8 +7,8 @@
 # Set global vars
 source $HTS_PIPELINE_HOME/env_profile.sh
 
-SHORT=f:d:m:D
-LONG=flowcell:,dir:,mismatch:,dev
+SHORT=f:d:m:Du
+LONG=flowcell:,dir:,mismatch:,dev,user-demultiplex
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 
@@ -34,6 +34,9 @@ while true; do
         -m|--mismatch)
             MISMATCH="$2"
             shift 2
+            ;;
+        -u|--user-demultiplex)
+            USER_DEMULTIPLEX=1
             ;;
         --)
             shift
@@ -162,11 +165,22 @@ if [ -f $complete_file ]; then
         EXTRA_FLAG="--create-fastq-for-index-reads"
     fi
 
+    if [ "$USER_DEMULTIPLEX" -eq 1 ]; then
+        BACKUP_SS="ss_backup.csv.bak"
+        TARGET_DIR="${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/"
+
+        while [ -f "${TARGET_DIR}/${BACKUP_SS}" ]; do
+            BACKUP_SS="${BACKUP_SS}.bak"
+        done
+        cp "${TARGET_DIR}/SampleSheet.csv" "${TARGET_DIR}/${BACKUP_SS}"
+
+        trim_samplesheet.sh "${TARGET_DIR}/SampleSheet.csv" ${dual_index_flag:-0}
+    fi
 
 
     # Demuxing step
     # They demux
-    #CMD="bcl2fastq_run.sh ${FC_ID} $run_dir Y*,Y* ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
+    #CMD="bcl2fastq_run.sh ${FC_ID} $run_dir Y*,Y* ${${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
     # We demux
     CMD="bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $MUX \"\" ${EXTRA_FLAG}"
     echo -e "==== DEMUX STEP ====\n${CMD}" >> $ERROR_FILE
