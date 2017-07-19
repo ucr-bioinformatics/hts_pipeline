@@ -180,10 +180,10 @@ seeFastqPlot <- function(fqlist, arrange=c(1,2,3,4,5,8,6,7), ...) {
 		
 		## (F) Distribution of mean quality of reads
 		fstats <- x[[1]][["fstats"]]
-        if("Percent.Freq" %in% colnames(fstats)) {
-            tmp = ggplot(fstats, aes(Quality, Percent.Freq))
-        } else {
+        if("Percent" %in% colnames(fstats)) {
             tmp = ggplot(fstats, aes(Quality, Percent))
+        } else {
+            tmp = ggplot(fstats, aes(Quality, Percent.Freq))
         }
 		f <-            tmp +
                         geom_bar(fill="#0072B2", stat="identity") +

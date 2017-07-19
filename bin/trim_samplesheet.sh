@@ -1,0 +1,1 @@
+../pre_casava/bin/trim_samplesheet.sh
