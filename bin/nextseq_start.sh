@@ -79,8 +79,11 @@ if [[ -f $complete_file ]]; then
     export ERROR_FILE="$SHARED_GENOMICS/$FC_ID/error.log"
     mkdir -p "$SHARED_GENOMICS/$FC_ID"
     echo "Starting Pipeline" > "$ERROR_FILE"
-    echo "Using mismatch of $MISMATCH" > "$ERROR_FILE"
-
+    echo "Using mismatch of $MISMATCH" >> "$ERROR_FILE"
+    
+    if [[ ! -z "$adapterSequence1" ]]; then
+        echo "Using adapter sequence of ${adapterSequence1}" >> "$ERROR_FILE"
+    fi
     ##################
     # Pipeline Steps #
     ##################
