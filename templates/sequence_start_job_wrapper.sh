@@ -81,6 +81,10 @@ if [[ ! -z "$adapterSequence1" ]]; then
     fi
 fi
 
+if [[ ! -z "$APPEND" ]]; then
+    echo "Appending '${APPEND}' to ${sequencer_start}.sh"
+fi
+
 sleep $(($RANDOM % 10))
 ${sequencer}_start.sh --flowcell "${flowcell}" --dir "${sourceDir}/${targetDir}" -m "${mismatch}" "${APPEND}"
 

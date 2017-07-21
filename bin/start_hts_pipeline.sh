@@ -49,6 +49,13 @@ if [[ "$DEV" == "y" ]]; then
     echo "Running in development mode"
 fi
 
+if [[ ! -z "$adapterSequence1" ]]; then
+    echo "Using adapterSequence1: ${adapterSequence1}"
+    if [[ ! -z "$adapterSequence2" ]]; then
+        echo "Using adapterSequence2: ${adapterSequence2}"
+    fi
+fi
+
 # Set global vars
 source "$HTS_PIPELINE_HOME/env_profile.sh"
 source "$HTS_PIPELINE_HOME/bin/load_hts_passwords.sh"
