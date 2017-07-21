@@ -7,7 +7,7 @@
 echo "started running"
 
 SHORT=m:D:q:Q:
-LONG=mismatch:,dev,adapter-sequence1:,adapter-sequence2
+LONG=mismatch:,dev,adapter-sequence1:,adapter-sequence2:
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 if [[ $? -ne 0 ]]; then
