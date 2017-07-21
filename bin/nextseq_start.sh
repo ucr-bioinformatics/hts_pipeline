@@ -83,6 +83,8 @@ if [[ -f $complete_file ]]; then
     
     if [[ ! -z "$adapterSequence1" ]]; then
         echo "Using adapter sequence of ${adapterSequence1}" >> "$ERROR_FILE"
+    else
+        echo "Using default adapter sequence" >> "$ERROR_FILE"
     fi
     ##################
     # Pipeline Steps #

@@ -6,8 +6,8 @@
 
 echo "started running"
 
-SHORT=m:Dq:Q:
-LONG=mismatch:,dev,adapter-sequence1:,adapter-sequence2:
+SHORT=m:Dq:Q:m
+LONG=mismatch:,dev,adapter-sequence1:,adapter-sequence2:,--no-mail
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 if [[ $? -ne 0 ]]; then
@@ -18,6 +18,10 @@ eval set -- "$PARSED"
 
 while true; do
     case "$1" in
+        -n|--no-mail)
+            noMail=y
+            shift
+            ;;
         -m|--mismatch)
             mismatch="$2"
             shift 2
@@ -110,10 +114,11 @@ for dir in $dir_list; do
             QUERY="SELECT flowcell_id FROM flowcell_list WHERE label=\"$label\";"
             FC_ID=$(mysql -hillumina.int.bioinfo.ucr.edu -Dprojects -u$DB_USERNAME -p$DB_PASSWORD -N -s -e "${QUERY}")
 
-
-            # Send email notification
-            echo "Sending Mail"
-            /usr/sbin/sendmail -vt << EOF
+            
+            if [[ -z "$noMail" ]]; then
+                # Send email notification
+                echo "Sending Mail"
+                /usr/sbin/sendmail -vt << EOF
 To: ${NOTIFY_EMAIL}
 From: no-reply@biocluster.ucr.edu
 Subject: HTS Pipeline: Flowcell ${FC_ID}: Started
@@ -121,6 +126,7 @@ Subject: HTS Pipeline: Flowcell ${FC_ID}: Started
 Flowcell ${FC_ID} has come in and is being processed.
 Thanks
 EOF
+            fi
             if [[ ! -z "$DEV" ]]; then
                 APPEND="--dev"
             fi
