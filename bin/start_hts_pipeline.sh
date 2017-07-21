@@ -6,7 +6,7 @@
 
 echo "started running"
 
-SHORT=m:D:q:Q:
+SHORT=m:Dq:Q:
 LONG=mismatch:,dev,adapter-sequence1:,adapter-sequence2:
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")

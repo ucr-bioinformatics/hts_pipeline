@@ -8,7 +8,7 @@
 source "$HTS_PIPELINE_HOME/env_profile.sh"
 
 SHORT=f:d:m:Dq:Q:
-LONG=flowcell:,dir:,mismatch:,dev,adapterSequence1:,adapterSequence2:
+LONG=flowcell:,dir:,mismatch:,dev,adapter-sequence1:,adapter-sequence2:
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 
@@ -192,7 +192,7 @@ if [[ -f $complete_file ]]; then
     # They demux
     #CMD="bcl2fastq_run.sh ${FC_ID} $run_dir Y*,Y* ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
     # We demux
-    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $MISMATCH nosplit"
+    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $MISMATCH nosplit ${EXTRA_FLAG}"
     echo -e "==== DEMUX STEP ====\n${CMD}" >> "$ERROR_FILE"
     if [ $ERROR -eq 0 ]; then
         cd "$SHARED_GENOMICS/$FC_ID"
