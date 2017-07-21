@@ -68,8 +68,6 @@ while true; do
     esac
 done
 
-echo "${sequencer} detected"
-
 if [[ "$DEV" == "y" ]]; then
     APPEND="--dev"
 fi
@@ -83,6 +81,8 @@ fi
 
 if [[ ! -z "$APPEND" ]]; then
     echo "Appending '${APPEND}' to ${sequencer_start}.sh"
+else
+    echo "No additional arguments to ${sequencer_start}.sh"
 fi
 
 sleep $(($RANDOM % 10))
