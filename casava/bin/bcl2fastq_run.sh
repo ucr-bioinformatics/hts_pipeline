@@ -2,7 +2,7 @@
 
 # Check Arguments
 MIN_ARGS=6
-MAX_ARGS=7
+MAX_ARGS=10
 E_BADARGS=65
 
 if [ $# -lt $MIN_ARGS ] || [ $# -gt $MAX_ARGS ]; then
@@ -17,6 +17,12 @@ base_mask=$3
 sample_sheet=$4
 barcode_mismatch=$5
 extra_flag="$7"
+
+if [ $# > 7 ]; then 
+    for (( i = 8; i <= $#; i++ )); do
+        extra_flag="${extra_flag} ${$i}"
+    done
+fi
 
 if [[ "$6" == "nosplit" ]]; then
     lane_split="--no-lane-splitting"
