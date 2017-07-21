@@ -7,8 +7,8 @@
 # Set global vars
 source "$HTS_PIPELINE_HOME/env_profile.sh"
 
-SHORT=f:d:m:D
-LONG=flowcell:,dir:,mismatch:,dev
+SHORT=f:d:m:Dq:Q:
+LONG=flowcell:,dir:,mismatch:,dev,adapterSequence1:,adapterSequence2:
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 
@@ -19,6 +19,12 @@ eval set -- "$PARSED"
 
 while true; do
     case "$1" in
+        -q|--adapter-sequence1)
+            adapterSequence1="$2"
+            ;;
+        -Q|--adapter-sequence2)
+            adapterSequence2="$2"
+            ;;
         -D|--dev)
             DEV=y
             shift
@@ -171,6 +177,13 @@ if [[ -f $complete_file ]]; then
        MUX=2
        BASEMASK="Y*,Y*,Y*"
        NUMFILES=3
+    fi
+
+    if [[ ! -z "$adapterSequence1" ]]; then
+        EXTRA_FLAG="--adapter-sequence ${adapterSequence1}"
+        if [[ ! -z "$adapterSequence2" ]]; then
+            EXTRA_FLAG="${EXTRA_FLAG} --adapter-sequence ${adapterSequence2} "
+        fi
     fi
     
     # Create Sample Sheet

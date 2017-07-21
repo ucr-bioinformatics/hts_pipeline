@@ -8,8 +8,8 @@
 #SBATCH --mail-type=ALL
 #SBATCH -p short
 
-SHORT=s:f:S:T:p:m:D
-LONG=sequencer:,flowcell:,source-dir:,target-dir:,pipeline-home:,mismatch:,dev
+SHORT=s:f:S:T:p:m:Dq:Q:
+LONG=sequencer:,flowcell:,source-dir:,target-dir:,pipeline-home:,mismatch:,dev,adapter-sequence1:,adapter-sequence2:
 
 PARSED="$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")"
 
@@ -21,6 +21,12 @@ eval set -- "$PARSED"
 
 while true; do
     case "$1" in
+        -q|--adapter-sequence1)
+            adapterSequence1="$2"
+            ;;
+        -Q|--adapter-sequence2)
+            adapterSequence2="$2"
+            ;;
         -D|--dev)
             DEV=y
             shift
@@ -64,6 +70,13 @@ echo "${sequencer} detected"
 
 if [[ "$DEV" == "y" ]]; then
     APPEND="--dev"
+fi
+
+if [[ ! -z "$adapterSequence1" ]]; then
+    APPEND="${APPEND} --adapter-sequence1 ${adapterSequence1}"
+    if [[ ! -z "$adapterSequence2" ]]; then
+        APPEND="${APPEND} --adapter-sequence2 ${adapterSequence2}"
+    fi
 fi
 
 sleep $(($RANDOM % 10))
