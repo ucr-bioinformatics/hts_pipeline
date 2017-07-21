@@ -28,9 +28,11 @@ while true; do
             ;;
         -q|--adapter-sequence1)
             adapterSequence1="$2"
+            shift 2
             ;;
         -Q|--adapter-sequence2)
             adapterSequence2="$2"
+            shift 2
             ;;
         --)
             shift
