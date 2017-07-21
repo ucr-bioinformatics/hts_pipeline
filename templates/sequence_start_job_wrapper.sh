@@ -8,8 +8,8 @@
 #SBATCH --mail-type=ALL
 #SBATCH -p short
 
-SHORT=s:f:S:T:p:m:Dq:Q:
-LONG=sequencer:,flowcell:,source-dir:,target-dir:,pipeline-home:,mismatch:,dev,adapter-sequence1:,adapter-sequence2:
+SHORT=s:f:S:T:p:m:D
+LONG=sequencer:,flowcell:,source-dir:,target-dir:,pipeline-home:,mismatch:,dev
 
 PARSED="$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")"
 
@@ -21,14 +21,6 @@ eval set -- "$PARSED"
 
 while true; do
     case "$1" in
-        -q|--adapter-sequence1)
-            adapterSequence1="$2"
-            shift 2
-            ;;
-        -Q|--adapter-sequence2)
-            adapterSequence2="$2"
-            shift 2
-            ;;
         -D|--dev)
             DEV=y
             shift
@@ -72,19 +64,6 @@ if [[ "$DEV" == "y" ]]; then
     APPEND="--dev"
 fi
 
-if [[ ! -z "$adapterSequence1" ]]; then
-    APPEND="${APPEND} --adapter-sequence1 ${adapterSequence1}"
-    if [[ ! -z "$adapterSequence2" ]]; then
-        APPEND="${APPEND} --adapter-sequence2 ${adapterSequence2}"
-    fi
-fi
-
-if [[ ! -z "$APPEND" ]]; then
-    echo "Appending '${APPEND}' to ${sequencer}_start.sh"
-else
-    echo "No additional arguments to ${sequencer}_start.sh"
-fi
-
 sleep $(($RANDOM % 10))
-${sequencer}_start.sh --flowcell "${flowcell}" --dir "${sourceDir}/${targetDir}" -m "${mismatch}" ${APPEND}
+${sequencer}_start.sh --flowcell "${flowcell}" --dir "${sourceDir}/${targetDir}" -m "${mismatch}" ${APPEND:-}
 

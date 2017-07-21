@@ -6,8 +6,8 @@
 
 echo "started running"
 
-SHORT=m:Dq:Q:n
-LONG=mismatch:,dev,adapter-sequence1:,adapter-sequence2:,no-mail
+SHORT=m:Dn
+LONG=mismatch:,dev,no-mail
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 if [[ $? -ne 0 ]]; then
@@ -30,14 +30,6 @@ while true; do
             DEV=y
             shift
             ;;
-        -q|--adapter-sequence1)
-            adapterSequence1="$2"
-            shift 2
-            ;;
-        -Q|--adapter-sequence2)
-            adapterSequence2="$2"
-            shift 2
-            ;;
         --)
             shift
             break
@@ -51,13 +43,6 @@ done
 
 if [[ "$DEV" == "y" ]]; then
     echo "Running in development mode"
-fi
-
-if [[ ! -z "$adapterSequence1" ]]; then
-    echo "Using adapterSequence1: ${adapterSequence1}"
-    if [[ ! -z "$adapterSequence2" ]]; then
-        echo "Using adapterSequence2: ${adapterSequence2}"
-    fi
 fi
 
 # Set global vars
@@ -129,13 +114,6 @@ EOF
             fi
             if [[ ! -z "$DEV" ]]; then
                 APPEND="--dev"
-            fi
-
-            if [[ ! -z "$adapterSequence1" ]]; then
-                APPEND="${APPEND} --adapter-sequence1 ${adapterSequence1}"
-                if [[ ! -z "$adapterSequence2" ]]; then
-                    APPEND="${APPEND} --adapter-sequence2 ${adapterSequence2}"
-                fi
             fi
 
             echo "Processing ${FC_ID} from ${SOURCE_DIR}/$dir" >> "${HTS_PIPELINE_HOME}/log/${SEQ}_pipeline.log"

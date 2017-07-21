@@ -7,8 +7,8 @@
 # Set global vars
 source "$HTS_PIPELINE_HOME/env_profile.sh"
 
-SHORT=f:d:m:Dq:Q:
-LONG=flowcell:,dir:,mismatch:,dev,adapter-sequence1:,adapter-sequence2:
+SHORT=f:d:m:D
+LONG=flowcell:,dir:,mismatch:,dev
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 
@@ -19,14 +19,6 @@ eval set -- "$PARSED"
 
 while true; do
     case "$1" in
-        -q|--adapter-sequence1)
-            adapterSequence1="$2"
-            shift 2
-            ;;
-        -Q|--adapter-sequence2)
-            adapterSequence2="$2"
-            shift 2
-            ;;
         -D|--dev)
             DEV=y
             shift
