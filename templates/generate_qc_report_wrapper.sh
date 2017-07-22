@@ -8,9 +8,13 @@
 #SBATCH --mail-type=ALL
 #SBATCH -p short 
 
+FILES="$4"
+
+echo "Generating QC report for ${FILES}"
+
 module load fastqc
-if [ "${4}" == "0" ]; then
-    fastqc -o ${1}/${2}/fastq_report/ ${3}
+if [ "${3}" == "0" ]; then
+    fastqc -t 10 -o ${1}/${2}/fastq_report/ ${FILES}
 else
-    fastqc -o ${1}/${2}/fastq_report/fastq_report_lane${4}/ ${3}
+    fastqc -o ${1}/${2}/fastq_report/fastq_report_lane${3}/ ${FILES}
 fi
