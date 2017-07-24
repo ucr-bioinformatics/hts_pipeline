@@ -2,19 +2,18 @@
 
 # Check number of arguments
 if (( $# < 1 )); then
-    echo "Usage: $(basename $0) FC_ID [NUM_LANES]"
+    echo "Usage: $(basename $0) FC_ID [NUM_LANES = 0] [SUBMIT_JOB = 0]"
     exit 1
 fi
 
 FC_ID=$1
-if (( $# == 1 )); then
-    NUM_LANES=0
-else
-    NUM_LANES=$2
-fi
+NUM_LANES=${2:-0}
+SUBMIT_JOB=${3:-0}
 
 # Generate second QC report
-if (( NUM_LANES == 0 )); then
+if (( NUM_LANES == 0 && SUBMIT_JOB == 0 )); then
+    fastqc -t 10 -o "${SHARED_GENOMICS}/${FC_ID}/fastq_report/" "$(echo $SHARED_GENOMICS/$FC_ID/*.fastq.gz)"
+elif (( NUM_LANES == 0 && SUBMIT_JOB == 1)); then
     module load slurm
     sbatch generate_qc_report_wrapper.sh ${SHARED_GENOMICS} ${FC_ID} 0 "$(echo $SHARED_GENOMICS/$FC_ID/*.fastq.gz)"
     if [ $? -ne 0 ]; then
@@ -22,7 +21,7 @@ if (( NUM_LANES == 0 )); then
         exit 1
     fi
 else
-    for (( i=1; i<=$NUM_LANES; i++ ))
+    for (( i = 1; i <= NUM_LANES; i++ ))
     do
         mkdir -p fastq_report/fastq_report_lane${i}/
         ls $SHARED_GENOMICS/$FC_ID/*lane${i}*.fastq.gz > $SHARED_GENOMICS/$FC_ID/file_list_new${i}.txt
