@@ -10,4 +10,7 @@
 
 module load trim_galore
 module load fastqc
-trim_galore ${3} --fastqc -o ${1}/${2}/
+OUT_DIR="${1}/${2}/fastqc_trimmed"
+
+mkdir -p "$OUT_DIR"
+trim_galore ${3} --fastqc_args "--outdir ${OUT_DIR}" -o "${1}/${2}/"
