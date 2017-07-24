@@ -7,8 +7,8 @@
 # Set global vars
 source "$HTS_PIPELINE_HOME/env_profile.sh"
 
-SHORT=f:d:m:D
-LONG=flowcell:,dir:,mismatch:,dev
+SHORT=f:d:m:Dt
+LONG=flowcell:,dir:,mismatch:,dev,trim-galore
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 
@@ -19,6 +19,10 @@ eval set -- "$PARSED"
 
 while true; do
     case "$1" in
+        -t|--trim-galore)
+            TRIM_GALORE=y
+            shift
+            ;;
         -D|--dev)
             DEV=y
             shift
@@ -57,7 +61,7 @@ cd "$SOURCE_DIR"
 # Check for SampleSheet
 complete_file=$(find "$SOURCE_DIR" -name RTAComplete.txt)
 
-if [[ -f $complete_file ]]; then
+if [ -f "$complete_file" ]; then
     # Determine sequencer run directory
     run_dir=$(dirname "$complete_file")
     run_dir=$(basename "$run_dir")
@@ -258,6 +262,18 @@ if [[ -f $complete_file ]]; then
         ${CMD} &>> "$ERROR_FILE"
         if [ $? -ne 0 ]; then
             echo "ERROR: FastQC report generation failed" >> "$ERROR_FILE" && ERROR=1
+        fi
+    fi
+
+    if [[ ! -z "$TRIM_GALORE" ]]; then
+        # Run Trim Galore! script
+        CMD="run_trim_galore.sh $FC_ID"
+        echo -e "==== Run Trim Galore! ====\n${CMD}" >> "$ERROR_FILE"
+        if [ $ERROR -eq 0 ]; then
+            ${CMD} &>> "$ERROR_FILE"
+            if [ $? -ne 0 ]; then
+                echo "ERROR: Failed to add Trim Galore! script to slurm queue" >> "$ERROR_FILE" && ERROR=1
+            fi
         fi
     fi
 

@@ -8,8 +8,8 @@
 #SBATCH --mail-type=ALL
 #SBATCH -p short
 
-SHORT=s:f:S:T:p:m:D
-LONG=sequencer:,flowcell:,source-dir:,target-dir:,pipeline-home:,mismatch:,dev
+SHORT=s:f:S:T:p:m:Dt
+LONG=sequencer:,flowcell:,source-dir:,target-dir:,pipeline-home:,mismatch:,dev,trim-galore
 
 PARSED="$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")"
 
@@ -21,6 +21,10 @@ eval set -- "$PARSED"
 
 while true; do
     case "$1" in
+        -t|--trim-galore)
+            trimGalore=y
+            shift
+            ;;
         -D|--dev)
             DEV=y
             shift
@@ -62,6 +66,10 @@ done
 
 if [[ "$DEV" == "y" ]]; then
     APPEND="--dev"
+fi
+
+if [[ "$trimGalore" == "y" ]]; then
+    APPEND="${APPEND} --trim-galore"
 fi
 
 sleep $(($RANDOM % 10))

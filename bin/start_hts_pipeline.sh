@@ -6,8 +6,8 @@
 
 echo "started running"
 
-SHORT=m:Dn
-LONG=mismatch:,dev,no-mail
+SHORT=m:Dnt
+LONG=mismatch:,dev,no-mail,trim-galore
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 if [[ $? -ne 0 ]]; then
@@ -18,6 +18,10 @@ eval set -- "$PARSED"
 
 while true; do
     case "$1" in
+        -t|--trim-galore)
+            trimGalore=y
+            shift
+            ;;
         -n|--no-mail)
             noMail=y
             shift
@@ -112,8 +116,13 @@ Flowcell ${FC_ID} has come in and is being processed.
 Thanks
 EOF
             fi
+
             if [[ ! -z "$DEV" ]]; then
                 APPEND="--dev"
+            fi
+
+            if [[ ! -z "$trimGalore" ]]; then
+                APPEND="${APPEND} --trim-galore"
             fi
 
             echo "Processing ${FC_ID} from ${SOURCE_DIR}/$dir" >> "${HTS_PIPELINE_HOME}/log/${SEQ}_pipeline.log"
