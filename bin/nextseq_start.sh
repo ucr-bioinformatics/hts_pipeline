@@ -7,8 +7,8 @@
 # Set global vars
 source "$HTS_PIPELINE_HOME/env_profile.sh"
 
-SHORT=f:d:m:Dt
-LONG=flowcell:,dir:,mismatch:,dev,trim-galore
+SHORT=f:d:m:DtP:
+LONG=flowcell:,dir:,mismatch:,dev,trim-galore,password-protect:
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 
@@ -19,6 +19,10 @@ eval set -- "$PARSED"
 
 while true; do
     case "$1" in
+        -P|--password-protect)
+            PASSWORD_PROTECT="$2"
+            shift 2
+            ;;
         -t|--trim-galore)
             TRIM_GALORE=y
             shift
@@ -288,6 +292,17 @@ if [ -f "$complete_file" ]; then
         fi
     else
         echo "URL Step skipped (in dev mode)" >> "$ERROR_FILE"
+    fi
+
+    if [[ "$PASSWORD_PROTECT" -eq 1 ]]; then
+        CMD="protect_flowcell ${FC_ID}"
+        echo -e "==== PASSWORD PROTECTION STEP ====\n${CMD}" >> "$ERROR_FILE"
+        if [ "$ERROR" -eq 0 ]; then
+            ${CMD} &>> "$ERROR_FILE"
+            if [ $? -ne 0 ]; then
+                echo "ERROR: Failed to password protect flowcell" >> "$ERROR_FILE" && ERROR=1
+            fi
+        fi
     fi
 
     # Remove lock files

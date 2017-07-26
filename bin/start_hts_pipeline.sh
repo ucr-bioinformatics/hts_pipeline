@@ -6,8 +6,8 @@
 
 echo "started running"
 
-SHORT=m:Dnt
-LONG=mismatch:,dev,no-mail,trim-galore
+SHORT=m:DntP:
+LONG=mismatch:,dev,no-mail,trim-galore,password-protect:
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 if [[ $? -ne 0 ]]; then
@@ -18,6 +18,10 @@ eval set -- "$PARSED"
 
 while true; do
     case "$1" in
+        -P|--password-protect)
+            passwordProtect="$2"
+            shift 2
+            ;;
         -t|--trim-galore)
             trimGalore=y
             shift
@@ -128,7 +132,7 @@ EOF
             echo "Processing ${FC_ID} from ${SOURCE_DIR}/$dir" >> "${HTS_PIPELINE_HOME}/log/${SEQ}_pipeline.log"
             #echo ${SEQ}_start.sh ${FC_ID} ${SOURCE_DIR}/$dir ${SEQ} ${label}| qsub -l nodes=1:ppn=32,mem=50gb,walltime=20:00:00 -j oe -o ${HTS_PIPELINE_HOME}/log/${SEQ}_start.log -m bea -M ${NOTIFY_EMAIL}
             module load slurm
-            sbatch sequence_start_job_wrapper.sh -s "${SEQ}" -f "${FC_ID}" -S "${SOURCE_DIR}" -T "$dir" -p "${HTS_PIPELINE_HOME}" -m "${mismatch:-1}" ${APPEND}
+            sbatch sequence_start_job_wrapper.sh -s "${SEQ}" -f "${FC_ID}" -S "${SOURCE_DIR}" -T "$dir" -p "${HTS_PIPELINE_HOME}" -m "${mismatch:-1}" --password-protect "${passwordProtect:-0}" ${APPEND}
 
         fi
     fi

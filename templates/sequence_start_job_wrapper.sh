@@ -8,8 +8,8 @@
 #SBATCH --mail-type=ALL
 #SBATCH -p short
 
-SHORT=s:f:S:T:p:m:Dt
-LONG=sequencer:,flowcell:,source-dir:,target-dir:,pipeline-home:,mismatch:,dev,trim-galore
+SHORT=s:f:S:T:p:m:DtP:
+LONG=sequencer:,flowcell:,source-dir:,target-dir:,pipeline-home:,mismatch:,dev,trim-galore,password-protect:
 
 PARSED="$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")"
 
@@ -21,6 +21,10 @@ eval set -- "$PARSED"
 
 while true; do
     case "$1" in
+        -P|--password-protect)
+            passwordProtect="$2"
+            shift 2
+            ;;
         -t|--trim-galore)
             trimGalore=y
             shift
@@ -73,5 +77,5 @@ if [[ "$trimGalore" == "y" ]]; then
 fi
 
 sleep $(($RANDOM % 10))
-${sequencer}_start.sh --flowcell "${flowcell}" --dir "${sourceDir}/${targetDir}" -m "${mismatch}" ${APPEND:-}
+${sequencer}_start.sh --flowcell "${flowcell}" --dir "${sourceDir}/${targetDir}" -m "${mismatch}" --password-protect ${passwordProtect:-0} ${APPEND:-}
 
