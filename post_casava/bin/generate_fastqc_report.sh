@@ -12,6 +12,7 @@ SUBMIT_JOB=${3:-0}
 
 # Generate second QC report
 if (( NUM_LANES == 0 && SUBMIT_JOB == 0 )); then
+    module load fastqc
     fastqc -t 10 -o "${SHARED_GENOMICS}/${FC_ID}/fastq_report/" "$(echo $SHARED_GENOMICS/$FC_ID/*.fastq.gz)"
 elif (( NUM_LANES == 0 && SUBMIT_JOB == 1)); then
     module load slurm
