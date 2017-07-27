@@ -6,8 +6,8 @@
 
 echo "started running"
 
-SHORT=m:DntP:
-LONG=mismatch:,dev,no-mail,trim-galore,password-protect:
+SHORT=m:DntP:E:I:
+LONG=mismatch:,dev,no-mail,trim-galore,password-protect:,exclude-flowcells:,include-flowcells:
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 if [[ $? -ne 0 ]]; then
@@ -18,6 +18,14 @@ eval set -- "$PARSED"
 
 while true; do
     case "$1" in
+        -E|--exclude-flowcells)
+            excludeFlowcells=(${2//,/ })
+            shift 2
+            ;;
+        -I|--include-flowcells)
+            includeFlowcells=(${2//,/ })
+            shift 2
+            ;;
         -P|--password-protect)
             passwordProtect="$2"
             shift 2
@@ -106,6 +114,18 @@ for dir in $dir_list; do
             # Determine flowcell ID
             QUERY="SELECT flowcell_id FROM flowcell_list WHERE label=\"$label\";"
             FC_ID=$(mysql -hillumina.int.bioinfo.ucr.edu -Dprojects -u$DB_USERNAME -p$DB_PASSWORD -N -s -e "${QUERY}")
+
+            if [[ $(echo "$excludeFlowcells" | grep -c "$FC_ID") -ge 1 ]]; then
+                echo "Excluding FC #${FC_ID}"
+                continue
+            fi
+
+            if [[ ! -z "$includeFlowcells" ]]; then
+                if [[ $(echo "$includeFlowcells" | grep -c "$FC_ID") -eq 0 ]]; then
+                    echo "FC #${FC_ID} not in include list, skipping..."
+                    continue
+                fi
+            fi
 
             
             if [[ -z "$noMail" ]]; then
