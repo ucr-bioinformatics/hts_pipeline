@@ -1,0 +1,1 @@
+../post_casava/bin/send_flowcell_email.sh
