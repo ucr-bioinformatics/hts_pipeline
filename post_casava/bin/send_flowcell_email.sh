@@ -14,7 +14,7 @@ EMAIL_CC="${EMAIL_SENDER}, Clay Clark <clay.clark@ucr.edu>, Glenn Hicks <glenn.h
 
 # TODO: Populate variables with information from DB
 FC_ID="$1"
-FC_EMAIL=$(mysql -D projects -h illumina.int.bioinfo.ucr.edu -u ***REMOVED*** -p -N -s -e "SELECT email FROM flowcell_list INNER JOIN project_list ON project_list.project_id = flowcell_list.lane_1_project WHERE flowcell_id=${FC_ID}")
+FC_EMAIL=$(mysql -D projects -h illumina.int.bioinfo.ucr.edu -u $DB_USERNAME -p $DB_PASSWORD -N -s -e "SELECT email FROM flowcell_list INNER JOIN project_list ON project_list.project_id = flowcell_list.lane_1_project WHERE flowcell_id=${FC_ID}")
 
 echo "Sending email for flowcell #${FC_ID} to ${FC_EMAIL}"
 
