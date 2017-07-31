@@ -11,7 +11,7 @@ For analysis in your (user's) development area change directory
 
 ```
 cd ~/bigdata/genomics_shared/
-``` 
+```
 	
 and you will see the Runs and the RunAnalysis directories. In the Runs directory you can upload sequencing run data and start analysis for yourself. This is for development and code testing purposes only.
 
@@ -32,7 +32,7 @@ and you will see Runs and RunAnalysis directories under this directory. You will
 
 **Hi-Seq**
 ==========
-1. Move sequencer run directory from Runs to RunAnalysis using transfer_data.sh
+1. Move sequencer run directory from Runs to RunAnalysis using `transfer_data.sh`
 
 	```
 	~/hts_pipeline/pre_casava/bin/transfer_data.sh
