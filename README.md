@@ -1,3 +1,15 @@
+**Table of Contents**
+=========
+- [**Setup**](#setup)
+- [**Hi-Seq**](#hi-seq)
+- [**MiSeq**](#miseq)
+- [**NextSeq**](#nextseq)
+- [References](#references)
+- [QC report](#qc-report)
+- [Analysis](#analysis)
+- [Dependencies](#dependencies)
+
+
 **Setup**
 ==========
 First time you are starting the process, setup your environment. You add these two lines in your .bashrc file by vim .bashrc
