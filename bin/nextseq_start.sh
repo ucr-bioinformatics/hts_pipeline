@@ -55,9 +55,6 @@ while true; do
 done
 
 SEQ="nextseq"
-if [[ -z "$MISMATCH" ]]; then
-    MISMATCH=1
-fi
 
 # Change directory to source
 cd "$SOURCE_DIR"
@@ -197,7 +194,13 @@ if [ -f "$complete_file" ]; then
     # They demux
     #CMD="bcl2fastq_run.sh ${FC_ID} $run_dir Y*,Y* ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
     # We demux
-    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $MISMATCH nosplit ${EXTRA_FLAG}"
+    if [[ ! -z "$MISMATCH" ]]; then
+        USED_MISMATCH="$MISMATCH"
+    else
+        USED_MISMATCH="$MUX"
+    fi
+
+    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $USED_MISMATCH nosplit ${EXTRA_FLAG}"
     echo -e "==== DEMUX STEP ====\n${CMD}" >> "$ERROR_FILE"
     if [ $ERROR -eq 0 ]; then
         cd "$SHARED_GENOMICS/$FC_ID"

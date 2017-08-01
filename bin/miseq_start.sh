@@ -54,9 +54,6 @@ while true; do
 done
 
 SEQ="miseq"
-if [[ -z "$MISMATCH" ]]; then
-    MISMATCH=1
-fi
 
 # Change directory to source
 cd $SOURCE_DIR
@@ -154,7 +151,7 @@ if [ -f $complete_file ]; then
         MUX=2
         BASEMASK="Y*,Y*"
         NUMFILES=2
-    fi
+    fi2
 
     #User will demultiplex and it is paired-end
     if [ ${numpair} == 2 ] && [ ${#barcode} == 0 ]; then
@@ -181,12 +178,17 @@ if [ -f $complete_file ]; then
         trim_samplesheet.sh "${TARGET_DIR}/SampleSheet.csv" ${dual_index_flag:-0}
     fi
 
+	if [[ ! -z "$MISMATCH" ]]; then
+        USED_MISMATCH="$MISMATCH"
+    else
+        USED_MISMATCH="$MUX"
+    fi
 
     # Demuxing step
     # They demux
     #CMD="bcl2fastq_run.sh ${FC_ID} $run_dir Y*,Y* ${${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"
     # We demux
-    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $MISMATCH \"\" ${EXTRA_FLAG}"
+    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $USED_MISMATCH \"\" ${EXTRA_FLAG}"
     echo -e "==== DEMUX STEP ====\n${CMD}" >> $ERROR_FILE
     if [ $ERROR -eq 0 ]; then
         cd $SHARED_GENOMICS/$FC_ID
