@@ -76,6 +76,10 @@ if [[ "$trimGalore" == "y" ]]; then
     APPEND="${APPEND} --trim-galore"
 fi
 
+if [[ ! -z "$mismatch" ]]; then
+    APPEND="${APPEND} -m $mismatch"
+fi
+
 sleep $(($RANDOM % 10))
-${sequencer}_start.sh --flowcell "${flowcell}" --dir "${sourceDir}/${targetDir}" -m "${mismatch}" --password-protect ${passwordProtect:-0} ${APPEND:-}
+${sequencer}_start.sh --flowcell "${flowcell}" --dir "${sourceDir}/${targetDir}" --password-protect ${passwordProtect:-0} ${APPEND:-}
 
