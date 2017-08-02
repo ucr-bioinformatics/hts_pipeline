@@ -8,8 +8,8 @@
 #SBATCH --mail-type=ALL
 #SBATCH -p short
 
-SHORT=s:f:S:T:p:m:DtP:
-LONG=sequencer:,flowcell:,source-dir:,target-dir:,pipeline-home:,mismatch:,dev,trim-galore,password-protect:
+SHORT=s:f:S:T:p:m:DtP:b:
+LONG=sequencer:,flowcell:,source-dir:,target-dir:,pipeline-home:,mismatch:,dev,trim-galore,password-protect:,base-mask:
 
 PARSED="$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")"
 
@@ -21,6 +21,10 @@ eval set -- "$PARSED"
 
 while true; do
     case "$1" in
+        -b|--base-mask)
+            baseMask="$2"
+            shift 2
+            ;;
         -P|--password-protect)
             passwordProtect="$2"
             shift 2
@@ -79,6 +83,9 @@ fi
 if [[ ! -z "$mismatch" ]]; then
     APPEND="${APPEND} -m $mismatch"
 fi
+
+if [[ ! -z "$baseMask" ]]; then
+    APPEND="${APPEND} -b"'"'"$baseMask"'"'
 
 sleep $(($RANDOM % 10))
 ${sequencer}_start.sh --flowcell "${flowcell}" --dir "${sourceDir}/${targetDir}" --password-protect ${passwordProtect:-0} ${APPEND:-}

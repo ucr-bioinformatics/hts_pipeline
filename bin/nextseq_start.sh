@@ -7,8 +7,8 @@
 # Set global vars
 source "$HTS_PIPELINE_HOME/env_profile.sh"
 
-SHORT=f:d:m:DtP:
-LONG=flowcell:,dir:,mismatch:,dev,trim-galore,password-protect:
+SHORT=f:d:m:DtP:b:
+LONG=flowcell:,dir:,mismatch:,dev,trim-galore,password-protect:,base-mask:
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 
@@ -19,6 +19,10 @@ eval set -- "$PARSED"
 
 while true; do
     case "$1" in
+        -b|--base-mask)
+            BASE_MASK="$2"
+            shift 2
+            ;;
         -P|--password-protect)
             PASSWORD_PROTECT="$2"
             shift 2
@@ -190,6 +194,10 @@ if [ -f "$complete_file" ]; then
         fi
     fi
     
+    if [[ ! -z "$BASE_MASK" ]]; then
+        BASEMASK="$BASE_MASK"
+    fi
+
     # Create Sample Sheet
     # They demux
     #CMD="bcl2fastq_run.sh ${FC_ID} $run_dir Y*,Y* ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv 1"

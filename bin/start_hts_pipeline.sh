@@ -6,8 +6,8 @@
 
 echo "started running"
 
-SHORT=m:DntP:E:I:
-LONG=mismatch:,dev,no-mail,trim-galore,password-protect:,exclude-flowcells:,include-flowcells:
+SHORT=m:DntP:E:I:b:
+LONG=mismatch:,dev,no-mail,trim-galore,password-protect:,exclude-flowcells:,include-flowcells:,base-mask:
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 if [[ $? -ne 0 ]]; then
@@ -45,6 +45,10 @@ while true; do
         -D|--dev)
             DEV=y
             shift
+            ;;
+        -b|--base-mask)
+            baseMask="$2"
+            shift 2
             ;;
         --)
             shift
@@ -151,6 +155,10 @@ EOF
 
             if [[ ! -z "$mismatch" ]]; then
                 APPEND="${APPEND} -m $mismatch"
+            fi
+
+            if [[ ! -z "$baseMask" ]]; then
+                APPEND="${APPEND} -b "'"'"$baseMask"'"'
             fi
 
             echo "Processing ${FC_ID} from ${SOURCE_DIR}/$dir" >> "${HTS_PIPELINE_HOME}/log/${SEQ}_pipeline.log"
