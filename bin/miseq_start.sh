@@ -7,8 +7,8 @@
 # Set global vars
 source $HTS_PIPELINE_HOME/env_profile.sh
 
-SHORT=f:d:m:DuP:
-LONG=flowcell:,dir:,mismatch:,dev,user-demultiplex,password-protect:
+SHORT=f:d:m:DuP:b:
+LONG=flowcell:,dir:,mismatch:,dev,user-demultiplex,password-protect:,base-mask:
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 
@@ -19,6 +19,10 @@ eval set -- "$PARSED"
 
 while true; do
     case "$1" in
+        -b|--base-mask)
+            BASE_MASK="$2"
+            shift 2
+            ;;
         -P|--password-protect)
             PASSWORD_PROTECT="$2"
             shift 2
@@ -158,12 +162,17 @@ if [ -f $complete_file ]; then
        MUX=2
        BASEMASK="Y*,Y*,Y*"
        NUMFILES=3
-    fi 
- 
+    fi
+
     # Special case where there are dual barcodes and the user will demultiplex
     if [ $dual_index_flag -eq 1 ] && [ ${#barcode} -eq 0 ]; then
         BASEMASK="Y*,I*,I*,Y*"
         EXTRA_FLAG="--create-fastq-for-index-reads"
+    fi
+
+    if [[ ! -z "$BASE_MASK" ]]; then
+        echo "Using basemask: ${BASE_MASK}"
+        BASEMASK="$BASE_MASK"
     fi
 
     if [ "$USER_DEMULTIPLEX" -eq 1 ]; then
