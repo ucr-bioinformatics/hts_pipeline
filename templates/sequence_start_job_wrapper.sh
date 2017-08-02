@@ -86,6 +86,7 @@ fi
 
 if [[ ! -z "$baseMask" ]]; then
     APPEND="${APPEND} -b"'"'"$baseMask"'"'
+fi
 
 sleep $(($RANDOM % 10))
 ${sequencer}_start.sh --flowcell "${flowcell}" --dir "${sourceDir}/${targetDir}" --password-protect ${passwordProtect:-0} ${APPEND:-}
