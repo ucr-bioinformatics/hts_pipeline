@@ -18,7 +18,7 @@ sample_sheet=$4
 barcode_mismatch=$5
 extra_flag="$7"
 
-if [ $# > 7 ]; then 
+if [[ $# -gt 7 ]]; then 
     for (( i = 8; i <= $#; i++ )); do
         extra_flag="${extra_flag} ${$i}"
     done
