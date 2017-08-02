@@ -155,7 +155,7 @@ if [ -f $complete_file ]; then
         MUX=2
         BASEMASK="Y*,Y*"
         NUMFILES=2
-    fi2
+    fi
 
     #User will demultiplex and it is paired-end
     if [ ${numpair} == 2 ] && [ ${#barcode} == 0 ]; then
