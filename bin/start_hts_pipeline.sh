@@ -158,7 +158,7 @@ EOF
             fi
 
             if [[ ! -z "$baseMask" ]]; then
-                APPEND="${APPEND} -b "'"'"$baseMask"'"'
+                APPEND="${APPEND} -b $baseMask"
             fi
 
             echo "Processing ${FC_ID} from ${SOURCE_DIR}/$dir" >> "${HTS_PIPELINE_HOME}/log/${SEQ}_pipeline.log"

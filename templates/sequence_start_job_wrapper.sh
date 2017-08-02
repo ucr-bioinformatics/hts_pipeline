@@ -85,7 +85,7 @@ if [[ ! -z "$mismatch" ]]; then
 fi
 
 if [[ ! -z "$baseMask" ]]; then
-    APPEND="${APPEND} -b"'"'"$baseMask"'"'
+    APPEND="${APPEND} -b $baseMask"
 fi
 
 sleep $(($RANDOM % 10))
