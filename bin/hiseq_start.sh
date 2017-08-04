@@ -11,8 +11,8 @@ source $HTS_PIPELINE_HOME/env_profile.sh
 EXPECTED_ARGS=4
 E_BADARGS=65
 
-SHORT=f:d:m:D
-LONG=flowcell:,dir:,mismatch:,dev
+SHORT=f:d:m:Db:P:
+LONG=flowcell:,dir:,mismatch:,dev,password-protect:,base-mask:
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 
@@ -23,6 +23,16 @@ eval set -- "$PARSED"
 
 while true; do
     case "$1" in
+        -b|--base-mask)
+            # Does nothing with it
+            BASE_MASK="$2"
+            shift 2
+            ;;
+        -P|--password-protect)
+            # Does nothing with it
+            PASSWORD_PROTECT="$2"
+            shift 2
+            ;;
         -D|--dev)
             DEV=y
             shift
