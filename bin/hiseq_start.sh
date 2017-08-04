@@ -128,7 +128,7 @@ if [ -f $complete_file ]; then
         echo "ERROR:: SampleSheet from ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv does not exist" >> $ERROR_FILE && ERROR=1
     else
         # Create SampleSheet_rename and QC from SampleSheet.
-        CMD="create_samplesheet_${SEQ}.R ${FC_ID} ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet_DB.csv $run_dir"
+        CMD="create_samplesheet_${SEQ}.R ${FC_ID} ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $run_dir"
         echo -e "==== SAMPLE SHEET STEP ====\n${CMD}" >> $ERROR_FILE
         if [ $ERROR -eq 0 ]; then
             ${CMD} &>> $ERROR_FILE
