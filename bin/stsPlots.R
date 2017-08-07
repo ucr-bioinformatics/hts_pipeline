@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 # stsPlots.2.0.R
 #
 # Author: Meredith Ashby, Lawrence Lee
