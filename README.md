@@ -362,7 +362,16 @@ and you will see Runs and RunAnalysis directories under this directory. You will
 	```
 	/opt/bcl2fastq/1.8.4/bin/configureBclToFastq.pl --input-dir /home/researchers/RunAnalysis/flowcell344/150814_SN279_0481_AC7KC5ACXX/Data/Intensities/BaseCalls --sample-sheet /home/researchers/RunAnalysis/flowcell344/150814_SN279_0481_AC7KC5ACXX/Data/Intensities/BaseCalls/SampleSheet.csv --fastq-cluster-count 600000000 --use-bases-mask Y*,I7,Y* --output-dir /home/casava_fastqs/344/Unaligned_Lane7-8
 	```
-	
+
+
+**Pacbio**
+==========
+1. Verify the checksums of the files (generated using `find . -not -name "*.sha1" -type f -print0 | xargs -0 shasum > checksums2.sha1`):
+    ```
+    shasum -c checksums.sha
+    ```
+
+
 References
 ==========
 Illumina BCL2Fastq
