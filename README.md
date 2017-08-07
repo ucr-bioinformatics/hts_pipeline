@@ -363,6 +363,8 @@ and you will see Runs and RunAnalysis directories under this directory. You will
 	/opt/bcl2fastq/1.8.4/bin/configureBclToFastq.pl --input-dir /home/researchers/RunAnalysis/flowcell344/150814_SN279_0481_AC7KC5ACXX/Data/Intensities/BaseCalls --sample-sheet /home/researchers/RunAnalysis/flowcell344/150814_SN279_0481_AC7KC5ACXX/Data/Intensities/BaseCalls/SampleSheet.csv --fastq-cluster-count 600000000 --use-bases-mask Y*,I7,Y* --output-dir /home/casava_fastqs/344/Unaligned_Lane7-8
 	```
 
+**Check storage space**
+```mmlsquota -j genomics bigdata --block-size=auto``` 
 
 **Pacbio**
 ==========
