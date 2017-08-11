@@ -12,8 +12,7 @@ source "$HTS_PIPELINE_HOME/bin/load_hts_passwords.sh"
 
 # Email information (constants)
 EMAIL_SENDER="William Shiao <wshia002@ucr.edu>"
-#EMAIL_CC="${EMAIL_SENDER}, Clay Clark <clay.clark@ucr.edu>, Glenn Hicks <glenn.hicks@ucr.edu>, Neerja Katiyar <neerja.katiyar@ucr.edu>"
-EMAIL_CC="${EMAIL_SENDER}"
+EMAIL_CC="${EMAIL_SENDER}, Clay Clark <clay.clark@ucr.edu>, Glenn Hicks <glenn.hicks@ucr.edu>, Neerja Katiyar <neerja.katiyar@ucr.edu>"
 
 TARGET_DIR="${SHARED_GENOMICS}/${FC_ID}"
 dir_list=$(find "$TARGET_DIR" -maxdepth 1 -type d)
@@ -95,7 +94,6 @@ else
     exit 2
 fi
 
-echo "Sending email to $FC_USER"
 /usr/sbin/sendmail -t << EOF
 $MAIL_HEADERS
 Subject: Your $SEQ data (FC #${FC_ID}) is ready to download
