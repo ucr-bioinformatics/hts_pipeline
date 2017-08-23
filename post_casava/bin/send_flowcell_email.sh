@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [[ $# -lt 1 || $# -gt 2 ]]; then
-    echo "Usage: send_flowcell_email.sh <FC_ID> [EXTRA_TARGETS]"
+if [[ $# -lt 1 || $# -gt 3 ]]; then
+    echo "Usage: send_flowcell_email.sh <FC_ID> [CONFIRM = 1] [EXTRA_TARGETS = '']"
     exit 1
 fi
 
@@ -48,11 +48,19 @@ if [[ -z "$FC_EMAIL" ]]; then
     exit 3
 fi
 
-if [[ $# -ge 2 ]]; then
-    FC_EMAIL="${FC_EMAIL},${2}"
+if [[ $# -ge 3 ]]; then
+    FC_EMAIL="${FC_EMAIL},${3}"
 fi
+
 echo "Sending email for flowcell #${FC_ID} to ${FC_EMAIL}"
 
+if [[ $# -ge 2 && $2 -ne 1 ]]; then
+	read -p "Are you sure? " -n 1 -r
+	if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+		echo 'Exiting...'
+		exit 4
+	fi
+fi
 
 MAIL_HEADERS=$(cat <<EOF
 From: $EMAIL_SENDER
