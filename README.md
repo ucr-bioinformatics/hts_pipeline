@@ -1,6 +1,7 @@
 **Table of Contents**
 =========
 - [**Setup**](#setup)
+- [**Pre-Processing**](#pre-processing)
 - [**Hi-Seq**](#hi-seq)
 - [**MiSeq**](#miseq)
 - [**NextSeq**](#nextseq)
@@ -42,7 +43,23 @@ cd /bigdata/genomics/shared/
 and you will see Runs and RunAnalysis directories under this directory. You will run analysis from shared directory.
 
 
-**Hi-Seq**
+**Pre-Processing**
+==========
+
+## Reverse Compliment
+
+A common problem with sample sheets is that the barcodes come in the reverse compliment of the barcode they want us to use.
+
+This can be fixed with the `reverse_compliment` script, which accepts the following arguments:
+
+    reverse_compliment.sh <SampleSheet> [barcodeColumn = 6] [printOnly = 0]
+
+`SampleSheet` is the path to the target sample sheet file and `barcodeColumn` is the column in the sample sheet that you want to change (it is usually column 6). Note that you may have to run this script twice for dual barcodes (usually on columns 6 and 8).
+
+`printOnly` specifies if the script only prints out the result of the conversion or actually writes it to the file. This is useful if you want to check that the conversion is successful before replacing the contents of the file.
+
+
+**Hi-Seq** 
 ==========
 1. Move sequencer run directory from Runs to RunAnalysis using `transfer_data.sh`
 
