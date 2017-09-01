@@ -10,13 +10,15 @@ fi
 SAMPLESHEET="$1"
 TMP_SAMPLESHEET="$1.tmp"
 
+COLUMN_NUM="${2:-6}"
+
 # Handle the case of $SAMPLESHEET.tmp already existing by appending another .tmp
 while [ -f "$TMP_SAMPLESHEET" ]; do
     TMP_SAMPLESHEET="${TMP_SAMPLESHEET}.tmp"
 done
     
 
-awk -F',' -v colNum="${COLUMN_NUM:-6}" '
+awk -F',' -v colNum="$COLUMN_NUM" '
 BEGIN {
   OFS = FS;
 }
