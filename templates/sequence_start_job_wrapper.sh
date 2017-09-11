@@ -2,7 +2,7 @@
 
 #SBATCH --nodes=1
 #SBATCH --ntasks=10
-#SBATCH --mem-per-cpu=50G
+#SBATCH --mem-per-cpu=8G
 #SBATCH --time=2:00:00
 #SBATCH --mail-user=${7}
 #SBATCH --mail-type=ALL
