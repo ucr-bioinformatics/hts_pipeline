@@ -6,7 +6,7 @@
 #SBATCH --time=2:00:00
 #SBATCH --mail-user=${7}
 #SBATCH --mail-type=ALL
-#SBATCH -p short
+#SBATCH -p intel
 
 SHORT=s:f:S:T:p:m:DtP:b:
 LONG=sequencer:,flowcell:,source-dir:,target-dir:,pipeline-home:,mismatch:,dev,trim-galore,password-protect:,base-mask:
