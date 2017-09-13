@@ -52,8 +52,8 @@ if [[ $# -ge 3 ]]; then
     FC_EMAIL="${FC_EMAIL},${3}"
 fi
 
-if [[ $# -ge 4 ]]; then
-    NOTE=$"\n$4\n"
+if [[ $# -ge 4 ]] && [[ ! -z "$4" ]]; then
+    NOTE=$'\n$4\n'
 fi
 
 
@@ -100,7 +100,8 @@ else
 fi
 
 echo "Sending email for flowcell #${FC_ID} to ${FC_EMAIL}"
-echo -e "Email contents: \n${EMAIL_BODY}"
+echo -e "Email contents:"
+echo "${EMAIL_BODY}"
 
 if [[ $# -lt 2 ]] || [[ $# -ge 2 && $2 -eq 1 ]]; then
 	read -p "Are you sure? " -n 1 -r
