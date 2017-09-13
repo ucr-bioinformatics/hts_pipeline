@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [[ $# -lt 1 || $# -gt 3 ]]; then
-    echo "Usage: send_flowcell_email.sh <FC_ID> [CONFIRM = 1] [EXTRA_TARGETS = '']"
+if [[ $# -lt 1 || $# -gt 4 ]]; then
+    echo "Usage: send_flowcell_email.sh <FC_ID> [CONFIRM = 1] [EXTRA_TARGETS = ''] [NOTE = '']"
     exit 1
 fi
 
@@ -52,15 +52,10 @@ if [[ $# -ge 3 ]]; then
     FC_EMAIL="${FC_EMAIL},${3}"
 fi
 
-echo "Sending email for flowcell #${FC_ID} to ${FC_EMAIL}"
-
-if [[ $# -lt 2 ]] || [[ $# -ge 2 && $2 -eq 1 ]]; then
-	read -p "Are you sure? " -n 1 -r
-	if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-		echo 'Exiting...'
-		exit 4
-	fi
+if [[ $# -ge 4 ]]; then
+    NOTE=$"\n$4\n"
 fi
+
 
 MAIL_HEADERS=$(cat <<EOF
 From: $EMAIL_SENDER
@@ -75,7 +70,7 @@ Dear user(s),
 The sequence data from your recent sample submission has been uploaded from Flowcell #${FC_ID} and are available on the HT Sequencing web site (http://illumina.ucr.edu/). To see your data click "Projects and Flowcells" in the Navigation menu, and then click "Download Project Data." The Demultiplex statistics and the sequence quality report can be downloaded from the links under Sequence Quality.
 
 Due to the vastly increased data output of the sequencing instrument, we can only store the raw data on our server for one month and then we delete them permanently. The raw data include pre-base-call data, which are rarely of any use to most NGS projects. However, they would be required for rerunning the Illumina base caller or third party base callers.
-
+${NOTE}
 Please note, the data were stored in illumina FASTQ format http://illumina.ucr.edu/ht/documentation/data-analysis-docs/CASAVA-FASTQ.pdf/view.
 
 The FASTQ files will be available for download for one year after their generation.  After this time period, they will be deleted.
@@ -88,8 +83,7 @@ Dear user(s),
 The sequence data from your recent sample submission has been uploaded from Flowcell #${FC_ID} and are available on the HT Sequencing web site (http://illumina.ucr.edu/). To see your data click "Projects and Flowcells" in the Navigation menu, and then click "Download Project Data." The Demultiplex statistics and the sequence quality report can be downloaded from the links under Sequence Quality.
 
 Due to the vastly increased data output of the NextSeq instrument, we can only store the raw data on our server for one month and then we delete them permanently. The raw data include pre-base-call data, which are rarely of any use to most NGS projects. However, they would be required for rerunning the Illumina base caller or third party base callers.
-
-
+${NOTE}
 Please note, the data were stored in illumina FASTQ format http://illumina.ucr.edu/ht/documentation/data-analysis-docs/CASAVA-FASTQ.pdf/view.
 
 The FASTQ files will be available for download for one year after their generation.  After this time period, they will be deleted.
@@ -103,6 +97,17 @@ elif [[ $SEQ == "MiSeq" ]]; then
 else
     echo "Unknown sequencer... exiting."
     exit 2
+fi
+
+echo "Sending email for flowcell #${FC_ID} to ${FC_EMAIL}"
+echo -e "Email contents: \n${EMAIL_BODY}"
+
+if [[ $# -lt 2 ]] || [[ $# -ge 2 && $2 -eq 1 ]]; then
+	read -p "Are you sure? " -n 1 -r
+	if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+		echo 'Exiting...'
+		exit 4
+	fi
 fi
 
 /usr/sbin/sendmail -t << EOF
