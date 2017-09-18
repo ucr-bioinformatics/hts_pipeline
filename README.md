@@ -390,6 +390,55 @@ This can be fixed with the `reverse_compliment` script, which accepts the follow
     shasum -c checksums.sha
     ```
 
+Workflow of Illumina (HiSeq, MiSeq and NextSeq)
+==========
+## Steps
+
+1. Create a copy of Clay's SampleSheet
+2. Transfer the data from Runs to RunAnalysis
+3. Demultiplexing the sequence data (`bcl2fastq_run.sh`)
+4. Create quality report (`qc_report_generate_targets.R`)
+5. Create SampleSheet for renaming the fastq files (`create_samplesheet_nextseq.R`)
+5. Rename files and create symbolic links (`fastqs_rename.R`)
+6. Update the sequence url in the database and website (`sequence_url_update.R`)
+
+
+## Running `start_hts_pipeline.sh`
+
+`start_hts_pipeline.sh` is the script that selects the correct sequencer start script (`miseq_start.sh`, `nextseq_start.sh`, or `highseq_start.sh`) and runs it.
+
+### Arguments
+
+- `-E`, `--exclude-flowcells = FLOWCELLS`
+    + Excludes a comma-seperated list of flowcells (a blacklist).
+- `-I`, `--include-flowcells = FLOWCELLS`
+    + Includes a comma-seperated list of flowcells (a whitelist).
+- `-P`, `--password-protect = false`
+    + Defaults to `false`
+    + Generate a random password and create a `.htaccess` and a `.htpasswd` file to protect the flowcell after creation.
+- `-t`, `--trim-galore`
+    + Use [Trim Galore!](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/) to perform adapter trimming after `bcl2fastq`.
+- `-n`, `--no-mail`
+    + Disables the email that is usually sent when each flowcell is being processed. Useful when debugging.
+- `-m`, `--mismatch = 1`
+    + Defaults to `1`.
+    + Sets the allowed mismatch value used by `bcl2fastq`.
+- `-D`, `--dev`
+    + Enables development mode, which skips the URL updating step. Useful when debugging.
+
+
+## Running `*_start.sh`
+
+The sequencer-specific start scripts (`miseq_start.sh`, `nextseq_start.sh`, and `highseq_start.sh`) are called by `start_hts_pipeline.sh`. They should only be called directly when debugging.
+
+### Arguments
+They accept the `--trim-galore`, `--password-protect`, `--dev`, and `--mismatch` arguments accepted by `start_hts_pipeline.sh`, with a few extra **required** arguments:
+
+- `-d`, `--dir = SOURCE_DIR`
+    + The source directory of the flowcell (usually `/bigdata/genomics/shared/Runs/FC_ID`).
+- `-f`, `--flowcell = FC_ID`
+    + The flowcell ID of the target flowcell.
+
 
 References
 ==========
