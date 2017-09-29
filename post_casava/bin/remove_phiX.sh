@@ -13,6 +13,10 @@ if [[ $# -lt 1  || $# -gt 2 ]]; then
     exit 1
 fi
 
+if [[ ! $VAR =~ [ci][0-9]+ ]]; then
+    echo "WARNING: This script is meant to be run on the cluster and should not be run on a head node.";
+fi
+
 FC_ID=$1
 PAIRED_END=${2:-0}
 
