@@ -10,4 +10,4 @@
 
 echo "Generating R QC report with args: $@"
 
-$HTS_PIPELINE_HOME/qc_report_generate_targets.R "$@"
+$HTS_PIPELINE_HOME/bin/qc_report_generate_targets.R "$@"
