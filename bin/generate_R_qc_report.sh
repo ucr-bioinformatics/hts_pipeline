@@ -1,0 +1,1 @@
+../templates/generate_R_qc_report.sh
