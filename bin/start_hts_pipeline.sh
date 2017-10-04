@@ -164,7 +164,7 @@ EOF
             echo "Processing ${FC_ID} from ${SOURCE_DIR}/$dir" >> "${HTS_PIPELINE_HOME}/log/${SEQ}_pipeline.log"
             #echo ${SEQ}_start.sh ${FC_ID} ${SOURCE_DIR}/$dir ${SEQ} ${label}| qsub -l nodes=1:ppn=32,mem=50gb,walltime=20:00:00 -j oe -o ${HTS_PIPELINE_HOME}/log/${SEQ}_start.log -m bea -M ${NOTIFY_EMAIL}
             module load slurm
-            sbatch sequence_start_job_wrapper.sh -s "${SEQ}" -f "${FC_ID}" -S "${SOURCE_DIR}" -T "$dir" -p "${HTS_PIPELINE_HOME}" --password-protect "${passwordProtect:-0}" ${APPEND}
+            sbatch -J "FC #${FC_ID}" sequence_start_job_wrapper.sh -s "${SEQ}" -f "${FC_ID}" -S "${SOURCE_DIR}" -T "$dir" -p "${HTS_PIPELINE_HOME}" --password-protect "${passwordProtect:-0}" ${APPEND}
             echo "sequence_start_job_wrapper.sh -s ${SEQ} -f ${FC_ID} -S ${SOURCE_DIR} -T $dir -p ${HTS_PIPELINE_HOME} --password-protect ${passwordProtect:-0} ${APPEND}"
 
         fi
