@@ -10,11 +10,18 @@ FC_ID=$1
 NUM_LANES=${2:-0}
 SUBMIT_JOB=${3:-0}
 
+if [ ! -d "${SHARED_GENOMICS}/${FC_ID}" ]; then
+    echo "Flowcell #${FC_ID} not found."
+    exit 1
+fi
+
 # Generate second QC report
 if (( NUM_LANES == 0 && SUBMIT_JOB == 0 )); then
+    mkdir -p "${SHARED_GENOMICS}/${FC_ID}/fastq_report"
     module load fastqc
     fastqc -t 10 -o "${SHARED_GENOMICS}/${FC_ID}/fastq_report/" $(echo $SHARED_GENOMICS/$FC_ID/*.fastq.gz)
 elif (( NUM_LANES == 0 && SUBMIT_JOB == 1)); then
+    mkdir -p "${SHARED_GENOMICS}/${FC_ID}/fastq_report"
     module load slurm
     sbatch generate_qc_report_wrapper.sh ${SHARED_GENOMICS} ${FC_ID} 0 "$(echo $SHARED_GENOMICS/$FC_ID/*.fastq.gz)"
     if [ $? -ne 0 ]; then
