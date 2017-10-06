@@ -23,7 +23,7 @@ if (( NUM_LANES == 0 && SUBMIT_JOB == 0 )); then
 elif (( NUM_LANES == 0 && SUBMIT_JOB == 1)); then
     mkdir -p "${SHARED_GENOMICS}/${FC_ID}/fastq_report"
     module load slurm
-    sbatch generate_qc_report_wrapper.sh ${SHARED_GENOMICS} ${FC_ID} 0 "$(echo $SHARED_GENOMICS/$FC_ID/*.fastq.gz)"
+    sbatch -J "FASTQC_${FC_ID}" generate_qc_report_wrapper.sh ${SHARED_GENOMICS} ${FC_ID} 0 "$(echo $SHARED_GENOMICS/$FC_ID/*.fastq.gz)"
     if [ $? -ne 0 ]; then
         echo "ERROR: Failed to add FastQC report generation to slurm queue. Exiting."
         exit 1
@@ -38,7 +38,7 @@ else
         do
             [ -f "$file" ]
             module load slurm
-            sbatch -J "FASTQC_${FC_ID}" generate_qc_report_wrapper.sh ${SHARED_GENOMICS} ${FC_ID} ${i} ${file}
+            sbatch -J "FASTQC_${FC_ID}_${i}" generate_qc_report_wrapper.sh ${SHARED_GENOMICS} ${FC_ID} ${i} ${file}
 
             if [ $? -ne 0 ]; then
                 echo "ERROR: Failed to add FastQC report generation to slurm queue. Exiting."
