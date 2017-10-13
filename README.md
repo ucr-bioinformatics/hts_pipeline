@@ -64,7 +64,7 @@ This can be fixed with the `reverse_compliment` script, which accepts the follow
 1. Move sequencer run directory from Runs to RunAnalysis using `transfer_data.sh`
 
 	```
-	~/hts_pipeline/pre_casava/bin/transfer_data.sh
+	~/hts_pipeline/pre_demultiplex/bin/transfer_data.sh
 	USAGE:: transfer_data.sh {FlowcellID} {/path/to/source}
 	```
 	
@@ -74,7 +74,7 @@ This can be fixed with the `reverse_compliment` script, which accepts the follow
 2. Creating a Samplesheet_rename for internal use
 
 	```
-	~/hts_pipeline/pre_casava/bin/create_samplesheet_hiseq.R
+	~/hts_pipeline/pre_demultiplex/bin/create_samplesheet_hiseq.R
 	USAGE:: create_samplesheet_hiseq.R <FlowcellID> <Samplesheet> <Rundir>
 	```
 	
@@ -166,7 +166,7 @@ This can be fixed with the `reverse_compliment` script, which accepts the follow
 1. Move sequencer run directory from Runs to RunAnalysis using transfer_data.sh
 
 	```
-	~/hts_pipeline/pre_casava/bin/transfer_data.sh
+	~/hts_pipeline/pre_demultiplex/bin/transfer_data.sh
 	USAGE:: transfer_data.sh {FlowcellID} {/path/to/source}
 	```
 	
@@ -190,7 +190,7 @@ This can be fixed with the `reverse_compliment` script, which accepts the follow
 3. Creating a Samplesheet_rename for internal use
 
 	```
-	~/hts_pipeline/pre_casava/bin/create_samplesheet_hiseq.R
+	~/hts_pipeline/pre_demultiplex/bin/create_samplesheet_hiseq.R
 	USAGE:: create_samplesheet_miseq.R <FlowcellID> <Samplesheet> <Rundir>
 	```
 	
@@ -267,7 +267,7 @@ This can be fixed with the `reverse_compliment` script, which accepts the follow
 1. Move sequencer run directory from Runs to RunAnalysis using transfer_data.sh
 
 	```
-	~/hts_pipeline/pre_casava/bin/transfer_data.sh
+	~/hts_pipeline/pre_demultiplex/bin/transfer_data.sh
 	USAGE:: transfer_data.sh {FlowcellID} {/path/to/source}
 	```
 	
@@ -291,7 +291,7 @@ This can be fixed with the `reverse_compliment` script, which accepts the follow
 3. Creating a Samplesheet_rename for internal use
 
 	```
-	~/hts_pipeline/pre_casava/bin/create_samplesheet_hiseq.R
+	~/hts_pipeline/pre_demultiplex/bin/create_samplesheet_hiseq.R
 	USAGE:: create_samplesheet_miseq.R <FlowcellID> <Samplesheet> <Rundir>
 	```
 	

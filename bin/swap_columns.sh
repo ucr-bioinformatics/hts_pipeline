@@ -1,1 +1,1 @@
-../pre_casava/bin/swap_columns.sh
+../pre_demultiplex/bin/swap_columns.sh

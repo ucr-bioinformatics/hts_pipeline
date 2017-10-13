@@ -1,1 +1,1 @@
-../pre_casava/bin/trim_samplesheet.sh
+../pre_demultiplex/bin/trim_samplesheet.sh

@@ -1,1 +1,1 @@
-../pre_casava/bin/create_samplesheet_miseq_i5_i7.R
+../pre_demultiplex/bin/create_samplesheet_miseq_i5_i7.R

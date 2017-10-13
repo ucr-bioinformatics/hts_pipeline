@@ -1,1 +1,1 @@
-../pre_casava/bin/transfer_data.sh
+../pre_demultiplex/bin/transfer_data.sh

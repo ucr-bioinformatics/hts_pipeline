@@ -1,1 +1,1 @@
-../pre_casava/bin/reverse_compliment.sh
+../pre_demultiplex/bin/reverse_compliment.sh

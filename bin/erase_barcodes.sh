@@ -1,1 +1,1 @@
-../pre_casava/bin/erase_barcodes.sh
+../pre_demultiplex/bin/erase_barcodes.sh

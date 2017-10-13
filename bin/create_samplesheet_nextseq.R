@@ -1,1 +1,1 @@
-../pre_casava/bin/create_samplesheet_nextseq.R
+../pre_demultiplex/bin/create_samplesheet_nextseq.R
