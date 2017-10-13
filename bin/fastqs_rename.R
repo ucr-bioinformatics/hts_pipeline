@@ -1,1 +1,1 @@
-../post_casava/bin/fastqs_rename.R
+../post_demultiplex/bin/fastqs_rename.R

@@ -100,7 +100,7 @@ This can be fixed with the `reverse_compliment` script, which accepts the follow
 4. Rename FASTQ files
 
 	```
-    ~/hts_pipeline/post_casava/bin/fastqs_rename.R
+    ~/hts_pipeline/post_demultiplex/bin/fastqs_rename.R
     USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir>
 	```
 	
@@ -133,7 +133,7 @@ This can be fixed with the `reverse_compliment` script, which accepts the follow
 5. Generate QC report
 
 	```
-    ~/hts_pipeline/post_casava/bin/qc_report_generate_targets.R
+    ~/hts_pipeline/post_demultiplex/bin/qc_report_generate_targets.R
     USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>
 	```
     
@@ -153,7 +153,7 @@ This can be fixed with the `reverse_compliment` script, which accepts the follow
 6. Update links on Illumina web server
 
 	```
-    ~/hts_pipeline/post_casava/bin/sequence_url_update.R
+    ~/hts_pipeline/post_demultiplex/bin/sequence_url_update.R
     USAGE:: script.R <FlowcellID> <NumberOfLanes> <FASTQPath>
 	```
     
@@ -201,7 +201,7 @@ This can be fixed with the `reverse_compliment` script, which accepts the follow
 4. Rename FASTQ files
 
 	```
-    ~/hts_pipeline/post_casava/bin/fastqs_rename.R
+    ~/hts_pipeline/post_demultiplex/bin/fastqs_rename.R
     USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir>
 	```
 	
@@ -234,7 +234,7 @@ This can be fixed with the `reverse_compliment` script, which accepts the follow
 5. Generate QC report
 
 	```
-    ~/hts_pipeline/post_casava/bin/qc_report_generate_targets.R
+    ~/hts_pipeline/post_demultiplex/bin/qc_report_generate_targets.R
     USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>
 	```
     
@@ -254,7 +254,7 @@ This can be fixed with the `reverse_compliment` script, which accepts the follow
 6. Update links on Illumina web server
 
 	```
-    ~/hts_pipeline/post_casava/bin/sequence_url_update.R
+    ~/hts_pipeline/post_demultiplex/bin/sequence_url_update.R
     USAGE:: script.R <FlowcellID> <NumberOfLanes> <FASTQPath>
 	```
     
@@ -302,7 +302,7 @@ This can be fixed with the `reverse_compliment` script, which accepts the follow
 4. Rename FASTQ files
 
 	```
-    ~/hts_pipeline/post_casava/bin/fastqs_rename.R
+    ~/hts_pipeline/post_demultiplex/bin/fastqs_rename.R
     USAGE:: script.R <FlowcellID> <NumberOfFiles> <SampleSheet> <UnalignedPath> <RunType> <RunDir>
 	```
 	
@@ -335,7 +335,7 @@ This can be fixed with the `reverse_compliment` script, which accepts the follow
 5. Generate QC report
 
 	```
-    ~/hts_pipeline/post_casava/bin/qc_report_generate_targets.R
+    ~/hts_pipeline/post_demultiplex/bin/qc_report_generate_targets.R
     USAGE:: script.R <FlowcellID> <NumberOfPairs> <FASTQPath> <TargetsPath> <SampleSheetPath> <Demultiplex type>
 	```
     
@@ -355,7 +355,7 @@ This can be fixed with the `reverse_compliment` script, which accepts the follow
 6. Update links on Illumina web server
 
 	```
-    ~/hts_pipeline/post_casava/bin/sequence_url_update.R
+    ~/hts_pipeline/post_demultiplex/bin/sequence_url_update.R
     USAGE:: script.R <FlowcellID> <NumberOfLanes> <FASTQPath>
 	```
     

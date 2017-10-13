@@ -1,1 +1,1 @@
-../post_casava/bin/protect_flowcell.sh
+../post_demultiplex/bin/protect_flowcell.sh

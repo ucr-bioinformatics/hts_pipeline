@@ -1,1 +1,1 @@
-../post_casava/bin/sequence_url_update_nextseq.R
+../post_demultiplex/bin/sequence_url_update_nextseq.R

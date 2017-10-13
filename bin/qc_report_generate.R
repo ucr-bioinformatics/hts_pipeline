@@ -1,1 +1,1 @@
-../post_casava/bin/qc_report_generate.R
+../post_demultiplex/bin/qc_report_generate.R

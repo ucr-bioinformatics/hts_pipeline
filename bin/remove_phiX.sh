@@ -1,1 +1,1 @@
-../post_casava/bin/remove_phiX.sh
+../post_demultiplex/bin/remove_phiX.sh

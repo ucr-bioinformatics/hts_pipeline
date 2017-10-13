@@ -1,1 +1,1 @@
-../post_casava/bin/send_flowcell_email.sh
+../post_demultiplex/bin/send_flowcell_email.sh

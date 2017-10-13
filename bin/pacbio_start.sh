@@ -3,8 +3,8 @@
 # Set global vars
 source "$HTS_PIPELINE_HOME/env_profile.sh"
 
-SHORT=D:d:f:
-LONG=dev,dir:,flowcell:
+SHORT=D:d:f:c
+LONG=dev,dir:,flowcell:,checksums
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 
@@ -17,6 +17,10 @@ pacbioPrefix="pacbio" # Prefix used for before folder name in $GENOMICS_SHARED
 
 while true; do
     case "$1" in
+        -c|--checksums)
+            checksums=y
+            shift
+            ;;
         -f|--flowcell) # The folder name for PacBio - named flowcell to be backwards compatible
             folderName="$2"
             FC_ID="$folderName"
@@ -54,11 +58,13 @@ echo "Started Pipeline" > "$ERROR_FILE"
 #========================
 # Step 1: Check checksums
 #========================
-CMD="shasum -c '$sourceDir/checksums.sha1'"
-echo -e "==== Step 1: Check Checksums ====\n${CMD}" >> "$ERROR_FILE"
-if [ $ERROR -eq 0 ]; then
-    if [ ${CMD} &>> "$ERROR_FILE" -ne 0 ]; then
-        echo "ERROR: Checksum check failed"
+if [[ ! -z "$checksums" ]]; then
+    CMD="shasum -c '$sourceDir/checksums.sha1'"
+    echo -e "==== Step 1: Check Checksums ====\n${CMD}" >> "$ERROR_FILE"
+    if [ $ERROR -eq 0 ]; then
+        if [ ${CMD} &>> "$ERROR_FILE" -ne 0 ]; then
+            echo "ERROR: Checksum check failed"
+        fi
     fi
 fi
 

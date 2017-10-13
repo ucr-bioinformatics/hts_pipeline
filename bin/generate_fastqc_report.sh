@@ -1,1 +1,1 @@
-../post_casava/bin/generate_fastqc_report.sh
+../post_demultiplex/bin/generate_fastqc_report.sh
