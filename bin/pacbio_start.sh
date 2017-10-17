@@ -48,7 +48,7 @@ done
 cd "$sourceDir"
 
 outputDir="$SHARED_GENOMICS/$folderName"
-analysisDir="$SHARED_GENOMICS/RunAnalysis/${pacbioPrefix}${folderName}"
+analysisDir="$SHARED_GENOMICS/RunAnalysis/${pacbioPrefix}${folderName// /}"
 ERROR=0
 export ERROR_FILE="$SHARED_GENOMICS/$folderName/error.log"
 
@@ -71,23 +71,23 @@ fi
 #===================================
 # Step 2: Move folder to RunAnalysis
 #===================================
-CMD="mv ${sourceDir} $analysisDir"
+CMD=$"mv \"${sourceDir}\" \"$analysisDir\""
 echo -e "==== Step 2: Move folder to RunAnalysis ====\n${CMD}" >> "$ERROR_FILE"
 if [ $ERROR -eq 0 ]; then
-    if [ ${CMD} &>> "$ERROR_FILE" -ne 0 ]; then
+    if [ mv "$sourceDir" "analysisDir" &>> "$ERROR_FILE" -ne 0 ]; then
         echo "ERROR: Moving folder failed"
     fi
 fi
 chmod -R u-w "${analysisDir}"
 
 #==========================
-# Step 3: Create hard links
+# Step 3: Copy files
 #==========================
-CMD="cp -l ${analysisDir} ${outputDir}"
-echo -e "==== Step 3: Create hard links ====\n${CMD}" >> "$ERROR_FILE"
+CMD="cp ${analysisDir} ${outputDir}"
+echo -e "==== Step 3: Create files ====\n${CMD}" >> "$ERROR_FILE"
 if [ $ERROR -eq 0 ]; then
     if [ ${CMD} &>> "$ERROR_FILE" -ne 0 ]; then
-        echo "ERROR: Creating hard links"
+        echo "ERROR: Copying files failed"
     fi
 fi
 
@@ -95,3 +95,12 @@ fi
 #==========================
 # Step 4: Create QC reports
 #==========================
+echo -e "==== Step 4: Create QC Reports ====" >> "$ERROR_FILE"
+if [ $ERROR -eq 0 ]; then
+  if [ find ${outputDir} -iname '*.csv' | xargs -n 1 | stsPlots.R -file &>> "$ERROR_FILE" -ne 0 ]; then
+    echo "ERROR: Creating QC report failed"
+  fi
+fi
+
+
+
