@@ -95,12 +95,13 @@ fi
 #==========================
 # Step 4: Create QC reports
 #==========================
-echo -e "==== Step 4: Create QC Reports ====" >> "$ERROR_FILE"
+echo "==== Step 4: Create QC Reports ====" >> "$ERROR_FILE"
+echo "find ${} -iname '*.csv' | xargs -n 1 | stsPlots.R -file" >> "$ERROR_FILE"
+
 if [ $ERROR -eq 0 ]; then
-  if [ find ${outputDir} -iname '*.csv' | xargs -n 1 | stsPlots.R -file &>> "$ERROR_FILE" -ne 0 ]; then
+  if [[ find ${outputDir} -iname '*.csv' | xargs -n 1 | stsPlots.R -file &>> "$ERROR_FILE" -ne 0 ]]; then
     echo "ERROR: Creating QC report failed"
   fi
 fi
-
 
 
