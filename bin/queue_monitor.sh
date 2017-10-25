@@ -22,5 +22,6 @@ Subject: Queue Completed
 The queue for user $1 is now empty.
 
 EOF
+    exit $?
 fi
 
