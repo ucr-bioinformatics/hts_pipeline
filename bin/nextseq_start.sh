@@ -306,7 +306,7 @@ if [ -f "$complete_file" ]; then
     fi
 
     if [[ "$PASSWORD_PROTECT" -eq 1 ]]; then
-        CMD="protect_flowcell ${FC_ID}"
+        CMD="protect_flowcell.sh ${FC_ID}"
         echo -e "==== PASSWORD PROTECTION STEP ====\n${CMD}" >> "$ERROR_FILE"
         if [ "$ERROR" -eq 0 ]; then
             ${CMD} &>> "$ERROR_FILE"
