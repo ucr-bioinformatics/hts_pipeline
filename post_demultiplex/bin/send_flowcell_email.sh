@@ -11,8 +11,8 @@ FC_ID="$1"
 source "$HTS_PIPELINE_HOME/bin/load_hts_passwords.sh"
 
 # Email information (constants)
-EMAIL_SENDER="William Shiao <wshia002@ucr.edu>"
-EMAIL_CC="${EMAIL_SENDER}, Clay Clark <clay.clark@ucr.edu>, Glenn Hicks <glenn.hicks@ucr.edu>, Neerja Katiyar <neerja.katiyar@ucr.edu>"
+EMAIL_SENDER="Neerja Katiyar <neerja.katiyar@ucr.edu>"
+EMAIL_CC="${EMAIL_SENDER}, Clay Clark <clay.clark@ucr.edu>, Glenn Hicks <glenn.hicks@ucr.edu>"
 
 TARGET_DIR="${SHARED_GENOMICS}/${FC_ID}"
 dir_list=$(find "$TARGET_DIR" -maxdepth 1 -type d)
@@ -120,8 +120,8 @@ $EMAIL_BODY
 Thank you.
 
 -- 
-William Shiao
-IIGB Student Programmer
+Neerja Katiyar
+Bioinformatics Programmer
 
 EOF
 
