@@ -100,11 +100,11 @@ else
 fi
 
 echo "Sending email for flowcell #${FC_ID} to ${FC_EMAIL}"
-echo -e "Email contents:"
+echo "Email contents:"
 echo "${EMAIL_BODY}"
 
 if [[ $# -lt 2 ]] || [[ $# -ge 2 && $2 -eq 1 ]]; then
-	read -p "Are you sure? " -n 1 -r
+	read -p $'Are you sure? \n' -n 1 -r
 	if [[ ! $REPLY =~ ^[Yy]$ ]]; then
 		echo 'Exiting...'
 		exit 4
