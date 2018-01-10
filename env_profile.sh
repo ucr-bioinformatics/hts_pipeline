@@ -12,7 +12,7 @@ if [[ $USER == genomics ]]; then
     export SHARED_GENOMICS=/bigdata/genomics/shared
 
     # Send email notifications to this address
-    export NOTIFY_EMAIL=hts@biocluster.ucr.edu
+    export NOTIFY_EMAIL=clay.clark@ucr.edu
 else
     # Set genomics data path
     GROUP=$(id -g -n)
