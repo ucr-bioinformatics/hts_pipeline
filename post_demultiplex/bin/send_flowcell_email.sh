@@ -11,8 +11,8 @@ FC_ID="$1"
 source "$HTS_PIPELINE_HOME/bin/load_hts_passwords.sh"
 
 # Email information (constants)
-EMAIL_SENDER="William Shiao <wshia002@ucr.edu>"
-EMAIL_CC="${EMAIL_SENDER}, Clay Clark <clay.clark@ucr.edu>, Glenn Hicks <glenn.hicks@ucr.edu>, Neerja Katiyar <neerja.katiyar@ucr.edu>"
+EMAIL_SENDER="Neerja Katiyar <neerja.katiyar@ucr.edu>"
+EMAIL_CC="${EMAIL_SENDER}, Clay Clark <clay.clark@ucr.edu>, Glenn Hicks <glenn.hicks@ucr.edu>"
 
 TARGET_DIR="${SHARED_GENOMICS}/${FC_ID}"
 dir_list=$(find "$TARGET_DIR" -maxdepth 1 -type d)
@@ -100,11 +100,11 @@ else
 fi
 
 echo "Sending email for flowcell #${FC_ID} to ${FC_EMAIL}"
-echo -e "Email contents:"
+echo "Email contents:"
 echo "${EMAIL_BODY}"
 
 if [[ $# -lt 2 ]] || [[ $# -ge 2 && $2 -eq 1 ]]; then
-	read -p "Are you sure? " -n 1 -r
+	read -p $'Are you sure? \n' -n 1 -r
 	if [[ ! $REPLY =~ ^[Yy]$ ]]; then
 		echo 'Exiting...'
 		exit 4
@@ -120,8 +120,8 @@ $EMAIL_BODY
 Thank you.
 
 -- 
-William Shiao
-IIGB Student Programmer
+Neerja Katiyar
+Bioinformatics Programmer
 
 EOF
 

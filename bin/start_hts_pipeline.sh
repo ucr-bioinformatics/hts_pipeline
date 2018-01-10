@@ -102,6 +102,9 @@ for dir in $dir_list; do
             "M02457")
                 SEQ="miseq"
             ;;
+            "pacbio")
+                SEQ="pacbio"
+            ;;
             *)
                 SEQ="default"
             ;;

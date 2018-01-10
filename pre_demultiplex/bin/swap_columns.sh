@@ -3,7 +3,7 @@
 source "$HTS_PIPELINE_HOME/env_profile.s"h
 
 if (($# < 1)); then
-    echo "Usage: reverse_compliment.sh <SampleSheet> [barcodeColumn1 = 6] [barcodeColumn2 = 8] [PRINT_ONLY = 0]"
+    echo "Usage: swap_columns.sh <SampleSheet> [barcodeColumn1 = 6] [barcodeColumn2 = 8] [PRINT_ONLY = 0]"
     exit 1
 fi
 
