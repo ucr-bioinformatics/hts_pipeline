@@ -120,8 +120,8 @@ $EMAIL_BODY
 Thank you.
 
 -- 
-Neerja Katiyar
-Bioinformatics Programmer
+Clay Clark
+Genomics Core Facility
 
 EOF
 
