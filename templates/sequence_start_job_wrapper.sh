@@ -2,11 +2,11 @@
 
 #SBATCH --nodes=1
 #SBATCH --ntasks=10
-#SBATCH --mem-per-cpu=8G
-#SBATCH --time=5:00:00
+#SBATCH --mem-per-cpu=5G
+#SBATCH --time=4:00:00
 #SBATCH --mail-user=${7}
 #SBATCH --mail-type=ALL
-#SBATCH -p intel
+#SBATCH -p batch
 
 SHORT=s:f:S:T:p:m:DtP:b:
 LONG=sequencer:,flowcell:,source-dir:,target-dir:,pipeline-home:,mismatch:,dev,trim-galore,password-protect:,base-mask:
