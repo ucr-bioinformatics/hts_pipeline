@@ -14,7 +14,7 @@ fi
 
 NUM_JOBS=$(squeue -u $1 --noheader | wc -l)
 RUNNING_JOBS=$(squeue -t R -u $1 --noheader | wc -l)
-PENDING_JOBS=$(squeue -t PD -u $1 --noheader --start -l)
+PENDING_JOBS=$(squeue -t PD -u $1 --start -l)
 
 if [[ ! -z "$2" && ${NUM_JOBS} -gt 0 ]]; then
     echo "Sending email to $2"
