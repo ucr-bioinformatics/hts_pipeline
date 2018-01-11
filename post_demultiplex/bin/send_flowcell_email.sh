@@ -59,7 +59,7 @@ fi
 
 MAIL_HEADERS=$(cat <<EOF
 From: $EMAIL_SENDER
-To: $FC_EMAIL
+To: $EMAIL_SENDER
 Cc: $EMAIL_CC
 EOF
 )
