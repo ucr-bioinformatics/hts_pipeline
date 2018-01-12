@@ -90,7 +90,8 @@ if [ -f $complete_file ]; then
     ##################
 
     # Create copy of the original samplesheet from Clay and name it as SampleSheet.csv
-    samplesheet_origfile=$(ls ${SHARED_GENOMICS}/Runs/$run_dir/*_FC#*.csv)
+    #samplesheet_origfile=$(ls ${SHARED_GENOMICS}/Runs/$run_dir/*_FC#*.csv)
+    samplesheet_origfile= # MiSEQ does not use custom samplesheets
     samplesheet=$(ls ${SHARED_GENOMICS}/Runs/$run_dir/SampleSheet.csv)
     if ([ ! -z $samplesheet_origfile ]); then
         CMD="cp $samplesheet_origfile SampleSheet.csv"
