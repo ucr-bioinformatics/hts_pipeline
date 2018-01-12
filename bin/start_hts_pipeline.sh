@@ -81,7 +81,7 @@ for dir in $dir_list; do
     # Check if directory is not source directory
     ls ${dir}/*_start.lock &>/dev/null
     ERROR=$?
-    if [[ "$dir" != '.' || ${ERROR} -ne 0 ]]; then
+    if [[ "$dir" != '.' && ${ERROR} -ne 0 ]]; then
         # Find sample sheet
         complete_file=$(find "$dir" -name RTAComplete.txt)
         samplesheet_file=$(find "$dir" -maxdepth 1 -name '*_FC#*.csv')
