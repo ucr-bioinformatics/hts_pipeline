@@ -6,7 +6,7 @@
 #SBATCH --time=4:00:00
 #SBATCH --mail-user="clay.clark@ucr.edu"
 #SBATCH --mail-type=ALL
-#SBATCH -p batch
+#SBATCH -p batch,intel
 
 SHORT=s:f:S:T:p:m:DtP:b:
 LONG=sequencer:,flowcell:,source-dir:,target-dir:,pipeline-home:,mismatch:,dev,trim-galore,password-protect:,base-mask:
