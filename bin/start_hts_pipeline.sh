@@ -81,7 +81,7 @@ for dir in $dir_list; do
     # Check if directory is not source directory
     ls ${dir}/*_start.lock &>/dev/null
     ERROR=$?
-    if [[ "$dir" != '.' && ${ERROR} -ne 0 ]]; then
+    if [[ "$dir" != '.' || ${ERROR} -ne 0 ]]; then
         # Find sample sheet
         complete_file=$(find "$dir" -name RTAComplete.txt)
         samplesheet_file=$(find "$dir" -maxdepth 1 -name '*_FC#*.csv')
@@ -174,6 +174,7 @@ EOF
             module load slurm
             JOBID=$(sbatch -J "FC #${FC_ID}" sequence_start_job_wrapper.sh -s "${SEQ}" -f "${FC_ID}" -S "${SOURCE_DIR}" -T "$dir" -p "${HTS_PIPELINE_HOME}" --password-protect "${passwordProtect:-0}" ${APPEND} | grep -Po '[0-9]*$')
             echo ${JOBID} >  ${SOURCE_DIR}/${dir}/${lockfile}
+            echo ${SOURCE_DIR}/${dir}/${lockfile}
             echo "sequence_start_job_wrapper.sh -s ${SEQ} -f ${FC_ID} -S ${SOURCE_DIR} -T $dir -p ${HTS_PIPELINE_HOME} --password-protect ${passwordProtect:-0} ${APPEND}"
 
         fi
