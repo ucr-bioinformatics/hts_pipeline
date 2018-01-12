@@ -81,7 +81,7 @@ if [ -f $complete_file ]; then
     lockfile="${SEQ}_start.lock"
  
     # Set lock file
-    if [[ ! "$(cat $run_dir/$lockfile)" == "${SLURM_JOBID}" ]]; then
+    if [[ ! "$(cat $lockfile)" == "${SLURM_JOBID}" ]]; then
         echo -e "ERROR: JOB ID does not match"
         ERROR=1 && exit 1
     fi
