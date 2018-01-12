@@ -5,7 +5,9 @@
 #############################################
 
 # Set global vars
+set -e
 source $HTS_PIPELINE_HOME/env_profile.sh
+ERROR=0
 
 # Check Arguments
 EXPECTED_ARGS=4
@@ -79,10 +81,12 @@ if [ -f $complete_file ]; then
     lockfile="${SEQ}_start.lock"
  
     # Set lock file
-    lockfile-create -r 0 $run_dir/${SEQ}_start || ( echo "Could not create $run_dir/$lockfile" && exit 1 )
+    if [[ ! "$(cat $run_dir/$lockfile)" == "${SLURM_JOBID}" ]]; then
+        echo -e "ERROR: JOB ID does not match"
+        ERROR=1 && exit 1
+    fi
 
     # Set error file
-    ERROR=0
     export ERROR_FILE=$SHARED_GENOMICS/$FC_ID/error.log
     mkdir -p $SHARED_GENOMICS/$FC_ID
     echo "Starting Pipeline" > $ERROR_FILE

@@ -79,7 +79,9 @@ dir_list=$(find . -maxdepth 1 -type d)
 # Iterate over each Run directory
 for dir in $dir_list; do
     # Check if directory is not source directory
-    if [ "$dir" != '.' ]; then
+    ls ${dir}/*_start.lock &>/dev/null
+    ERROR=$?
+    if [[ "$dir" != '.' && ${ERROR} -ne 0 ]]; then
         # Find sample sheet
         complete_file=$(find "$dir" -name RTAComplete.txt)
         samplesheet_file=$(find "$dir" -maxdepth 1 -name '*_FC#*.csv')
@@ -109,6 +111,9 @@ for dir in $dir_list; do
                 SEQ="default"
             ;;
             esac
+
+            # Define lock file
+            lockfile="${SEQ}_start.lock"
 
             # Pull chars from dir name
             str=$(echo "$dir" | grep -oP "[A-Z0-9]+$")
@@ -167,7 +172,8 @@ EOF
             echo "Processing ${FC_ID} from ${SOURCE_DIR}/$dir at $(date)" >> "${HTS_PIPELINE_HOME}/log/${SEQ}_pipeline.log"
             #echo ${SEQ}_start.sh ${FC_ID} ${SOURCE_DIR}/$dir ${SEQ} ${label}| qsub -l nodes=1:ppn=32,mem=50gb,walltime=20:00:00 -j oe -o ${HTS_PIPELINE_HOME}/log/${SEQ}_start.log -m bea -M ${NOTIFY_EMAIL}
             module load slurm
-            sbatch -J "FC #${FC_ID}" sequence_start_job_wrapper.sh -s "${SEQ}" -f "${FC_ID}" -S "${SOURCE_DIR}" -T "$dir" -p "${HTS_PIPELINE_HOME}" --password-protect "${passwordProtect:-0}" ${APPEND}
+            JOBID=$(sbatch -J "FC #${FC_ID}" sequence_start_job_wrapper.sh -s "${SEQ}" -f "${FC_ID}" -S "${SOURCE_DIR}" -T "$dir" -p "${HTS_PIPELINE_HOME}" --password-protect "${passwordProtect:-0}" ${APPEND} | grep -Po '[0-9]*$')
+            echo ${JOBID} >  ${SOURCE_DIR}/${dir}/${lockfile}
             echo "sequence_start_job_wrapper.sh -s ${SEQ} -f ${FC_ID} -S ${SOURCE_DIR} -T $dir -p ${HTS_PIPELINE_HOME} --password-protect ${passwordProtect:-0} ${APPEND}"
 
         fi
