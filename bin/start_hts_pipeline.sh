@@ -146,7 +146,7 @@ for dir in $dir_list; do
                 /usr/sbin/sendmail -vt << EOF
 To: ${NOTIFY_EMAIL}
 From: no-reply@biocluster.ucr.edu
-Subject: HTS Pipeline: Flowcell ${FC_ID}: Started
+Subject: HTS Pipeline: Flowcell ${FC_ID}: Queued
 
 Flowcell ${FC_ID} has come in and is being processed.
 Thanks
