@@ -42,6 +42,10 @@ while true; do
             mismatch="$2"
             shift 2
             ;;
+        -l|--lane-split)
+            lanesplit="$2"
+            shift 2
+            ;;
         -D|--dev)
             DEV=y
             shift
@@ -163,6 +167,10 @@ EOF
 
             if [[ ! -z "$mismatch" ]]; then
                 APPEND="${APPEND} -m $mismatch"
+            fi
+            
+            if [[ ! -z "$lanesplit" ]]; then
+                APPEND="${APPEND} -l $lanesplit"
             fi
 
             if [[ ! -z "$baseMask" ]]; then

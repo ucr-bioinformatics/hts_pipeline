@@ -8,8 +8,8 @@
 #SBATCH --mail-type=ALL
 #SBATCH -p batch,intel
 
-SHORT=s:f:S:T:p:m:DtP:b:
-LONG=sequencer:,flowcell:,source-dir:,target-dir:,pipeline-home:,mismatch:,dev,trim-galore,password-protect:,base-mask:
+SHORT=s:f:S:T:p:m:l:DtP:b:
+LONG=sequencer:,flowcell:,source-dir:,target-dir:,pipeline-home:,mismatch:lane-split:,dev,trim-galore,password-protect:,base-mask:
 
 PARSED="$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")"
 
@@ -61,6 +61,10 @@ while true; do
             mismatch="$2"
             shift 2
             ;;
+        -l|--lane-split)
+            lanesplit="$2"
+            shift 2
+            ;;
         --)
             shift
             break
@@ -82,6 +86,10 @@ fi
 
 if [[ ! -z "$mismatch" ]]; then
     APPEND="${APPEND} -m $mismatch"
+fi
+
+if [[ ! -z "$lanesplit" ]]; then
+    APPEND="${APPEND} -l $lanesplit"
 fi
 
 if [[ ! -z "$baseMask" ]]; then

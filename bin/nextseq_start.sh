@@ -9,8 +9,8 @@ set -e
 source "$HTS_PIPELINE_HOME/env_profile.sh"
 ERROR=0
 
-SHORT=f:d:m:DtP:b:
-LONG=flowcell:,dir:,mismatch:,dev,trim-galore,password-protect:,base-mask:
+SHORT=f:d:m:l:DtP:b:
+LONG=flowcell:,dir:,mismatch:lane-split:,dev,trim-galore,password-protect:,base-mask:
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 
@@ -47,6 +47,10 @@ while true; do
             ;;
         -m|--mismatch)
             MISMATCH="$2"
+            shift 2
+            ;;
+        -l|--lane-split)
+            LANE_SPLIT="$2"
             shift 2
             ;;
         --)
@@ -212,7 +216,7 @@ if [ -f "$complete_file" ]; then
         USED_MISMATCH="$MUX"
     fi
 
-    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $USED_MISMATCH nosplit ${EXTRA_FLAG}"
+    CMD="bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $USED_MISMATCH $LANE_SPLIT ${EXTRA_FLAG}"
     echo -e "==== DEMUX STEP ====\n${CMD}" >> "$ERROR_FILE"
     if [ $ERROR -eq 0 ]; then
         cd "$SHARED_GENOMICS/$FC_ID"

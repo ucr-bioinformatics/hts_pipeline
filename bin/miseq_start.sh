@@ -180,7 +180,7 @@ if [ -f $complete_file ]; then
         BASEMASK="$BASE_MASK"
     fi
 
-    if [ "$USER_DEMULTIPLEX" -eq 1 ]; then
+    if [ $USER_DEMULTIPLEX -eq 1 ]; then
         BACKUP_SS="ss_backup.csv.bak"
         TARGET_DIR="${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/"
 
