@@ -6,8 +6,8 @@
 
 echo "started running"
 
-SHORT=m:DntP:E:I:b:
-LONG=mismatch:,dev,no-mail,trim-galore,password-protect:,exclude-flowcells:,include-flowcells:,base-mask:
+SHORT=m:l:DntP:E:I:b:
+LONG=mismatch:,lane-split:,dev,no-mail,trim-galore,password-protect:,exclude-flowcells:,include-flowcells:,base-mask:
 
 PARSED=$(getopt --options $SHORT --longoptions $LONG --name "$0" -- "$@")
 if [[ $? -ne 0 ]]; then
