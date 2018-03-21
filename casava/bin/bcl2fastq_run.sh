@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 # Check Arguments
-MIN_ARGS=6
+MIN_ARGS=5
 MAX_ARGS=10
 E_BADARGS=65
 

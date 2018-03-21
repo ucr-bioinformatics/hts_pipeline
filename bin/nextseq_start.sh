@@ -216,6 +216,11 @@ if [ -f "$complete_file" ]; then
         USED_MISMATCH="$MUX"
     fi
 
+    # Set default to no-lane-splitting
+    if [[ -z "$LANE_SPLIT" ]]; then
+        LANE_SPLIT="nosplit"
+    fi
+
     CMD="bcl2fastq_run.sh ${FC_ID} $run_dir $BASEMASK ${SHARED_GENOMICS}/RunAnalysis/flowcell${FC_ID}/$run_dir/SampleSheet.csv $USED_MISMATCH $LANE_SPLIT ${EXTRA_FLAG}"
     echo -e "==== DEMUX STEP ====\n${CMD}" >> "$ERROR_FILE"
     if [ $ERROR -eq 0 ]; then
