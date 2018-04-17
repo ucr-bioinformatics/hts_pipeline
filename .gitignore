@@ -5,4 +5,5 @@
 log/*.log
 
 passwords.tsv
+passwords.tsv.gpg
 passwords-decrypted.tsv
