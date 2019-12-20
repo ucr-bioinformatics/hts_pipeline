@@ -41,7 +41,7 @@ done
 echo "Sequencer: ${SEQ}"
 
 # Populate variables with information from DB
-FC_EMAIL=$(mysql -D projects -h penguin -u $DB_USERNAME -P 3611 -p $DB_PASSWORD -N -s -e "SELECT email FROM flowcell_list INNER JOIN project_list ON project_list.project_id = flowcell_list.lane_1_project WHERE flowcell_id=${FC_ID}")
+FC_EMAIL=$(mysql -Dprojects -hpenguin -u$DB_USERNAME -P3611 -p$DB_PASSWORD -N -s -e "SELECT email FROM flowcell_list INNER JOIN project_list ON project_list.project_id = flowcell_list.lane_1_project WHERE flowcell_id=${FC_ID}")
 
 if [[ -z "$FC_EMAIL" ]]; then
     echo "Got empty target email... exiting."

@@ -38,7 +38,7 @@ for dir in $dir_list; do
 
         # Pull chars from dir name then query mysql...
         QUERY="SELECT flowcell_id FROM flowcell_list WHERE label=\"$str\";"
-        flowcellID=flowcell`mysql -h penguin -D projects -u $DB_USERNAME -P 3611 -p $DB_PASSWORD -N -s -e "SELECT flowcell_id FROM flowcell_list WHERE label=\"$str\";"`
+        flowcellID=flowcell`mysql -hpenguin -Dprojects -u$DB_USERNAME -P3611 -p$DB_PASSWORD -N -s -e "SELECT flowcell_id FROM flowcell_list WHERE label=\"$str\";"`
 
         # Check if symlink already exists in target directory
         if [ ! -h "$TARGET_DIR/$flowcellID" ]; then
