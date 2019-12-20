@@ -129,7 +129,7 @@ for dir in $dir_list; do
             
             # Determine flowcell ID
             QUERY="SELECT flowcell_id FROM flowcell_list WHERE label=\"$label\";"
-            FC_ID=$(mysql -hillumina -Dprojects -u$DB_USERNAME -p$DB_PASSWORD -N -s -e "${QUERY}")
+            FC_ID=$(mysql -hpenguin -Dprojects -u$DB_USERNAME -p$DB_PASSWORD -N -s -e "${QUERY}")
 
             if [[ $(echo "$excludeFlowcells" | grep -c "$FC_ID") -ge 1 ]]; then
                 echo "Excluding FC #${FC_ID}"
