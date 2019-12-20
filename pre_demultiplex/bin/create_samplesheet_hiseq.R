@@ -23,7 +23,7 @@ source(paste(hts_pipeline_home, "/bin/load_hts_passwords.R", sep = ""))
 
 # Connect to Database
 require(RMySQL, quietly = TRUE)
-con <- dbConnect(MySQL(), user=hts_pass$db['user'], password=hts_pass$db['pass'],dbname="projects", host="penguin")
+con <- dbConnect(MySQL(), user=hts_pass$db['user'], password=hts_pass$db['pass'],dbname="projects", host="penguin", port=3611)
 
 # Get sample and project ids
 flowcell_table <- dbGetQuery(con,paste("SELECT * FROM flowcell_list where flowcell_id = ", flowcellid," LIMIT 1",sep=""))
